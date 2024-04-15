@@ -1,0 +1,1 @@
+var x = ee.Number(10);
