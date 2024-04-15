@@ -47,14 +47,15 @@ var dataset = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
                   .mean();
 
 var visualization = {
-  min: 0.0,
-  max: 0.3,
+  min: 0,
+  max: 10,
 };
 print(dataset);
-var ones = ee.Image(3.6);
-var comp = arrayConstant.gt(ones);
+var ones = ee.Image(2.6);
+var comp = arrayConstant.lte(ones);
 print(comp);
+var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]);
 //print(dataset);
-Map.addLayer(comp, visualization, 'RGB');
+Map.addLayer(rcomp, visualization, 'RGB');
 
 
