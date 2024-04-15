@@ -50,8 +50,11 @@ var visualization = {
   min: 0.0,
   max: 0.3,
 };
-
+print(dataset);
+var ones = ee.Image(3.6);
+var comp = arrayConstant.gt(ones);
+print(comp);
 //print(dataset);
-//Map.addLayer(dataset, visualization, 'RGB');
+Map.addLayer(comp, visualization, 'RGB');
 
 
