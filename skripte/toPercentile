@@ -1,1 +1,1 @@
-var x = ee.Number(10);
+var x = ee.Number(3.4);
