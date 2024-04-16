@@ -1,3 +1,73 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var harz = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.941869235761107, 51.97407055281603],
+          [9.941869235761107, 51.371112319227876],
+          [11.880956149823607, 51.371112319227876],
+          [11.880956149823607, 51.97407055281603]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
+
+//Satellite Data
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterBounds(harz)
+                    .map(cloudMask.S2CloudMask)
+                    .select(['B5', 'B8A', 'B11']);
+
+var createImage = function(region, type, month){
+  
+  var baseImage = s2Data.filter(ee.Filter.calendarRange(month, month, 'month'));
+
+  baseImage = baseImage.mean()
+                       .mask(vegMask.createCopernicusMask(type))
+                       ;//.select('B5');
+  Map.addLayer(baseImage, {min: 1500, max: 3000});
+
+  //create percentiles for 5 and for 10 to 95 percent, so that the order does not get messed up
+  //(in dictionaries p5 is located between p45 and p50 because of the alphabetical order of keys)
+  var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
+                              'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
+  var perc_reducer = ee.Reducer.percentile(ee.List.sequence(5, 95, 5), outputnames);
+
+  var percs =  ee.List(['B5', 'B8A', 'B11']).map(function(el){
+    
+    var refImage = baseImage.select([el]).reduceRegion({
+     reducer: perc_reducer,
+     geometry: region,
+     scale: 1000,
+    
+    });
+    return ee.Image(ee.Array(refImage.values())).rename([el]);
+  });
+  return percs;
+  //var b = ee.Image(ee.Array(refImage.values()));
+  
+  //  return b.clip(region);
+  
+};
+
+var a = ee.ImageCollection(createImage(harz, 'Evergreen', 6)).toBands().clip(harz).rename(['B5', 'B8A', 'B11']);
+Map.addLayer(a);
+print(a);
+
+var testImage = s2Data.filter(ee.Filter.calendarRange(6, 6, 'month'));
+
+testImage = testImage.mean()
+                      .mask(vegMask.createCopernicusMask('Evergreen'));
+  
+
+var comp = testImage.gte(a);
+print(comp);
+Map.addLayer(comp);
+var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]);
+// Map.addLayer(rcomp, {min: 0, max: 19});
+
