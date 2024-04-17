@@ -44,7 +44,7 @@ var createImage = function(region, type, month){
      reducer: perc_reducer,
      geometry: region,
      scale: 1000,
-    
+     bestEffort: true    
     });
     return ee.Image(ee.Array(refImage.values())).rename([el]);
   });
