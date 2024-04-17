@@ -86,7 +86,7 @@ var himg = a.toList(100).map(function(el){
 });
 
 himg = ee.ImageCollection(himg).mosaic();
-Map.addLayer(himg)
+Map.addLayer(himg);
 print(himg);
 
 // var c = a.first().get('quantiles');
