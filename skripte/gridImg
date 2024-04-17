@@ -52,7 +52,7 @@ var createPercentiles = function(type, month){
     reducer: perc_reducer,
     collection: grid.filterBounds(rekt),
     scale: 1000,
-    tileScale : 8
+    tileScale : 2
     });
 
   
@@ -76,7 +76,7 @@ var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40
                             'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
 
 var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').select('quantiles');
-print(a);
+print(a.propertyNames());
 // Map.addLayer(b);
 // Map.centerObject(a);
 Map.addLayer(grid.filterBounds(rekt));
