@@ -9,10 +9,10 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[11.82079401822051, 50.74344741427037],
-          [11.82079401822051, 47.02524874030163],
-          [20.11547175259551, 47.02524874030163],
-          [20.11547175259551, 50.74344741427037]]], null, false),
+        [[[3.60276534203952, 54.25703966340199],
+          [3.60276534203952, 45.05586394598586],
+          [26.04783370141452, 45.05586394598586],
+          [26.04783370141452, 54.25703966340199]]], null, false),
     gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
@@ -52,7 +52,7 @@ var createPercentiles = function(type, month){
     reducer: perc_reducer,
     collection: grid.filterBounds(rekt),
     scale: 1000,
-    tileScale : 4
+    tileScale : 8
     });
 
   
