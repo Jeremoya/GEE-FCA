@@ -71,10 +71,9 @@ var createPercentiles = function(type, month){
 };
   
 
-var a = createPercentiles('Evergreen', 6);
-a = a.map(function(el){return ee.Image(a)}).flatten();
-print(a);
-Map.addLayer(a);
+// var a = createPercentiles('Evergreen', 6);
+// print(a);
+// Map.addLayer(a);
 // Map.centerObject(a);
 // Map.addLayer(grid);
 // Map.addLayer(gerGrid);
