@@ -2,6 +2,7 @@
 var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     rekt = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -76,7 +77,10 @@ var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40
 
 var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').select('quantiles');
 print(a);
-// Map.addLayer(b);
-// Map.centerObject(a);
+
+// var b = ee.Image.constant(a.first().toDictionary(['quantiles']).values());
+var c = a.reduceToImage(['quantiles'], ee.Reducer.max());
+print(c);
+Map.addLayer(c);
 Map.addLayer(grid.filterBounds(rekt));
 // print(grid);
