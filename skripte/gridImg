@@ -9,10 +9,10 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[9.66747370572051, 52.072792190989986],
-          [9.66747370572051, 51.35810072409547],
-          [11.59008112759551, 51.35810072409547],
-          [11.59008112759551, 52.072792190989986]]], null, false),
+        [[[2.6142510494705107, 53.75524388423502],
+          [2.6142510494705107, 45.782892075224204],
+          [20.11547175259551, 45.782892075224204],
+          [20.11547175259551, 53.75524388423502]]], null, false),
     gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
@@ -50,9 +50,9 @@ var createPercentiles = function(type, month){
   img = img.select(['B5']);
   img = img.reduceRegions({
     reducer: perc_reducer,
-    collection: gerGrid,
+    collection: grid.filterBounds(rekt),
     scale: 1000,
-    tileScale : 4
+    tileScale : 8
     });
 
   
@@ -76,9 +76,8 @@ var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40
                             'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
 
 var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').select('quantiles');
-var b = ee.ImageCollection(a);
-print(b);
-Map.addLayer(b);
+print(a);
+// Map.addLayer(b);
 // Map.centerObject(a);
-// Map.addLayer(grid);
-Map.addLayer(gerGrid);
+Map.addLayer(grid.filterBounds(rekt));
+// print(grid);
