@@ -75,9 +75,10 @@ var createPercentiles = function(type, month){
 var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
                             'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
 
-var a = createPercentiles('Evergreen', 6).makeArray(outputnames);
-print(a);
-Map.addLayer(a);
+var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').select('quantiles');
+var b = ee.ImageCollection(a);
+print(b);
+Map.addLayer(b);
 // Map.centerObject(a);
 // Map.addLayer(grid);
 Map.addLayer(gerGrid);
