@@ -79,8 +79,8 @@ var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').se
 print(a);
 
 // var b = ee.Image.constant(a.first().toDictionary(['quantiles']).values());
-var c = a.reduceToImage(['quantiles'], ee.Reducer.max());
+var c = a.get('quantiles');//a.reduceToImage(['quantiles'], ee.Reducer.toList());
 print(c);
-Map.addLayer(c);
+// Map.addLayer(c);
 Map.addLayer(grid.filterBounds(rekt));
 // print(grid);
