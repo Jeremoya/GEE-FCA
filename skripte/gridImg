@@ -9,10 +9,10 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[8.92040339322051, 52.32866380422929],
-          [8.92040339322051, 47.02524874030163],
+        [[[11.82079401822051, 50.74344741427037],
+          [11.82079401822051, 47.02524874030163],
           [20.11547175259551, 47.02524874030163],
-          [20.11547175259551, 52.32866380422929]]], null, false),
+          [20.11547175259551, 50.74344741427037]]], null, false),
     gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
@@ -78,9 +78,25 @@ var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40
 var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').select('quantiles');
 print(a);
 
-// var b = ee.Image.constant(a.first().toDictionary(['quantiles']).values());
-var c = a.get('quantiles');//a.reduceToImage(['quantiles'], ee.Reducer.toList());
-print(c);
-// Map.addLayer(c);
+var himg = a.toList(100).map(function(el){
+  el = ee.Feature(el);
+  var percs = ee.Array(el.get('quantiles'));
+  var ret = ee.Image(percs).clip(el.geometry());
+  return ret;
+});
+
+himg = ee.ImageCollection(himg).mosaic();
+Map.addLayer(himg)
+print(himg);
+
+// var c = a.first().get('quantiles');
+// var d = ee.Image(ee.Array(c)).clip(a.first().geometry());
+// Map.addLayer(d);
+
+
+
+
+
+
 Map.addLayer(grid.filterBounds(rekt));
-// print(grid);
+
