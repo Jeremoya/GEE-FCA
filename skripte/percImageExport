@@ -69,5 +69,5 @@ var comp = testImage.gte(a);
 print(comp);
 Map.addLayer(comp);
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]);
-// Map.addLayer(rcomp, {min: 0, max: 19});
+Map.addLayer(rcomp, {min: 0, max: 19});
 
