@@ -48,25 +48,15 @@ var createPercentiles = function(type, month){
   var perc_reducer = ee.Reducer.percentile(ee.List.sequence(5, 95, 5), outputnames);
 
   img = img.select(['B5']);
-  // img = img.reduceRegions({
-  //   reducer: perc_reducer,
-  //   collection: gerGrid,
-  //   scale: 1000,
-  //   tileScale : 4
-  //   });
-  var percImgs = gerGrid.toList().map(function(el){
-    
-    var percs = img.reduceRegion({
+  img = img.reduceRegions({
     reducer: perc_reducer,
-    geometry: el,
+    collection: gerGrid,
     scale: 1000,
-    
+    tileScale : 4
     });
-    return ee.Image(ee.Array(percs.values())).rename(['B5']);
-    
-  });
+
   
-  return percImgs;
+  return img;
   // var percs =  ee.List(['B5', 'B8A', 'B11']).map(function(el){
     
   //   var refImage = baseImage.select([el]).reduceRegion({
@@ -82,9 +72,12 @@ var createPercentiles = function(type, month){
 };
   
 
-// var a = createPercentiles('Evergreen', 6);
-// print(a);
-// Map.addLayer(a);
+var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
+                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
+
+var a = createPercentiles('Evergreen', 6).makeArray(outputnames);
+print(a);
+Map.addLayer(a);
 // Map.centerObject(a);
 // Map.addLayer(grid);
-// Map.addLayer(gerGrid);
+Map.addLayer(gerGrid);
