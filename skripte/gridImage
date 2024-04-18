@@ -1,3 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
+var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
+    image = ee.Image("projects/ee-fichtnej/assets/EvergreenJune2"),
+    image2 = ee.Image("projects/ee-fichtnej/assets/EvergreenJune");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(image2.unmask(ee.Array([1])))
+Map.addLayer(image2)
