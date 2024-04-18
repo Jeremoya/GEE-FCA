@@ -70,7 +70,7 @@ var createPercentiles = function(type, month){
 };
   
 //Feature Collection mit Quantilen eines Monats in Bild mit 3 Bändern
-// pTI :: FeatureCollection -> IMG 3
+
 var percentileToImage = function(fc){
   fc = ee.FeatureCollection(fc);
   var bandimages = bandnames.map(function(el){
