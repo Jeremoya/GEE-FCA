@@ -25,7 +25,20 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .select(['B5', 'B8A', 'B11']);
 
 
+//Global variables
 
+//create percentiles for 5 and for 10 to 95 percent, so that the order does not get messed up
+//(in dictionaries p5 is located between p45 and p50 because of the alphabetical order of keys)
+var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
+                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
+var bands = ee.List(['B5_', 'B8A_', 'B11_']);
+var bandnames = bands.map(function(el){
+     return outputnames.map(function(innerel){
+       return ee.String(el).cat(ee.String(innerel));
+     });
+});
+
+//Functions
 
 var createImage = function(type, month){
   
@@ -56,27 +69,34 @@ var createPercentiles = function(type, month){
   
 };
   
+//Feature Collection mit Quantilen eines Monats in Bild mit 3 Bändern
+// pTI :: FeatureCollection -> IMG 3
+var percentileToImage = function(fc){
+  fc = ee.FeatureCollection(fc);
+  var bandimages = bandnames.map(function(el){
+    var quantiles = fc.makeArray(el, 'quantiles').select('quantiles');
+    var imgs = quantiles.map(function(el){
+      el = ee.Feature(el);
+      var percs = ee.Array(el.get('quantiles'));
+      var ret = ee.Image(percs).clip(el.geometry());
+      return ret;
+  });
+    return ee.ImageCollection(imgs).mosaic();
+  });
+  return ee.ImageCollection(bandimages).toBands().rename(['B5', 'B8A', 'B11']);
+};
+  
 
 //Map für jeden Monat
 var a = createPercentiles('Evergreen', 6);
 print(a);
 
-//Global machen
 
-//create percentiles for 5 and for 10 to 95 percent, so that the order does not get messed up
-//(in dictionaries p5 is located between p45 and p50 because of the alphabetical order of keys)
-var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
-                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
-var bands = ee.List(['B5_', 'B8A_', 'B11_']);
-var bandnames = bands.map(function(el){
-     return outputnames.map(function(innerel){
-       return ee.String(el).cat(ee.String(innerel));
-     });
-});
-print('x', bandnames);
 
 //In funktion auslagern (percentileToImage)
-var himgs = bandnames.map(function(el){
+var himgs = percentileToImage(a); 
+/*
+bandnames.map(function(el){
   var q = a.makeArray(el, 'quantiles').select('quantiles');
   var imgs = q.map(function(el){
     el = ee.Feature(el);
@@ -88,8 +108,10 @@ var himgs = bandnames.map(function(el){
   return ee.ImageCollection(imgs).mosaic();
 });
 himgs = ee.ImageCollection(himgs).toBands().rename(['B5', 'B8A', 'B11']);
+*/
 print('himgs', himgs);
 Map.addLayer(himgs);
+
 
 
 
