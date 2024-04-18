@@ -16,7 +16,6 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var refImg = eg.filter(ee.Filter.eq('month', 7)).first()//.select(['B5']);
-Map.addLayer(refImg, {}, 'JAN');
 print(refImg);
 var refImg2 = eg.filter(ee.Filter.eq('month', 3)).first().select(['B5']);
 /*Map.addLayer(refImg2, {},'APR');
@@ -51,15 +50,18 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .mask(vegMask.createCopernicusMask('Evergreen'));
 
 print(s2Data);                  
-Map.addLayer(s2Data, {}, 's2Data');
 
 var comp = s2Data.gte(refImg);
 print(comp);
-Map.addLayer(comp, {}, 'comp');
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-Map.addLayer(rcomp, {}, 'rcomp');
 rcomp = rcomp.subtract(19).divide(19);
 var final = getFCA(rcomp);
+
+/*
+*/
+
+Map.addLayer(refImg, {}, 'percs');
+Map.addLayer(s2Data, {}, 's2Data');
+Map.addLayer(comp, {}, 'comp');
+Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
 Map.addLayer(final, viz, 'FCA');
-
-
