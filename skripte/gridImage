@@ -1,3 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
+var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
+    img = ee.Image("projects/ee-fichtnej/assets/myExportImageTask");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(img);
+Map.centerObject(img);
