@@ -41,10 +41,6 @@ var createPercentiles = function(type, month){
   
   var img = ee.Image(createImage(type, month));
   
-   //create percentiles for 5 and for 10 to 95 percent, so that the order does not get messed up
-  //(in dictionaries p5 is located between p45 and p50 because of the alphabetical order of keys)
-  var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
-                              'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
   var perc_reducer = ee.Reducer.percentile(ee.List.sequence(5, 95, 5), outputnames);
 
   //img = img.select(['B5']);
@@ -57,29 +53,18 @@ var createPercentiles = function(type, month){
 
   
   return img;
-  // var percs =  ee.List(['B5', 'B8A', 'B11']).map(function(el){
-    
-  //   var refImage = baseImage.select([el]).reduceRegion({
-  //   reducer: perc_reducer,
-  //   geometry: region,
-  //   scale: 1000,
-  //   bestEffort: true    
-  //   });
-  //   return ee.Image(ee.Array(refImage.values())).rename([el]);
-  // });
-  // return percs;
-
+  
 };
   
 
-var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
-                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
-
-var a = createPercentiles('Evergreen', 6)//.makeArray(outputnames, 'quantiles').select('quantiles');
+//Map für jeden Monat
+var a = createPercentiles('Evergreen', 6)
 print(a);
 
+//Global machen
+var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
+                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
 var bands = ee.List(['B5_', 'B8A_', 'B11_']);
-
 var bandnames = bands.map(function(el){
      return outputnames.map(function(innerel){
        return ee.String(el).cat(ee.String(innerel));
@@ -87,6 +72,7 @@ var bandnames = bands.map(function(el){
 });
 print('x', bandnames);
 
+//In funktion auslagern
 var himgs = bandnames.map(function(el){
   var q = a.makeArray(el, 'quantiles').select('quantiles');
   var imgs = q.map(function(el){
