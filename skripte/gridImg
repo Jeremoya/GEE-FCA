@@ -61,7 +61,7 @@ var createPercentiles = function(type, month){
     reducer: perc_reducer,
     collection: grid,
     scale: 1000,
-    tileScale : 4
+    tileScale : 8
     });
 
   
