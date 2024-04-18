@@ -15,7 +15,7 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [21.353585347216896, 52.690581120322484]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var refImg = eg.filter(ee.Filter.eq('month', 5)).first()//.select(['B5']);
+var refImg = eg.filter(ee.Filter.eq('month', 7)).first()//.select(['B5']);
 Map.addLayer(refImg, {}, 'JAN');
 print(refImg);
 var refImg2 = eg.filter(ee.Filter.eq('month', 3)).first().select(['B5']);
@@ -29,17 +29,17 @@ var FCA = require('users/fichtnej/modules:fcaUtils');
 
 var viz = FCA.getFCAviz();
 
-function getFCA(img5, img8A, img11){
+function getFCA(img){
   
   var image = ee.Image();
   return image.expression('RE4 * 0.2923 - RE1 * 0.337 - SWIR * 0.3707',{
-                            'RE1': img5,
-                            'RE4': img8A,
-                            'SWIR': img11,
+                            'RE1': img.select(['B5']),
+                            'RE4': img.select(['B5']),
+                            'SWIR': img.select(['B5']),
                           }).rename('FCA');
 }
 
-var dates = ee.DateRange('2023-05-01', '2023-05-30');
+var dates = ee.DateRange('2022-07-01', '2022-07-30');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -56,6 +56,10 @@ Map.addLayer(s2Data);
 var comp = s2Data.gte(refImg);
 print(comp);
 Map.addLayer(comp);
-var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]);
-Map.addLayer(rcomp, {min: 0, max: 19});
+var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+Map.addLayer(rcomp, {}, 'rcomp');
+rcomp = rcomp.subtract(19).divide(19);
+var final = getFCA(rcomp);
+Map.addLayer(final, viz, 'FCA');
+
 
