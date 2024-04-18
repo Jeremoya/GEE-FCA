@@ -1,7 +1,19 @@
-var x = ee.Number(0.4);
-var reference = ee.Array([0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6]);
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
+    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    rekt = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[20.562569722216896, 59.707287067644174],
+          [20.562569722216896, 52.23541611860914],
+          [47.19342909721689, 52.23541611860914],
+          [47.19342909721689, 59.707287067644174]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(eg.first());
 
-var y = reference.lt(x).reduce(ee.Reducer.sum(), [0]);
-//var z = y.sum();
-print(y);
-//print(z);
+var satImgs = s2Data.filterBounds(rekt);
