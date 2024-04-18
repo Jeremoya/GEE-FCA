@@ -1,19 +1,40 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
-    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     rekt = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[20.562569722216896, 59.707287067644174],
-          [20.562569722216896, 52.23541611860914],
-          [47.19342909721689, 52.23541611860914],
-          [47.19342909721689, 59.707287067644174]]], null, false);
+        [[[7.203194722216897, 52.690581120322484],
+          [7.203194722216897, 46.64288924156801],
+          [21.353585347216896, 46.64288924156801],
+          [21.353585347216896, 52.690581120322484]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(eg.first());
 
-var satImgs = s2Data.filterBounds(rekt);
+var refImg = eg.filter(ee.Filter.eq('month', 1)).first();
+Map.addLayer(refImg);
+print(refImg);
+
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+
+
+var dates = ee.DateRange('2024-01-01', '2024-01-31');
+//Satellite Data
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .filterBounds(rekt)
+                    .map(cloudMask.S2CloudMask)
+                    //.select(['B5', 'B8A', 'B11']);
+                    .select(['B5'])
+                    .mean()
+                    .mask(vegMask.createCopernicusMask('Evergreen'));
+
+print(s2Data);                  
+Map.addLayer(s2Data);
+
