@@ -89,22 +89,20 @@ var percentileToImage = function(fc){
 
 //Map für jeden Monat
 
-var months = ee.List.sequence(1,3,1);
-print(months);
+
 var startImageExports = function(type){
-  var imgs = months.map(function(el){
-    var values = createPercentiles(type, el);
+  
+  for(var month = 1; month <= 12; month++){
+    var values = createPercentiles(type, month);
     var img = percentileToImage(values);
-    Export.image.toAsset({image: img, description: type + '_export', assetId : type});
-    return img;
-  });
-  imgs = ee.ImageCollection(imgs);
-  print(imgs);
+    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, pyramidingPolicy: 'sample', scale: 100});
+  }
+  
 };
 var a = createPercentiles('Evergreen', 6);
 print(a);
 
-startImageExports('Evergreen');
+//startImageExports('Evergreen');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
