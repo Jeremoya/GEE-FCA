@@ -78,7 +78,24 @@ var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40
 var a = createPercentiles('Evergreen', 6).makeArray(outputnames, 'quantiles').select('quantiles');
 print(a);
 
+var bands = ee.List(['B5_', 'B8A_', 'B11_']);
 
+var bandnames = outputnames.map(function(el){
+     return bands.map(function(innerel){
+       return ee.String(innerel).cat(ee.String(el));
+     });
+});
+print('x', x);
+/*
+var imgs = bands.map(function(el){
+  
+  var dataname = outputnames.map(function(inner_el){
+    return ee.String(el).cat(ee.String('_')).cat(ee.String(inner_el));
+  });
+  print('dataname', dataname);
+  return 1;
+});
+*/
 var himg = a.map(function(el){
   el = ee.Feature(el);
   var percs = ee.Array(el.get('quantiles'));
