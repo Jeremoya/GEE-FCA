@@ -59,7 +59,7 @@ var createPercentiles = function(type, month){
   //img = img.select(['B5']);
   img = img.reduceRegions({
     reducer: perc_reducer,
-    collection: grid.filterBounds(rekt),
+    collection: grid,
     scale: 1000,
     tileScale : 8
     });
@@ -89,23 +89,26 @@ var percentileToImage = function(fc){
 
 //Map für jeden Monat
 
-Export.image.toAsset({image: s2Data.first(), maxPixels: 120582361})
-/*
+var months = ee.List.sequence(1,3,1);
+print(months);
+var startImageExports = function(type){
+  var imgs = months.map(function(el){
+    var values = createPercentiles(type, el);
+    var img = percentileToImage(values);
+    Export.image.toAsset({image: img, description: type + '_export', assetId : type});
+    return img;
+  });
+  imgs = ee.ImageCollection(imgs);
+  print(imgs);
+};
 var a = createPercentiles('Evergreen', 6);
 print(a);
+
+startImageExports('Evergreen');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
 Map.addLayer(himgs);
+//Export.image.toAsset({image: himgs, description: 'percsJune', assetId : 'EvergreenJune', maxPixels: 80301082752});
 
-var image1 = ee.Image(1);
-var image2 = s2Data.first();
-var IC1 = ee.ImageCollection([image1, image2])
-Export.table.toDrive({
-  collection: IC1, 
-  description: "TestImageCollection" ,
-  folder : "IC", 
-  });
-*/
-
-Map.addLayer(grid.filterBounds(rekt));
+Map.addLayer(grid);
