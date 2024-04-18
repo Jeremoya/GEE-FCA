@@ -88,31 +88,24 @@ var percentileToImage = function(fc){
   
 
 //Map für jeden Monat
+
+Export.image.toAsset(s2Data.first())
+/*
 var a = createPercentiles('Evergreen', 6);
 print(a);
 
-
-
-//In funktion auslagern (percentileToImage)
 var himgs = percentileToImage(a); 
-/*
-bandnames.map(function(el){
-  var q = a.makeArray(el, 'quantiles').select('quantiles');
-  var imgs = q.map(function(el){
-    el = ee.Feature(el);
-    var percs = ee.Array(el.get('quantiles'));
-    var ret = ee.Image(percs).clip(el.geometry());
-    return ret;
-  });
-  
-  return ee.ImageCollection(imgs).mosaic();
-});
-himgs = ee.ImageCollection(himgs).toBands().rename(['B5', 'B8A', 'B11']);
-*/
 print('himgs', himgs);
 Map.addLayer(himgs);
 
-
-
+var image1 = ee.Image(1);
+var image2 = s2Data.first();
+var IC1 = ee.ImageCollection([image1, image2])
+Export.table.toDrive({
+  collection: IC1, 
+  description: "TestImageCollection" ,
+  folder : "IC", 
+  });
+*/
 
 Map.addLayer(grid.filterBounds(rekt));
