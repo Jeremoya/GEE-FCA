@@ -89,7 +89,7 @@ var percentileToImage = function(fc){
 
 //Map für jeden Monat
 
-Export.image.toAsset(s2Data.first())
+Export.image.toAsset({image: s2Data.first(), maxPixels: 120582361})
 /*
 var a = createPercentiles('Evergreen', 6);
 print(a);
