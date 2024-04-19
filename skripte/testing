@@ -1,5 +1,23 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
-    eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens");
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
+    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[4.047982029748014, 49.12610821983358],
+          [4.047982029748014, 45.10658363132984],
+          [17.671028904748013, 45.10658363132984],
+          [17.671028904748013, 49.12610821983358]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(eg.first())
+var img = s2Data//.filterDate(ee.DateRange(2023-01-01, 2023-01-31))
+                .filterBounds(geometry)
+                //.filter(ee.Filter.eq('SCL', 4))
+                .mean()
+Map.addLayer(img)
