@@ -16,10 +16,7 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [13.133675389123013, 51.10533440360542],
           [13.133675389123013, 52.06102062779893]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var img = s2Data.filterDate(ee.DateRange('2023-06-01', '2023-07-01'))
-                .filterBounds(geometry)
-                .map(function(img){
-                  return img.updateMask(img.select(['SCL']).eq(4));
-                })
-                .max();
-Map.addLayer(img, {})
+s2Data = s2Data.filter(ee.Filter.calendarRange(6, 6, 'month')).filterBounds(geometry);
+s2Data = s2Data.filterDate('2023-06-01', '2023-07-01').select(['B5']).median();
+print(s2Data)
+Map.addLayer(s2Data, {min: 1800, max: 2000})
