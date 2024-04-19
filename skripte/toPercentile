@@ -31,22 +31,25 @@ var viz = FCA.getFCAviz();
 function getFCA(img){
   
   var image = ee.Image();
-  return image.expression('RE4 * 0.2923 - RE1 * 0.337 - SWIR * 0.3707',{
+  //nochmal wegen der gewichte nachfragen
+  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
                             'RE1': img.select(['B5']),
-                            'RE4': img.select(['B5']),
-                            'SWIR': img.select(['B5']),
+                            'RE4': img.select(['B8A']),
+                            'SWIR': img.select(['B11']),
                           }).rename('FCA');
 }
 
-var dates = ee.DateRange('2022-07-01', '2022-07-30');
+var dates = ee.DateRange('2021-07-01', '2021-08-01');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
                     //.filterBounds(rekt)
-                    .map(cloudMask.S2CloudMask)
+                    //.map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                     return img.updateMask(img.select(['SCL']).eq(4));
+                     })
                     .select(['B5', 'B8A', 'B11'])
-                    //.select(['B5'])
-                    .mean()
+                    .median()
                     .mask(vegMask.createCopernicusMask('Evergreen'));
 
 print(s2Data);                  
@@ -54,7 +57,7 @@ print(s2Data);
 var comp = s2Data.gte(refImg);
 print(comp);
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-rcomp = rcomp.subtract(19).divide(19);
+rcomp = rcomp.subtract(9.5).divide(9.5);
 var final = getFCA(rcomp);
 
 /*
