@@ -48,7 +48,7 @@ var createImage = function(type, month){
   var img = s2Data.filter(ee.Filter.calendarRange(month, month, 'month'))
                   .filterBounds(grid)
                   .median()
-                  .mask(vegMask.createCopernicusMask(type));
+                  .updateMask(vegMask.createCopernicusMask(type));
 
   return img;
 };
