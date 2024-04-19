@@ -43,6 +43,10 @@ var bandnames = bands.map(function(el){
 var createImage = function(type, month){
   
   var img = s2Data.filter(ee.Filter.calendarRange(month, month, 'month'))
+                  .filterBounds(grid)
+                  .map(function(img){
+                  return img.updateMask(img.select(['SCL']).eq(4));
+                  })
                   .median()
                   .mask(vegMask.createCopernicusMask(type));
 
@@ -59,7 +63,7 @@ var createPercentiles = function(type, month){
   //img = img.select(['B5']);
   img = img.reduceRegions({
     reducer: perc_reducer,
-    collection: grid.filterBounds(rekt),
+    collection: grid,
     scale: 1000,
     tileScale : 8
     });
