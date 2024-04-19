@@ -9,10 +9,10 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[5.18479659203952, 53.47970758916728],
-          [5.18479659203952, 47.45576259738118],
+        [[[8.92014815453952, 52.68786831200015],
+          [8.92014815453952, 47.45576259738118],
           [20.95017745141452, 47.45576259738118],
-          [20.95017745141452, 53.47970758916728]]], null, false),
+          [20.95017745141452, 52.68786831200015]]], null, false),
     gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
@@ -22,6 +22,9 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                     return img.updateMask(img.select(['SCL']).eq(4));
+                     })
                     .select(['B5', 'B8A', 'B11']);
 
 
@@ -44,9 +47,6 @@ var createImage = function(type, month){
   
   var img = s2Data.filter(ee.Filter.calendarRange(month, month, 'month'))
                   .filterBounds(grid)
-                  .map(function(img){
-                  return img.updateMask(img.select(['SCL']).eq(4));
-                  })
                   .median()
                   .mask(vegMask.createCopernicusMask(type));
 
@@ -63,7 +63,7 @@ var createPercentiles = function(type, month){
   //img = img.select(['B5']);
   img = img.reduceRegions({
     reducer: perc_reducer,
-    collection: grid,
+    collection: grid.filterBounds(rekt),
     scale: 1000,
     tileScale : 8
     });
@@ -111,6 +111,4 @@ print(a);
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
 Map.addLayer(himgs);
-//Export.image.toAsset({image: himgs, description: 'percsJune', assetId : 'EvergreenJune', maxPixels: 80301082752});
-
-Map.addLayer(grid);
+Map.addLayer(grid.filterBounds(rekt));
