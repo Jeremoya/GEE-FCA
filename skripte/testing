@@ -11,15 +11,15 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[4.047982029748014, 49.12610821983358],
-          [4.047982029748014, 45.10658363132984],
-          [17.671028904748013, 45.10658363132984],
-          [17.671028904748013, 49.12610821983358]]], null, false);
+        [[[10.013558201623013, 52.06102062779893],
+          [10.013558201623013, 51.10533440360542],
+          [13.133675389123013, 51.10533440360542],
+          [13.133675389123013, 52.06102062779893]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var img = s2Data.filterDate(ee.DateRange('2023-01-01', '2023-02-01'))
+var img = s2Data.filterDate(ee.DateRange('2023-06-01', '2023-07-01'))
                 .filterBounds(geometry)
                 .map(function(img){
-                  return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                  return img.updateMask(img.select(['SCL']).eq(ee.Image([4])).reduce(ee.Reducer.max()));
                 })
                 .max();
 Map.addLayer(img, {})
