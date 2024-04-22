@@ -12,7 +12,8 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
         [[[7.203194722216897, 52.690581120322484],
           [7.203194722216897, 46.64288924156801],
           [21.353585347216896, 46.64288924156801],
-          [21.353585347216896, 52.690581120322484]]], null, false);
+          [21.353585347216896, 52.690581120322484]]], null, false),
+    img7 = ee.Image("projects/ee-fichtnej/assets/7_Evergreen_SCL");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var refImg = eg.filter(ee.Filter.eq('month', 7)).first()//.select(['B5']);
@@ -54,7 +55,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 
 print(s2Data);                  
 
-var comp = s2Data.gte(refImg);
+var comp = s2Data.gte(img7);
 print(comp);
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
 rcomp = rcomp.subtract(9.5).divide(9.5);
@@ -63,7 +64,8 @@ var final = getFCA(rcomp);
 /*
 */
 
-Map.addLayer(refImg, {}, 'percs');
+Map.addLayer(img7, {}, 'new7');
+// Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
 Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
