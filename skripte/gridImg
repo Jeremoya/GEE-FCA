@@ -96,7 +96,7 @@ var percentileToImage = function(fc){
 
 var startImageExports = function(type){
   
-  for(var month = 1; month <= 12; month++){
+  for(var month = 7; month <= 7; month++){
     var values = createPercentiles(type, month);
     var img = percentileToImage(values);
     img = img.set({'month' : month});
@@ -107,7 +107,7 @@ var startImageExports = function(type){
 var a = createPercentiles('Evergreen', 7);
 print(a);
 
-//startImageExports('Evergreen');
+startImageExports('Evergreen');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
