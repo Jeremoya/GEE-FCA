@@ -21,7 +21,7 @@ s2Data = s2Data.updateMask(s2Data.lt(1000));
 print(s2Data)
 Map.addLayer(s2Data, {min: 2000, max: 4000})
 
-var circleKernel = ee.Kernel.circle(25);
+var circleKernel = ee.Kernel.circle(100);
 
 var redImg = s2Data.reduceNeighborhood(ee.Reducer.percentile(ee.List.sequence(5,95,5)), circleKernel);
 redImg = redImg.toArray();
