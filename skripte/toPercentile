@@ -39,12 +39,12 @@ function getFCA(img){
                           }).rename('FCA');
 }
 
-var dates = ee.DateRange('2021-07-01', '2021-08-01');
+var dates = ee.DateRange('2022-07-01', '2022-08-01');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
                     //.filterBounds(rekt)
-                    //.map(cloudMask.S2CloudMask)
+                    // .map(cloudMask.S2CloudMask)
                     .map(function(img){
                      return img.updateMask(img.select(['SCL']).eq(4));
                      })
