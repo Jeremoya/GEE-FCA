@@ -55,17 +55,17 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 
 print(s2Data);                  
 
-var comp = s2Data.gte(img7);
+var comp = s2Data.gte(refImg);
 print(comp);
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-rcomp = rcomp.subtract(9.5).divide(9.5);
+//rcomp = rcomp.subtract(9.5).divide(9.5);
 var final = getFCA(rcomp);
 
 /*
 */
 
-Map.addLayer(img7, {}, 'new7');
-// Map.addLayer(refImg, {}, 'percs');
+//Map.addLayer(img7, {}, 'new7');
+Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
 Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
