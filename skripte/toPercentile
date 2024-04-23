@@ -14,16 +14,13 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [21.353585347216896, 46.64288924156801],
           [21.353585347216896, 52.690581120322484]]], null, false),
     img7 = ee.Image("projects/ee-fichtnej/assets/7_Evergreen_SCL"),
-    treuenbrietzen = 
-    /* color: #ffb2b2 */
-    /* shown: false */
-    ee.Geometry.Polygon(
+    treuenbrietzen = /* color: #ffb2b2 */ee.Geometry.Polygon(
         [[[12.90252841133496, 52.03716849917983],
           [12.90450251716992, 52.03510930007029],
-          [12.908665305561033, 52.02964404256545],
-          [12.910296088642088, 52.02972325396662],
-          [12.918621665424315, 52.032653977168664],
-          [12.923685676044432, 52.035452506508555],
+          [12.906390792316405, 52.03287839400042],
+          [12.91025317329785, 52.033960859368705],
+          [12.914415961688963, 52.03570330954731],
+          [12.917827731555906, 52.036825305914896],
           [12.922054892963377, 52.038435651488705],
           [12.925788527912108, 52.040547492185674],
           [12.931281691974608, 52.03896362101655],
@@ -62,18 +59,18 @@ function getFCA(img){
                           }).rename('FCA');
 }
 
-var dates = ee.DateRange('2018-08-23', '2018-10-30');
+var dates = ee.DateRange('2018-09-23', '2018-10-06');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
                     //.filterBounds(rekt)
                     .map(cloudMask.S2CloudMask)
-                    // .map(function(img){
-                    // return img.updateMask(img.select(['SCL']).eq(ee.Image([2,3,4,5])).reduce(ee.Reducer.max()));
-                    // })
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                    })
                     .select(['B5', 'B8A', 'B11'])
                     .median()
-                    .mask(vegMask.createCopernicusMask('Evergreen'));
+                    .updateMask(vegMask.createCopernicusMask('Evergreen'));
 
 print(s2Data);                  
 
