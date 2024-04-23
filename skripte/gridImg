@@ -96,10 +96,11 @@ var percentileToImage = function(fc){
 
 var startImageExports = function(type){
   
-  for(var month = 1; month <= 1; month++){
+  for(var month = 1; month <= 12; month++){
     var values = createPercentiles(type, month);
     var img = percentileToImage(values);
     img = img.set({'month' : month});
+    img = img.set({'type' : type});
     img = img.updateMask(vegMask.createCopernicusMask(type));
     Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, scale: 100, maxPixels: 900000000000});
   }
