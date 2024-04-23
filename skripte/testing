@@ -14,7 +14,8 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.211556248498013, 52.06777475205635],
           [9.391457371544888, 52.06777475205635],
           [9.391457371544888, 52.1571704946266]]], null, false),
-    cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global");
+    cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
+    jan = ee.Image("projects/ee-fichtnej/assets/1_Evergreen_SCL");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 s2Data = s2Data.filter(ee.Filter.calendarRange(6, 6, 'month')).filterBounds(geometry);
 s2Data = s2Data.filterDate('2023-06-01', '2023-07-01').select(['B5']).median();
@@ -30,3 +31,4 @@ print(redImg);
 Map.addLayer(redImg);
 
 print(cop);
+Map.addLayer(jan);
