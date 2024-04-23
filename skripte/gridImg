@@ -63,7 +63,7 @@ var createPercentiles = function(type, month){
   //img = img.select(['B5']);
   img = img.reduceRegions({
     reducer: perc_reducer,
-    collection: grid.filterBounds(rekt),
+    collection: grid,
     scale: 1000,
     tileScale : 8
     });
@@ -112,4 +112,4 @@ print(a);
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
 Map.addLayer(himgs);
-Map.addLayer(grid.filterBounds(rekt));
+Map.addLayer(grid);
