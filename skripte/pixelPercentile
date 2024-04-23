@@ -8,9 +8,9 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[6.56907393578952, 52.94019427842104],
-          [6.56907393578952, 50.24526988631708],
-          [12.82029463891452, 50.24526988631708],
+        [[[9.88694502953952, 52.94019427842104],
+          [9.88694502953952, 51.752366910321044],
+          [12.82029463891452, 51.752366910321044],
           [12.82029463891452, 52.94019427842104]]], null, false),
     gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -75,8 +75,8 @@ var createPercentiles = function(type, month){
 //Map für jeden Monat
 
 var img = createPercentiles('Evergreen', 6);
-img = img.set({'month' : month});
-img = img.set({'type' : type});
+img = img.set({'month' : 6});
+img = img.set({'type' : 'Evergreen'});
 // Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, scale: 100, maxPixels: 900000000000});
 
 Map.addLayer(img);
