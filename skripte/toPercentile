@@ -13,10 +13,32 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [7.203194722216897, 46.64288924156801],
           [21.353585347216896, 46.64288924156801],
           [21.353585347216896, 52.690581120322484]]], null, false),
-    img7 = ee.Image("projects/ee-fichtnej/assets/7_Evergreen_SCL");
+    img7 = ee.Image("projects/ee-fichtnej/assets/7_Evergreen_SCL"),
+    treuenbrietzen = 
+    /* color: #ffb2b2 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[12.90252841133496, 52.03716849917983],
+          [12.90450251716992, 52.03510930007029],
+          [12.908665305561033, 52.02964404256545],
+          [12.910296088642088, 52.02972325396662],
+          [12.918621665424315, 52.032653977168664],
+          [12.923685676044432, 52.035452506508555],
+          [12.922054892963377, 52.038435651488705],
+          [12.925788527912108, 52.040547492185674],
+          [12.931281691974608, 52.03896362101655],
+          [12.942396766132322, 52.039649972080284],
+          [12.943126326984373, 52.04057388956303],
+          [12.942911750263182, 52.04442773937021],
+          [12.934328681415526, 52.05194970795866],
+          [12.928578025287596, 52.05057737303437],
+          [12.92508986200378, 52.05152358656513],
+          [12.916893031254268, 52.04719526890587],
+          [12.91908171381042, 52.04466142500384],
+          [12.9056062957196, 52.039434918230356]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var refImg = eg.filter(ee.Filter.eq('month', 7)).first()//.select(['B5']);
+var refImg = eg.filter(ee.Filter.eq('month', 9)).first()//.select(['B5']);
 print(refImg);
 var refImg2 = eg.filter(ee.Filter.eq('month', 3)).first().select(['B5']);
 /*Map.addLayer(refImg2, {},'APR');
@@ -40,15 +62,15 @@ function getFCA(img){
                           }).rename('FCA');
 }
 
-var dates = ee.DateRange('2023-07-01', '2023-08-01');
+var dates = ee.DateRange('2018-08-23', '2018-10-30');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
                     //.filterBounds(rekt)
-                    //.map(cloudMask.S2CloudMask)
-                    .map(function(img){
-                     return img.updateMask(img.select(['SCL']).eq(4));
-                     })
+                    .map(cloudMask.S2CloudMask)
+                    // .map(function(img){
+                    // return img.updateMask(img.select(['SCL']).eq(ee.Image([2,3,4,5])).reduce(ee.Reducer.max()));
+                    // })
                     .select(['B5', 'B8A', 'B11'])
                     .median()
                     .mask(vegMask.createCopernicusMask('Evergreen'));
@@ -58,15 +80,23 @@ print(s2Data);
 var comp = s2Data.gte(refImg);
 print(comp);
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-//rcomp = rcomp.subtract(9.5).divide(9.5);
+rcomp = rcomp.subtract(9.5).divide(9.5);
 var final = getFCA(rcomp);
 
 /*
 */
 
-//Map.addLayer(img7, {}, 'new7');
+var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .map(cloudMask.S2CloudMask)
+                    .select(['B4', 'B3', 'B2'])
+                    .median();
+Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');                    
+
+
+// Map.addLayer(img7, {}, 'new7');
 Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
-Map.addLayer(comp, {}, 'comp');
+// Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
 Map.addLayer(final, viz, 'FCA');
