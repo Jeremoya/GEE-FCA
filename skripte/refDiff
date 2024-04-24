@@ -3,6 +3,10 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+
+
 Map.addLayer(grid, {}, 'grid');
 Map.addLayer(px, {}, 'egPx');
 var egImg = eg.filter(ee.Filter.eq('month', 8)).first();
@@ -19,7 +23,7 @@ var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .map(function(img){
                      return img.updateMask(img.select(['SCL']).eq(4));
                      })
-                    .filter(ee.Filter.calendarRange(month, month, 'month'))
+                    .filter(ee.Filter.calendarRange(6, 6, 'month'))
                     .median()
                     .select(['B5', 'B8A', 'B11']);
                     
