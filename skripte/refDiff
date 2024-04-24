@@ -13,10 +13,11 @@ Map.addLayer(px, {}, 'egPx');
 var egImg = eg.filter(ee.Filter.eq('month', 8)).first();
 Map.addLayer(egImg, {}, 'egHex');
 
-var diff = px.subtract(egImg).abs().select(['B8A']);
+var diff = px.subtract(egImg)/*.abs()*/.select(['B8A']);
 // Map.addLayer(diff, {}, 'diff');
-var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19);
-Map.addLayer(diffsum, {min: 50, max: 200}, 'diffsum');
+var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19).arrayGet(0);
+Map.addLayer(diffsum, {min: -300, max: 300, palette: ['blue', 'white', 'red']}, 'diffsum');
+Map.addLayer(diffsum.abs(), {min: 0, max: 300}, 'diffsum-abs');
 
 
 var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
