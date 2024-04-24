@@ -35,9 +35,9 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
 // print(cop);
 // Map.addLayer(jan);
 
-Map.addLayer(px);
-var egj1 = egj.filter(ee.Filter.eq('month', 6).first()
-
+Map.addLayer(px, {}, 'px');
+var egj1 = egj.filter(ee.Filter.eq('month', 8)).first();
+Map.addLayer(egj1, {}, 'EGJ');
 // var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
 // var twos = ee.Image(ee.Array(ee.List.sequence(11,20,1)));
 // var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
