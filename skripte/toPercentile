@@ -89,7 +89,10 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [13.173901304933695, 51.558383044351174]]]),
     eg2 = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
-    luebtheen300619 = /* color: #d63000 */ee.Geometry.Polygon(
+    luebtheen300619 = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
         [[[11.123268519073104, 53.26711527610096],
           [11.128504191070174, 53.26547255441404],
           [11.132023249297713, 53.266704601595755],
@@ -135,7 +138,7 @@ function getFCA(img){
                           }).rename('FCA');
 }
 
-var dates = ee.DateRange('2023-05-01', '2023-06-01');
+var dates = ee.DateRange('2023-07-01', '2023-08-01');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -155,8 +158,6 @@ var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
 rcomp = rcomp.subtract(9.5).divide(9.5);
 var final = getFCA(rcomp);
 
-/*
-*/
 var interesting = final.lte(-0.95).updateMask(final.lte(-0.95));
 
 var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
@@ -168,6 +169,7 @@ var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');                    
 
 
+/*
 // Map.addLayer(img7, {}, 'new7');
 Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
@@ -175,3 +177,4 @@ Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
 Map.addLayer(final, viz, 'FCA');
 Map.addLayer(interesting, {palette: ['orange']}, 'FCA-extreme-low');
+*/
