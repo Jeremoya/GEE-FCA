@@ -16,7 +16,8 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.391457371544888, 52.1571704946266]]], null, false),
     cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
     jan = ee.Image("projects/ee-fichtnej/assets/1_Evergreen_SCL"),
-    px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m");
+    px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
+    egj = ee.ImageCollection("projects/ee-fichtnej/assets/EG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // s2Data = s2Data.filter(ee.Filter.calendarRange(6, 6, 'month')).filterBounds(geometry);
 // s2Data = s2Data.filterDate('2023-06-01', '2023-07-01').select(['B5']).median();
@@ -34,15 +35,16 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
 // print(cop);
 // Map.addLayer(jan);
 
-// Map.addLayer(px);
+Map.addLayer(px);
+var egj1 = egj.filter(ee.Filter.eq('month', 6).first()
 
-var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
-var twos = ee.Image(ee.Array(ee.List.sequence(11,20,1)));
-var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
+// var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
+// var twos = ee.Image(ee.Array(ee.List.sequence(11,20,1)));
+// var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
 
-var imgs = ee.ImageCollection([ones,twos,threes])
-imgs = imgs.toBands();
-print(imgs);
-imgs = imgs.arrayReduce(ee.Reducer.max(), [0]);
-Map.addLayer(imgs);
+// var imgs = ee.ImageCollection([ones,twos,threes])
+// imgs = imgs.toBands();
+// print(imgs);
+// imgs = imgs.arrayReduce(ee.Reducer.max(), [0]);
+// Map.addLayer(imgs);
 // Map.addLayer(ones.median(twos))
