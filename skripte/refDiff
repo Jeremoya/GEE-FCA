@@ -4,11 +4,11 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(grid, {}, 'grid');
-// Map.addLayer(px, {}, 'px');
+Map.addLayer(px, {}, 'egPx');
 var egImg = eg.filter(ee.Filter.eq('month', 8)).first();
-// Map.addLayer(egj1, {}, 'EGJ');
+Map.addLayer(egImg, {}, 'egHex');
 
-var diff = px.subtract(egImg).abs().select(['B5']);
+var diff = px.subtract(egImg).abs().select(['B8A']);
 // Map.addLayer(diff, {}, 'diff');
 var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19);
 Map.addLayer(diffsum, {min: 50, max: 200}, 'diffsum');
