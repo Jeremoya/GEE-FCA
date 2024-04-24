@@ -25,8 +25,8 @@ var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                      })
                     .filter(ee.Filter.calendarRange(6, 6, 'month'))
                     .median()
-                    .select(['B5', 'B8A', 'B11']);
+                    .select(['B8A']);
                     
-Map.addLayer(tc, {min: 100, max: 2500}, 'tc')    
+Map.addLayer(tc, {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc')    
 
 
