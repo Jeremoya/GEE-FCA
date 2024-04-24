@@ -5,6 +5,7 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
 
 
 Map.addLayer(grid, {}, 'grid');
@@ -25,8 +26,9 @@ var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                      })
                     .filter(ee.Filter.calendarRange(6, 6, 'month'))
                     .median()
-                    .select(['B8A']);
+                    .updateMask(vegMask.createCopernicusMask('Evergreen'));
                     
-Map.addLayer(tc, {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc')    
+Map.addLayer(tc.select(['B8A']), {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc-IR')    
+Map.addLayer(tc.select(['B4','B3','B2']), {min: 0, max: 2000}, 'tc-RGB')    
 
 
