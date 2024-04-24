@@ -35,24 +35,25 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
 // print(cop);
 // Map.addLayer(jan);
 
-Map.addLayer(table);
+// Map.addLayer(table);
 // Map.addLayer(px, {}, 'px');
-var egj1 = egj.filter(ee.Filter.eq('month', 8)).first();
+// var egj1 = egj.filter(ee.Filter.eq('month', 8)).first();
 // Map.addLayer(egj1, {}, 'EGJ');
 
-var diff = px.subtract(egj1).abs().select(['B5']);
+// var diff = px.subtract(egj1).abs().select(['B5']);
 // Map.addLayer(diff, {}, 'diff');
-var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19);
-Map.addLayer(diffsum, {min: 50, max: 200}, 'diffsum');
+// var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19);
+// Map.addLayer(diffsum, {min: 50, max: 200}, 'diffsum');
 
-// var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
-// var twos = ee.Image(ee.Array(ee.List.sequence(11,20,1)));
-// var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
+var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
+var twos = ee.Image(ee.Array(ee.List.sequence(11,20,1)));
+var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
 
-// var imgs = ee.ImageCollection([ones,twos,threes])
+var imgs = ee.ImageCollection([ones,twos,threes])
 // imgs = imgs.toBands();
 // print(imgs);
 // imgs = imgs.arrayReduce(ee.Reducer.max(), [0]);
-// Map.addLayer(imgs);
 // Map.addLayer(ones.subtract(twos).abs())
 
+// imgs = imgs.reduce(ee.Reducer.mean());
+Map.addLayer(imgs.first());
