@@ -62,7 +62,7 @@ var createImage = function(type, month){
 var createPercentiles = function(type, month){
   
   var img = ee.Image(createImage(type, month));
-  
+  // Map.addLayer(img.select(['B5']), {min: 500, max: 1500}, 'img');
   var perc_reducer = ee.Reducer.percentile(ee.List.sequence(5, 95, 5), outputnames);
 
   var redImg = img.reduceNeighborhood(perc_reducer, circleKernel);
@@ -83,6 +83,9 @@ var type = 'Evergreen';
 var img = createPercentiles('Evergreen', 6);
 img = img.set({'month' : 6});
 img = img.set({'type' : 'Evergreen'});
-Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, scale: 100, maxPixels: 9000000000000});
+// Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, scale: 100, maxPixels: 9000000000000});
 // print(img);
 // Map.addLayer(img);
+
+                
+                  
