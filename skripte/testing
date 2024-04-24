@@ -15,20 +15,34 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.391457371544888, 52.06777475205635],
           [9.391457371544888, 52.1571704946266]]], null, false),
     cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
-    jan = ee.Image("projects/ee-fichtnej/assets/1_Evergreen_SCL");
+    jan = ee.Image("projects/ee-fichtnej/assets/1_Evergreen_SCL"),
+    px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-s2Data = s2Data.filter(ee.Filter.calendarRange(6, 6, 'month')).filterBounds(geometry);
-s2Data = s2Data.filterDate('2023-06-01', '2023-07-01').select(['B5']).median();
-s2Data = s2Data.updateMask(s2Data.lt(1000));
-print(s2Data)
-Map.addLayer(s2Data, {min: 2000, max: 4000})
+// s2Data = s2Data.filter(ee.Filter.calendarRange(6, 6, 'month')).filterBounds(geometry);
+// s2Data = s2Data.filterDate('2023-06-01', '2023-07-01').select(['B5']).median();
+// s2Data = s2Data.updateMask(s2Data.lt(1000));
+// print(s2Data)
+// Map.addLayer(s2Data, {min: 2000, max: 4000})
 
-var circleKernel = ee.Kernel.circle(100);
+// var circleKernel = ee.Kernel.circle(100);
 
-var redImg = s2Data.reduceNeighborhood(ee.Reducer.percentile(ee.List.sequence(5,95,5)), circleKernel);
-redImg = redImg.toArray();
-print(redImg);
-Map.addLayer(redImg);
+// var redImg = s2Data.reduceNeighborhood(ee.Reducer.percentile(ee.List.sequence(5,95,5)), circleKernel);
+// redImg = redImg.toArray();
+// print(redImg);
+// Map.addLayer(redImg);
 
-print(cop);
-Map.addLayer(jan);
+// print(cop);
+// Map.addLayer(jan);
+
+Map.addLayer(px);
+
+var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
+var twos = ee.Image(ee.Array(ee.List.sequence(11,20,1)));
+var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
+
+var imgs = ee.ImageCollection([ones,twos,threes])
+imgs = imgs.toBands();
+print(imgs);
+imgs = imgs.arrayReduce(ee.Reducer.max(), [0]);
+Map.addLayer(imgs);
+// Map.addLayer(ones.median(twos))
