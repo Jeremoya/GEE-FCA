@@ -30,7 +30,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 
 //Global variables
 
-var circleKernel = ee.Kernel.circle(100);
+var circleKernel = ee.Kernel.circle(1000);
 
 
 
@@ -83,6 +83,6 @@ var type = 'Evergreen';
 var img = createPercentiles('Evergreen', 6);
 img = img.set({'month' : 6});
 img = img.set({'type' : 'Evergreen'});
-Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, scale: 10, maxPixels: 9000000000000});
+Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : month + '_' + type, scale: 100, maxPixels: 9000000000000});
 // print(img);
 // Map.addLayer(img);
