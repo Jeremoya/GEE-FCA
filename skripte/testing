@@ -14,9 +14,6 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.211556248498013, 52.06777475205635],
           [9.391457371544888, 52.06777475205635],
           [9.391457371544888, 52.1571704946266]]], null, false),
-    cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
-    jan = ee.Image("projects/ee-fichtnej/assets/1_Evergreen_SCL"),
-    px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
