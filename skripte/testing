@@ -3,6 +3,7 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     geometry = 
     /* color: #98ff00 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -16,7 +17,8 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
     jan = ee.Image("projects/ee-fichtnej/assets/1_Evergreen_SCL"),
     px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
-    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG");
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*
 var ones = ee.Image(ee.Array(ee.List.sequence(1,10,1)));
@@ -25,5 +27,14 @@ var threes = ee.Image(ee.Array(ee.List.sequence(21,30,1)));
 var imgs = ee.ImageCollection([ones,twos,threes])
 */
 
+var dd1 = dd.first();
+var eg1 = eg.first();
 
+Map.addLayer(dd1, {}, 'dd');
+Map.addLayer(eg1, {}, 'eg');
 
+var ic = ee.ImageCollection([dd1, eg1]);
+print(ic);
+ic = ic.reduce( ee.Reducer.firstNonNull());
+print(ic);
+Map.addLayer(ee.Image(ic));
