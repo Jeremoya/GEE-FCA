@@ -8,18 +8,20 @@ var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
 
 
+//diffrences between hex-references and pixelwise references
+var egImg = eg.filter(ee.Filter.eq('month', 6)).first();
+var diff = px.subtract(egImg).select(['B8A']);
+var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19).arrayGet(0);
+
 Map.addLayer(grid, {}, 'grid');
 Map.addLayer(px, {}, 'egPx');
-var egImg = eg.filter(ee.Filter.eq('month', 8)).first();
 Map.addLayer(egImg, {}, 'egHex');
 
-var diff = px.subtract(egImg)/*.abs()*/.select(['B8A']);
-// Map.addLayer(diff, {}, 'diff');
-var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19).arrayGet(0);
-Map.addLayer(diffsum, {min: -300, max: 300, palette: ['blue', 'white', 'red']}, 'diffsum');
-Map.addLayer(diffsum.abs(), {min: 0, max: 300}, 'diffsum-abs');
+Map.addLayer(diffsum, {min: -500, max: 500, palette: ['blue', 'white', 'red']}, 'diffsum');
+Map.addLayer(diffsum.abs(), {min: 0, max: 500}, 'diffsum-abs');
 
 
+//truecolor images to compare with deviations
 var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .map(cloudMask.S2CloudMask)
                     .map(function(img){
