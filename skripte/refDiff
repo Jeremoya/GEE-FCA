@@ -10,7 +10,7 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 
 //diffrences between hex-references and pixelwise references
 var egImg = eg.filter(ee.Filter.eq('month', 6)).first();
-var diff = px.subtract(egImg).select(['B8A']);
+var diff = px.subtract(egImg).select(['B5']);
 var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19).arrayGet(0);
 
 Map.addLayer(grid, {}, 'grid');
@@ -31,7 +31,7 @@ var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .median()
                     .updateMask(vegMask.createCopernicusMask('Evergreen'));
                     
-Map.addLayer(tc.select(['B8A']), {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc-IR')    
+Map.addLayer(tc.select(['B5']), {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc-IR')    
 Map.addLayer(tc.select(['B4','B3','B2']), {min: 0, max: 2000}, 'tc-RGB')    
 
 
