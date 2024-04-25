@@ -1,6 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
-    rekt = 
+var rekt = 
     /* color: #d63000 */
     /* shown: false */
     /* displayProperties: [
@@ -86,7 +85,7 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [13.174115881654886, 51.562918620951656],
           [13.172613844606547, 51.560650889196],
           [13.173901304933695, 51.558383044351174]]]),
-    eg2 = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
     luebtheen300619 = 
     /* color: #d63000 */
@@ -166,8 +165,8 @@ function getFCA(img){
 }
 
 //Globale Variablen
+var dates = ee.DateRange('2022-06-01', '2023-07-01');
 var refImg = px;//eg2.filter(ee.Filter.eq('month', 8)).first()//.select(['B5']);
-var dates = ee.DateRange('2022-07-24', '2023-09-01');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
