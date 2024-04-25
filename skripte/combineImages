@@ -1,0 +1,24 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var dd1 = dd.first();
+var eg1 = eg.first();
+
+Map.addLayer(dd1, {}, 'dd');
+Map.addLayer(eg1, {}, 'eg');
+
+var ic = ee.ImageCollection([dd1, eg1]);
+print(ic);
+ic = ic.reduce( ee.Reducer.firstNonNull());
+print(ic);
+Map.addLayer(ee.Image(ic));
+
+var monthNumbers = ee.List.sequence(1,12,1);
+
+var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
+  var egImg = eg.filter
+  
+}))
