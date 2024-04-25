@@ -13,7 +13,6 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [7.203194722216897, 46.64288924156801],
           [21.353585347216896, 46.64288924156801],
           [21.353585347216896, 52.690581120322484]]], null, false),
-    img7 = ee.Image("projects/ee-fichtnej/assets/7_Evergreen_SCL"),
     treuenbrietzen = 
     /* color: #ffb2b2 */
     /* shown: false */
@@ -149,24 +148,16 @@ var eg = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
           [14.238239212359913, 50.87720085836018],
           [14.238325042368706, 50.87395129925092]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-var refImg = px;//eg2.filter(ee.Filter.eq('month', 8)).first()//.select(['B5']);
-print(refImg);
-var refImg2 = eg.filter(ee.Filter.eq('month', 3)).first().select(['B5']);
-/*Map.addLayer(refImg2, {},'APR');
-print(refImg2);*/
-
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
-
 var viz = FCA.getFCAviz();
 
+//Funktionen
 function getFCA(img){
   
   var image = ee.Image();
-  //nochmal wegen der gewichte nachfragen
   return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
                             'RE1': img.select(['B5']),
                             'RE4': img.select(['B8A']),
@@ -174,6 +165,8 @@ function getFCA(img){
                           }).rename('FCA');
 }
 
+//Globale Variablen
+var refImg = px;//eg2.filter(ee.Filter.eq('month', 8)).first()//.select(['B5']);
 var dates = ee.DateRange('2022-07-24', '2023-09-01');
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
@@ -186,31 +179,37 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .median()
                     .updateMask(vegMask.createCopernicusMask('Evergreen'));
 
-print(s2Data);                  
-
-var comp = s2Data.gte(refImg);
-print(comp);
-var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-rcomp = rcomp.subtract(9.5).divide(9.5);
-var final = getFCA(rcomp);
-
-var interesting = final.lte(-0.95).updateMask(final.lte(-0.95));
-
+//"Truecolor" zum abgleich
 var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
                     .map(cloudMask.S2CloudMask)
                     .select(['B4', 'B3', 'B2'])
                     .median();
-Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');                    
+
+
+
+
+
+
+//Einordnen der Beobachtung in Quantile
+var comp = s2Data.gte(refImg);
+var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+//Normierung
+rcomp = rcomp.subtract(9.5).divide(9.5);
+//Indexberechnung
+var fcaIndex = getFCA(rcomp);
+//Extremwerte
+var fcaLow = fcaIndex.lte(-0.95).updateMask(fcaIndex.lte(-0.95));
+
 
 
 /*
-// Map.addLayer(img7, {}, 'new7');
+Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');
 Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
 Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
 */
-Map.addLayer(final, viz, 'FCA');
-Map.addLayer(interesting, {palette: ['orange']}, 'FCA-extreme-low');
+Map.addLayer(fcaIndex, viz, 'FCA');
+Map.addLayer(fcaLow, {palette: ['orange']}, 'FCA-extreme-low');
