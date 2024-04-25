@@ -4,21 +4,18 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var dd1 = dd.first();
-var eg1 = eg.first();
-
-Map.addLayer(dd1, {}, 'dd');
-Map.addLayer(eg1, {}, 'eg');
-
-var ic = ee.ImageCollection([dd1, eg1]);
-print(ic);
-ic = ic.reduce( ee.Reducer.firstNonNull());
-print(ic);
-Map.addLayer(ee.Image(ic));
-
 var monthNumbers = ee.List.sequence(1,12,1);
 
 var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
-  var egImg = eg.filter
+  var mxImg = mx.filter(ee.Filter.eq('month', month)).first();
+  var egImg = eg.filter(ee.Filter.eq('month', month)).first();
+  var ddImg = dd.filter(ee.Filter.eq('month', month)).first();
+  var ovImg = eg.filter(ee.Filter.eq('month', month)).first();
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, ovImg]);
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  return allImgs.rename(['B5', 'B8A', 'B11']);
   
-}))
+}));
+
+print(combinedImages);
+Map.addLayer(combinedImages.first());
