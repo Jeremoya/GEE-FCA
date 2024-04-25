@@ -203,12 +203,12 @@ var fcaLow = fcaIndex.lte(-0.95).updateMask(fcaIndex.lte(-0.95));
 
 
 
-Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');
 /*
+Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');
+*/
 Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
 Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
-*/
 Map.addLayer(fcaIndex, viz, 'FCA');
 Map.addLayer(fcaLow, {palette: ['orange']}, 'FCA-extreme-low');
