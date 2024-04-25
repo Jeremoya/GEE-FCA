@@ -17,5 +17,9 @@ var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
   
 }));
 
-print(combinedImages);
-Map.addLayer(combinedImages.first());
+
+
+Map.addLayer(combinedImages);
+//to visualize differences between forest types
+var cI = combinedImages.first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
+Map.addLayer(cI, {min:500, max:800, palette : ['green', 'lightgreen', 'white', 'pink', 'red']});
