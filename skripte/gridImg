@@ -102,14 +102,14 @@ var startImageExports = function(type){
     img = img.set({'month' : month});
     img = img.set({'type' : type});
     img = img.updateMask(vegMask.createCopernicusMask(type));
-    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : 'DD/' + month + '_' + type, scale: 50, maxPixels: 900000000000});
+    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : 'MX/' + month + '_' + type, scale: 50, maxPixels: 900000000000});
   }
   
 };
 var a = createPercentiles('Evergreen', 7);
 print(a);
 
-startImageExports('Deciduous');
+startImageExports('Mixed');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
