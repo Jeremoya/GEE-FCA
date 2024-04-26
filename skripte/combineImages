@@ -10,9 +10,10 @@ var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
   var mxImg = mx.filter(ee.Filter.eq('month', month)).first();
   var egImg = eg.filter(ee.Filter.eq('month', month)).first();
   var ddImg = dd.filter(ee.Filter.eq('month', month)).first();
-  var ovImg = eg.filter(ee.Filter.eq('month', month)).first();
+  var ovImg = ov.filter(ee.Filter.eq('month', month)).first();
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, ovImg]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  allImgs = allImgs.set('month', month);
   return allImgs.rename(['B5', 'B8A', 'B11']);
   
 }));
@@ -21,5 +22,8 @@ var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
 
 Map.addLayer(combinedImages);
 //to visualize differences between forest types
+
+var junImg = combinedImages.filter(ee.Filter.eq('month', 6)).first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
 var cI = combinedImages.first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
-Map.addLayer(cI, {min:500, max:800, palette : ['green', 'lightgreen', 'white', 'pink', 'red']});
+print(cI)
+Map.addLayer(junImg, {min:500, max:1100, palette : ['blue', 'aqua', 'pink', 'red']});
