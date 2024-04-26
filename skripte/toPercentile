@@ -12,7 +12,10 @@ var rekt =
           [7.203194722216897, 46.64288924156801],
           [21.353585347216896, 46.64288924156801],
           [21.353585347216896, 52.690581120322484]]], null, false),
-    treuenbrietzen = /* color: #ffb2b2 */ee.Geometry.Polygon(
+    treuenbrietzen = 
+    /* color: #ffb2b2 */
+    /* shown: false */
+    ee.Geometry.Polygon(
         [[[12.90252841133496, 52.03716849917983],
           [12.90450251716992, 52.03510930007029],
           [12.906390792316405, 52.03287839400042],
@@ -120,7 +123,10 @@ var rekt =
           [11.12738846463845, 53.275163812468755],
           [11.124813543984153, 53.274162974887865],
           [11.117045866677024, 53.268901776643006]]]),
-    hrensko24072022 = /* color: #0b4a8b */ee.Geometry.Polygon(
+    hrensko24072022 = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    ee.Geometry.Polygon(
         [[[14.247251366553302, 50.87460122916973],
           [14.270768797556281, 50.86875153329975],
           [14.27523195965242, 50.868914034763655],
@@ -142,7 +148,8 @@ var rekt =
           [14.249010875619556, 50.88307657619751],
           [14.240213028539962, 50.88529681078208],
           [14.238239212359913, 50.87720085836018],
-          [14.238325042368706, 50.87395129925092]]]);
+          [14.238325042368706, 50.87395129925092]]]),
+    egs = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -163,7 +170,7 @@ function getFCA(img){
 
 //Globale Variablen
 var dates = ee.DateRange('2022-06-01', '2023-07-01');
-var refImg = px;//eg.filter(ee.Filter.eq('month', 8)).first()//.select(['B5']);
+var refImg = eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
