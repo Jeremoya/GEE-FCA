@@ -34,9 +34,9 @@ for(var month = 1; month < 13; month++){
     description: month + '_export_hexRef',
     assetId : 'hexRef/' + month + '_reference_data',
     scale: 100, maxPixels: 900000000000
-  */
     
   });
+  */
 }
 
 Map.addLayer(combinedImages);
