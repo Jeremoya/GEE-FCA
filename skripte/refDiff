@@ -17,7 +17,7 @@ Map.addLayer(grid, {}, 'grid');
 Map.addLayer(px, {}, 'egPx');
 Map.addLayer(egImg, {}, 'egHex');
 
-Map.addLayer(diffsum, {min: -500, max: 500, palette: ['blue', 'white', 'red']}, 'diffsum');
+Map.addLayer(diffsum, {min: -250, max: 250, palette: ['blue', 'white', 'red']}, 'diffsum');
 Map.addLayer(diffsum.abs(), {min: 0, max: 500}, 'diffsum-abs');
 
 
