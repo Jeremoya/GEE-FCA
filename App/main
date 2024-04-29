@@ -2,3 +2,17 @@
 //Nutzungshinweise, Interpretation der Ergebnisse
 //Hintergründe zur Thematik
 //Hauptprojekt des Waldzustandsmonitors, Forschung am Ufz, Kontext der Arbeit im Projekt
+
+
+// Anpassung an screensize
+function configLayout(deviceInfo) {
+  
+  if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
+    
+  } else {
+    
+  }
+   
+}
+ui.root.onResize(configLayout);
+
