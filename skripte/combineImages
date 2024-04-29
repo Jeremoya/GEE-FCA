@@ -25,4 +25,4 @@ Map.addLayer(combinedImages);
 
 var junImg = combinedImages.filter(ee.Filter.eq('month', 6)).first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
 var cI = combinedImages.first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
-Map.addLayer(cI, {min:600, max:1000, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']});
+Map.addLayer(junImg, {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']});
