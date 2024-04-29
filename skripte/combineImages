@@ -28,7 +28,7 @@ for(var month = 1; month < 13; month++){
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
   allImgs = allImgs.set('month', month).rename(['B5', 'B8A', 'B11']);
   
-  Map.addLayer(allImgs.select(['B5']).arrayReduce(ee.Reducer.median(), [0]).arrayGet(0), {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']}, month+'')
+  //Map.addLayer(allImgs.select(['B5']).arrayReduce(ee.Reducer.median(), [0]).arrayGet(0), {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']}, month+'')
   /*
   Export.image.toAsset({image: allImgs,
     description: month + '_export_hexRef',
@@ -39,9 +39,9 @@ for(var month = 1; month < 13; month++){
   */
 }
 
-//Map.addLayer(combinedImages);
+Map.addLayer(combinedImages);
 //to visualize differences between forest types
 
 var junImg = combinedImages.filter(ee.Filter.eq('month', 6)).first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
 var cI = combinedImages.first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
-//Map.addLayer(junImg, {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']});
+Map.addLayer(junImg, {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']});
