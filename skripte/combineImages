@@ -13,9 +13,16 @@ var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
   var ovImg = ov.filter(ee.Filter.eq('month', month)).first();
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, ovImg]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  allImgs = allImgs.set('month', month);
-  return allImgs.rename(['B5', 'B8A', 'B11']);
+  allImgs = allImgs.set('month', month).rename(['B5', 'B8A', 'B11']);
   
+  Export.image.toAsset({image: img,
+    description: month + '_export_hexRef',
+    assetId : 'hexRef/' + month + '_reference_data',
+    scale: 50, maxPixels: 900000000000
+    
+  });
+  
+  return allImgs;
 }));
 
 
