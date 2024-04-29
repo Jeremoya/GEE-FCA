@@ -28,15 +28,15 @@ for(var month = 1; month < 13; month++){
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
   allImgs = allImgs.set('month', month).rename(['B5', 'B8A', 'B11']);
   
-  /*
   Map.addLayer(allImgs.select(['B5']).arrayReduce(ee.Reducer.median(), [0]).arrayGet(0), {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']}, month+'')
-  */
+  /*
   Export.image.toAsset({image: allImgs,
     description: month + '_export_hexRef',
     assetId : 'hexRef/' + month + '_reference_data',
     scale: 50, maxPixels: 900000000000
     
   });
+  */
 }
 
 //Map.addLayer(combinedImages);
