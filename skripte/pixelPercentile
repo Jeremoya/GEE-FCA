@@ -30,7 +30,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 
 //Global variables
 
-var circleKernel = ee.Kernel.circle(250);
+var circleKernel = ee.Kernel.circle(150);
 
 
 
