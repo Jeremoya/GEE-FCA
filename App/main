@@ -6,7 +6,7 @@
 // Globale Variablen
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
-var classNames = ['1', '2', '3', '4', '5', '6', '7', '8'];//{min: -0.8, max: 0.5} ;
+var classNames = ['1 (kritisch)', '2', '3', '4', '5', '6', '7', '8 (gut)'];//{min: -0.8, max: 0.5} ;
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
 
 // Funktionen
@@ -37,10 +37,20 @@ var makeLegendRow = function(name, color, mobileStyle) {
 };
 
 
+// Anpassung an Bildschirmgröße
+function configLayout(deviceInfo) {
+  
+  if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
+    
+  } else {
+    
+  }
+   
+}
 
 //GUI
 var panel = ui.Panel({style: {width: '400px', height: 'auto', textAlign: 'center'}});
-var legend = ui.Panel();
+var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
 var infobox = ui.Panel();
 
 // var years = ee.List.sequence(2017, 2022);
@@ -92,6 +102,11 @@ var SelectSatellite = ui.Select({
     }
 });
 
+
+
+for (var i = 0; i < classNames.length; i++) {
+  legend.add(makeLegendRow(classNames[i], palette[i], false));
+}
 panel.setLayout(hor);
 panel.add(yearSelect);
 panel.add(monthSelect);
@@ -99,25 +114,8 @@ panel.add(calcButton);
 panel.add(SelectSatellite);
 Map.add(panel)
 Map.add(legend)
-// ui.root.insert(1, panel);
-//ui.root.setLayout(vert);
-
 Map.setLocked(false, 8, 13);
 
-for (var i = 0; i < classNames.length; i++) {
-  legend.add(makeLegendRow(classNames[i], palette[i], false));
-}
 
-
-// Anpassung an screensize
-function configLayout(deviceInfo) {
-  
-  if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
-    
-  } else {
-    
-  }
-   
-}
 ui.root.onResize(configLayout);
 
