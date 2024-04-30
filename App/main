@@ -10,6 +10,7 @@ var classNames = ['1 (kritisch)', '2', '3', '4', '5', '6', '7', '8 (gut)'];//{mi
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
 var year = 2019;
 var month = 7;
+var dates = ee.DateRange('2019-07-01', '2019-08-01');
 
 
 // Funktionen
@@ -61,6 +62,16 @@ function startCalc(){
 
 function createObsImage(month){
   
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                    })
+                    .select(['B5', 'B8A', 'B11'])
+                    .median()
+                    .updateMask(vegMask.createCopernicusMask('Deciduous'));
+
   
 }
 
