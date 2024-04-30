@@ -149,7 +149,8 @@ var rekt =
           [14.240213028539962, 50.88529681078208],
           [14.238239212359913, 50.87720085836018],
           [14.238325042368706, 50.87395129925092]]]),
-    egs = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens");
+    egs = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -169,8 +170,8 @@ function getFCA(img){
 }
 
 //Globale Variablen
-var dates = ee.DateRange('2022-06-01', '2023-07-01');
-var refImg = px//eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
+var dates = ee.DateRange('2022-06-01', '2022-07-01');
+var refImg = dd.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -180,7 +181,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     })
                     .select(['B5', 'B8A', 'B11'])
                     .median()
-                    .updateMask(vegMask.createCopernicusMask('Evergreen'));
+                    .updateMask(vegMask.createCopernicusMask('Deciduous'));
 
 //"Truecolor" zum abgleich
 var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
