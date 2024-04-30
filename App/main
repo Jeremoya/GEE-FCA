@@ -16,7 +16,7 @@ var makeLegendRow = function(name, color, mobileStyle) {
   // Create the label that is actually the colored box.
   var colorBox = ui.Label({
     style: {
-      backgroundColor: '#' + color,
+      backgroundColor: color,
       // Use padding to give the box height and width.
       padding: mobileStyle ? '10px' : '8px',
       margin: '0 0 4px 0',
@@ -98,13 +98,14 @@ panel.add(monthSelect);
 panel.add(calcButton);
 panel.add(SelectSatellite);
 Map.add(panel)
+Map.add(legend)
 // ui.root.insert(1, panel);
 //ui.root.setLayout(vert);
 
 Map.setLocked(false, 8, 13);
 
 for (var i = 0; i < classNames.length; i++) {
-  uiComponents.legend.add(makeLegendRow(classNames[i], palette[i], false));
+  legend.add(makeLegendRow(classNames[i], palette[i], false));
 }
 
 
