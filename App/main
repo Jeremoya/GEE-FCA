@@ -84,13 +84,13 @@ function startCalc(){
   // Erstellung Beobachtung und Referenz
   var img = createObsImage();
   var refDD = createRefImage(dd);
-  var refEG = createRefImage(ee);
-  var refMX = createRefImage(mx);
-  var refOV = createRefImage(ov);
+  // var refEG = createRefImage(ee);
+  // var refMX = createRefImage(mx);
+  // var refOV = createRefImage(ov);
   
   // Einordnung
   var fcaDD = compareImages(refDD, img);
-  Map.addLayer(fcaDD);
+  Map.addLayer(fcaDD, viz, 'Deciduous Vegetation');
   
 }
 
@@ -105,8 +105,8 @@ function createObsImage(){
                     return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
                     })
                     .select(['B5', 'B8A', 'B11'])
-                    .median()
-                    .updateMask(vegMask.createCopernicusMask('Deciduous'));
+                    .median();
+                    
 
   return s2Data;
 }
