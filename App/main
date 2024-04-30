@@ -20,7 +20,7 @@ var viz = FCA.getFCAviz();
 // Globale Variablen
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
-var classNames = ['1 (kritisch)', '2', '3', '4', '5', '6', '7', '8 (gut)'];//{min: -0.8, max: 0.5} ;
+var classNames = ['1 (critical)', '2', '3', '4', '5', '6', '7', '8 (good)'];//{min: -0.8, max: 0.5} ;
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
 var year = 2019;
 var month = 7;
@@ -153,8 +153,14 @@ function compareImages(ref, obs){
 //GUI
 var panel = ui.Panel({style: {width: '300px', height: 'auto', textAlign: 'center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
-var infobox = ui.Panel();
-
+var infobox = ui.Panel({style: {width: '250px', height: '70%', position : 'middle-right'}});
+var infolabel = ui.Label('Project Information');
+var infotext = ui.Label('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+var moreInfoButton = ui.Button({
+  label: 'more Information',
+  style: {position: 'bottom-right'},
+  // onClick: 
+});
 // var years = ee.List.sequence(2017, 2022);
 
 var years = ee.List.sequence(2017, 2022).map(function(year) {
@@ -202,8 +208,14 @@ panel.setLayout(hor);
 panel.add(yearSelect);
 panel.add(monthSelect);
 panel.add(calcButton);
-Map.add(panel)
-Map.add(legend)
+Map.add(panel);
+infobox.add(infolabel);
+infobox.add(infotext);
+infobox.add(moreInfoButton);
+Map.add(infobox);
+//?????
+// legend.setLayout(hor)
+Map.add(legend);
 Map.setLocked(false, 5, 18);
 
 
