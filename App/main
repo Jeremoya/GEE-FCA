@@ -1,3 +1,9 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
 // Hintergründe zur Thematik
