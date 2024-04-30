@@ -6,11 +6,69 @@
 
 
 
-var mainPanel = ui.Panel();
-ui.root.add(mainPanel);
+//GUI
+var panel = ui.Panel({style: {width: '400px', height: 'auto', textAlign: 'center'}});
 
 
+// var years = ee.List.sequence(2017, 2022);
 
+var years = ee.List.sequence(2017, 2022).map(function(year) {
+  return {label: ee.Number(year).format('%.0f'), value: year };
+});
+
+var yearSelect = ui.Select({
+  placeholder : '2019',
+  items : years.getInfo(),
+  onChange: function(value){
+    
+    year = value;
+    updateDateRange();
+    startCalc();
+  }
+});
+
+var months = {Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, 
+  Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12
+};
+
+var monthSelect = ui.Select({
+  placeholder : 'Jul',
+  items : Object.keys(months),
+  onChange: function(key){
+    
+    month = months[key];
+    updateDateRange();
+    startCalc();
+  }
+});
+
+
+var calcButton = ui.Button({
+  label: 'Calculate FCA',
+  //onClick: startCalc
+});
+
+var satellites = {Modis: true, Sentinel2: false};
+var SelectSatellite = ui.Select({
+  placeholder : 'Select Modis',
+  items : Object.keys(satellites),
+  onChange: function(key){
+    satelliteNumber = satellites[key];
+    startCalc();
+    }
+});
+
+panel.add(yearSelect);
+panel.add(monthSelect);
+panel.add(calcButton);
+panel.add(SelectSatellite);
+var vert = ui.Panel.Layout.Flow('vertical');
+var hor = ui.Panel.Layout.Flow('horizontal');
+panel.setLayout(hor);
+ui.root.insert(1, panel);
+ui.root.setLayout(vert);
+
+Map.setLocked(false, 8, 13);
 
 
 
