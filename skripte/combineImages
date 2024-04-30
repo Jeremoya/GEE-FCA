@@ -24,7 +24,7 @@ for(var month = 1; month < 2; month++){
   var egImg = eg.filter(ee.Filter.eq('month', month)).first();
   var ddImg = dd.filter(ee.Filter.eq('month', month)).first();
   // var ovImg = ov.filter(ee.Filter.eq('month', month)).first();
-  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, ovImg]);
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, /*ovImg*/]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
   allImgs = allImgs.set('month', month).rename(['B5', 'B8A', 'B11']);
   
@@ -32,7 +32,7 @@ for(var month = 1; month < 2; month++){
   Export.image.toAsset({image: allImgs,
     description: month + '_export_hexRef',
     assetId : 'hexRef/' + month + '_reference_data',
-    scale: 110, maxPixels: 900000000000
+    scale: 100, maxPixels: 900000000000
     
   });
   /*
