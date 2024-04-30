@@ -57,6 +57,13 @@ function startCalc(){
   print('Start');
 }
 
+// Erstellen des Beobachtungsbildes
+
+function createObsImage(month){
+  
+  
+}
+
 //GUI
 var panel = ui.Panel({style: {width: '300px', height: 'auto', textAlign: 'center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
