@@ -7,7 +7,7 @@
 
 
 var mainPanel = ui.Panel();
-ui.root.add(mainPanel);s
+ui.root.add(mainPanel);
 
 
 
