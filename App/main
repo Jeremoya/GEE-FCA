@@ -81,11 +81,16 @@ function configLayout(deviceInfo) {
 function startCalc(){
   print('Start');
   
+  // Erstellung Beobachtung und Referenz
   var img = createObsImage();
-  var refDD = dd.filter(ee.Filter.eq('month', month)).first();
-  var refEG = eg.filter(ee.Filter.eq('month', month)).first();
-  var refMX = mx.filter(ee.Filter.eq('month', month)).first();
-  var refOV = ov.filter(ee.Filter.eq('month', month)).first();
+  var refDD = createRefImage(dd);
+  var refEG = createRefImage(ee);
+  var refMX = createRefImage(mx);
+  var refOV = createRefImage(ov);
+  
+  // Einordnung
+  var fcaDD = compareImages(refDD, img);
+  Map.addLayer(fcaDD);
   
 }
 
@@ -104,6 +109,10 @@ function createObsImage(){
                     .updateMask(vegMask.createCopernicusMask('Deciduous'));
 
   return s2Data;
+}
+
+function createRefImage(imgCol){
+  return ee.ImageCollection(imgCol).filter(ee.Filter.eq('month', month)).first();
 }
 
 // Aktualisieren des Zeitraumes für Beobachtungsbild
