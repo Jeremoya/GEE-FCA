@@ -9,6 +9,14 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
 // Hintergründe zur Thematik
 // Hauptprojekt des Waldzustandsmonitors, Forschung am Ufz, Kontext der Arbeit im Projekt
 
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+var FCA = require('users/fichtnej/modules:fcaUtils');
+var viz = FCA.getFCAviz();
+
+
+
 // Globale Variablen
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
@@ -20,6 +28,16 @@ var dates = ee.DateRange('2019-07-01', '2019-08-01');
 
 
 // Funktionen
+
+function getFCA(img){
+  
+  var image = ee.Image();
+  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
+                            'RE1': img.select(['B5']),
+                            'RE4': img.select(['B8A']),
+                            'SWIR': img.select(['B11']),
+                          }).rename('FCA');
+}
 
 // Erstellen eines Legendeneintrages
 var makeLegendRow = function(name, color, mobileStyle) {
@@ -62,11 +80,18 @@ function configLayout(deviceInfo) {
 
 function startCalc(){
   print('Start');
+  
+  var img = createObsImage();
+  var refDD = dd.filter(ee.Filter.eq('month', month)).first();
+  var refEG = eg.filter(ee.Filter.eq('month', month)).first();
+  var refMX = mx.filter(ee.Filter.eq('month', month)).first();
+  var refOV = ov.filter(ee.Filter.eq('month', month)).first();
+  
 }
 
 // Erstellen des Beobachtungsbildes
 
-function createObsImage(month){
+function createObsImage(){
   
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -88,6 +113,20 @@ function updateDateRange(){
   var dr = ee.DateRange(startDate, endDate);
   dates = dr;
   print(dates);
+  
+}
+
+// Vergleich Beobachtung Referenz
+
+function compareImages(ref, obs){
+  
+  //Einordnen der Beobachtung in Quantile
+  var comp = obs.gte(ref);
+  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+  //Normierung
+  rcomp = rcomp.subtract(9.5).divide(9.5);
+  //Indexberechnung
+  return getFCA(rcomp);
   
 }
 
