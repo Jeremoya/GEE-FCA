@@ -72,6 +72,16 @@ function createObsImage(month){
                     .median()
                     .updateMask(vegMask.createCopernicusMask('Deciduous'));
 
+  return s2Data;
+}
+
+// Aktualisieren des Zeitraumes für Beobachtungsbild
+function updateDateRange(){
+  var startDate = ee.Date.fromYMD(year, month, 1);
+  var endDate = startDate.advance(1, 'month');
+  var dr = ee.DateRange(startDate, endDate);
+  dates = dr;
+  print(dates);
   
 }
 
@@ -92,7 +102,8 @@ var yearSelect = ui.Select({
   onChange: function(value){
     
     year = value;
-    //updateDateRange();
+    print('year', year);
+    updateDateRange();
     startCalc();
   }
 });
@@ -104,6 +115,8 @@ var monthSelect = ui.Select({
   items : Object.keys(months),
   onChange: function(key){
     month = months[key];
+    print('month',month);
+    updateDateRange();
     startCalc();
   }
 });
