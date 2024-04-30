@@ -108,7 +108,7 @@ panel.add(monthSelect);
 panel.add(calcButton);
 Map.add(panel)
 Map.add(legend)
-Map.setLocked(false, 8, 13);
+Map.setLocked(false, 5, 18);
 
 
 ui.root.onResize(configLayout);
