@@ -1,8 +1,38 @@
-//typspezifische Layer
-//Nutzungshinweise, Interpretation der Ergebnisse
-//Hintergründe zur Thematik
-//Hauptprojekt des Waldzustandsmonitors, Forschung am Ufz, Kontext der Arbeit im Projekt
+// typspezifische Layer
+// Nutzungshinweise, Interpretation der Ergebnisse
+// Hintergründe zur Thematik
+// Hauptprojekt des Waldzustandsmonitors, Forschung am Ufz, Kontext der Arbeit im Projekt
 
+// Globale Variablen
+var vert = ui.Panel.Layout.Flow('vertical');
+var hor = ui.Panel.Layout.Flow('horizontal');
+
+// Funktionen
+
+// Erstellen eines Legendeneintrages
+var makeLegendRow = function(name, color, mobileStyle) {
+  // Create the label that is actually the colored box.
+  var colorBox = ui.Label({
+    style: {
+      backgroundColor: '#' + color,
+      // Use padding to give the box height and width.
+      padding: mobileStyle ? '10px' : '8px',
+      margin: '0 0 4px 0',
+      border: 'solid 0.5px',
+    }
+  });
+
+  // Create the label filled with the description text.
+  var description = ui.Label({
+    value: name,
+    style: {margin: '0 0 4px 6px', fontSize: mobileStyle ? '16px' : '12px'},
+  });
+
+  return ui.Panel({
+    widgets: [colorBox, description],
+    layout: ui.Panel.Layout.Flow('horizontal')
+  });
+};
 
 
 
@@ -60,19 +90,20 @@ var SelectSatellite = ui.Select({
     }
 });
 
+panel.setLayout(hor);
 panel.add(yearSelect);
 panel.add(monthSelect);
 panel.add(calcButton);
 panel.add(SelectSatellite);
-var vert = ui.Panel.Layout.Flow('vertical');
-var hor = ui.Panel.Layout.Flow('horizontal');
-panel.setLayout(hor);
 Map.add(panel)
 // ui.root.insert(1, panel);
 //ui.root.setLayout(vert);
 
 Map.setLocked(false, 8, 13);
 
+for (var i = 0; i < classNames.length; i++) {
+  uiComponents.legend.add(makeLegendRow(classNames[i], palette[i], mobileStyle));
+}
 
 
 // Anpassung an screensize
