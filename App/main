@@ -84,13 +84,22 @@ function startCalc(){
   // Erstellung Beobachtung und Referenz
   var img = createObsImage();
   var refDD = createRefImage(dd);
-  // var refEG = createRefImage(ee);
-  // var refMX = createRefImage(mx);
-  // var refOV = createRefImage(ov);
+  var refEG = createRefImage(eg);
+  var refMX = createRefImage(mx);
+  var refOV = createRefImage(ov);
   
   // Einordnung
   var fcaDD = compareImages(refDD, img);
-  Map.addLayer(fcaDD, viz, 'Deciduous Vegetation');
+  var fcaEG = compareImages(refEG, img);
+  var fcaMX = compareImages(refMX, img);
+  var fcaOV = compareImages(refOV, img);
+  
+  // Karte Aktualisieren
+  Map.layers().reset();
+  Map.addLayer(fcaDD, viz, 'Deciduous Forest');
+  Map.addLayer(fcaEG, viz, 'Evergreen Forest');
+  Map.addLayer(fcaMX, viz, 'Mixed Forest');
+  Map.addLayer(fcaOV, viz, 'Other Vegetation');
   
 }
 
@@ -112,7 +121,9 @@ function createObsImage(){
 }
 
 function createRefImage(imgCol){
-  return ee.ImageCollection(imgCol).filter(ee.Filter.eq('month', month)).first();
+  
+  imgCol = ee.ImageCollection(imgCol);
+  return imgCol.filter(ee.Filter.eq('month', month)).first();
 }
 
 // Aktualisieren des Zeitraumes für Beobachtungsbild
