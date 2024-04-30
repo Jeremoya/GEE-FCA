@@ -6,6 +6,8 @@
 // Globale Variablen
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
+var classNames;
+var palette;
 
 // Funktionen
 
