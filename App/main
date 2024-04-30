@@ -11,6 +11,7 @@ var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66',
 var year = 2019;
 var month = 7;
 
+
 // Funktionen
 
 // Erstellen eines Legendeneintrages
@@ -80,9 +81,7 @@ var monthSelect = ui.Select({
   placeholder : 'Jul',
   items : Object.keys(months),
   onChange: function(key){
-    
     month = months[key];
-    updateDateRange();
     startCalc();
   }
 });
