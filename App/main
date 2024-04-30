@@ -8,6 +8,8 @@ var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
 var classNames = ['1 (kritisch)', '2', '3', '4', '5', '6', '7', '8 (gut)'];//{min: -0.8, max: 0.5} ;
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
+var year = 2019;
+var month = 7;
 
 // Funktionen
 
@@ -49,7 +51,7 @@ function configLayout(deviceInfo) {
 }
 
 //GUI
-var panel = ui.Panel({style: {width: '400px', height: 'auto', textAlign: 'center'}});
+var panel = ui.Panel({style: {width: '300px', height: 'auto', textAlign: 'center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
 var infobox = ui.Panel();
 
@@ -65,7 +67,7 @@ var yearSelect = ui.Select({
   onChange: function(value){
     
     year = value;
-    updateDateRange();
+    //updateDateRange();
     startCalc();
   }
 });
@@ -88,18 +90,8 @@ var monthSelect = ui.Select({
 
 var calcButton = ui.Button({
   label: 'Calculate FCA',
-  //onClick: startCalc
-});
-
-var satellites = {Modis: true, Sentinel2: false};
-var SelectSatellite = ui.Select({
-  placeholder : 'Select Modis',
-  items : Object.keys(satellites),
   style: {stretch: 'horizontal'},
-  onChange: function(key){
-    satelliteNumber = satellites[key];
-    startCalc();
-    }
+  //onClick: startCalc
 });
 
 
@@ -111,7 +103,6 @@ panel.setLayout(hor);
 panel.add(yearSelect);
 panel.add(monthSelect);
 panel.add(calcButton);
-panel.add(SelectSatellite);
 Map.add(panel)
 Map.add(legend)
 Map.setLocked(false, 8, 13);
