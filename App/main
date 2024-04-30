@@ -51,6 +51,12 @@ function configLayout(deviceInfo) {
    
 }
 
+// Berechnen eines neuen Bildes
+
+function startCalc(){
+  print('Start');
+}
+
 //GUI
 var panel = ui.Panel({style: {width: '300px', height: 'auto', textAlign: 'center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
@@ -73,9 +79,7 @@ var yearSelect = ui.Select({
   }
 });
 
-var months = {Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, 
-  Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12
-};
+var months = {May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10};
 
 var monthSelect = ui.Select({
   placeholder : 'Jul',
@@ -90,7 +94,7 @@ var monthSelect = ui.Select({
 var calcButton = ui.Button({
   label: 'Calculate FCA',
   style: {stretch: 'horizontal'},
-  //onClick: startCalc
+  onClick: startCalc
 });
 
 
