@@ -8,7 +8,8 @@
 
 //GUI
 var panel = ui.Panel({style: {width: '400px', height: 'auto', textAlign: 'center'}});
-
+var legend = ui.Panel();
+var infobox = ui.Panel();
 
 // var years = ee.List.sequence(2017, 2022);
 
@@ -52,6 +53,7 @@ var satellites = {Modis: true, Sentinel2: false};
 var SelectSatellite = ui.Select({
   placeholder : 'Select Modis',
   items : Object.keys(satellites),
+  style: {stretch: 'horizontal'},
   onChange: function(key){
     satelliteNumber = satellites[key];
     startCalc();
@@ -65,8 +67,9 @@ panel.add(SelectSatellite);
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
 panel.setLayout(hor);
-ui.root.insert(1, panel);
-ui.root.setLayout(vert);
+Map.add(panel)
+// ui.root.insert(1, panel);
+//ui.root.setLayout(vert);
 
 Map.setLocked(false, 8, 13);
 
