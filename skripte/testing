@@ -17,13 +17,5 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var ic = eg.merge(dd);
-print(ic);
-var ic2 = ic.filter(ee.Filter.eq('month', 6));
-print(ic2);
-ic2 = ic2.map(function(img){
-  return img.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-});
-print(ic2.mean())
-Map.addLayer(ic2.mean(), {bands: ['B5'], min: 10000, max :25000});
-
+var arr = Array.from(Array(10));
+print(arr)
