@@ -17,5 +17,6 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var arr = Array.from(Array(10));
-print(arr)
+var dates = ee.DateRange('2017-03-01', '2017-04-01');
+var filteredS2 = s2Data.filterDate(dates);
+print(filteredS2);
