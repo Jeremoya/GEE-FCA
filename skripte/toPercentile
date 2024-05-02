@@ -170,8 +170,8 @@ function getFCA(img){
 }
 
 //Globale Variablen
-var dates = ee.DateRange('2020-06-01', '2020-07-01');
-var refImg = eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
+var dates = ee.DateRange('2022-06-01', '2022-07-01');
+var refImg = px//eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
