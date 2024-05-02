@@ -3,7 +3,26 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV"),
-    hex = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
+    aoi1 = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      },
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.MultiPolygon(
+        [[[[23.645476277373046, 45.27204716831395],
+           [23.645476277373046, 45.18875133788677],
+           [23.715342457792968, 45.18875133788677],
+           [23.715342457792968, 45.27204716831395]]],
+         [[[23.716602092816654, 45.231658268944074],
+           [23.716602092816654, 45.21618209424559],
+           [23.72140861137134, 45.21618209424559],
+           [23.72140861137134, 45.231658268944074]]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -97,7 +116,6 @@ function startCalc(){
   
   // Karte Aktualisieren
   Map.layers().reset();
-  Map.addLayer(hex);
   Map.addLayer(fcaDD, viz, 'Deciduous Forest');
   Map.addLayer(fcaEG, viz, 'Evergreen Forest');
   Map.addLayer(fcaMX, viz, 'Mixed Forest');
@@ -154,17 +172,28 @@ function compareImages(ref, obs){
 }
 
 //GUI
-var panel = ui.Panel({style: {width: '300px', height: 'auto', textAlign: 'center'}});
+var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
-var infobox = ui.Panel({style: {width: '250px', height: '70%', position : 'middle-right'}});
+var infobox = ui.Panel({style: {width: '250px', height: '70%', maxHeight: '500px', position : 'middle-right'}});
 var infolabel = ui.Label('Project Information');
 var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
                   style : {position : 'bottom-left', stretch :'vertical'}
 });
 var moreInfoButton = ui.Button({
-  label: 'more Information',
+  label: 'ℹ - more Information' ,
   style: {position: 'bottom-right'},
   // onClick: 
+});
+
+var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
+var checkEG = ui.Checkbox('Evergreen', true);
+var checkDD = ui.Checkbox('Decidouos', true);
+var checkMX = ui.Checkbox('Mixed Forest', true);
+var checkOV = ui.Checkbox('Other Vegetation');
+var layerInformation = ui.Button({
+  label : 'i',
+  style : {stretch: 'horizontal'}
+  
 });
 
 
@@ -209,17 +238,26 @@ var calcButton = ui.Button({
 for (var i = 0; i < classNames.length; i++) {
   legend.add(makeLegendRow(classNames[i], palette[i], false));
 }
-panel.setLayout(hor);
-panel.add(yearSelect);
-panel.add(monthSelect);
-panel.add(calcButton);
-Map.add(panel);
+inputPanel = inputPanel.setLayout(hor);
+var nxPanel = ui.Panel({style: {position : 'top-center'}})
+inputPanel.add(yearSelect);
+inputPanel.add(monthSelect);
+inputPanel.add(calcButton);
 infobox.add(infolabel);
 infobox.add(infotext);
 infobox.add(moreInfoButton);
+nxPanel.add(inputPanel);
+Map.add(nxPanel);
 Map.add(infobox);
-//?????
-// legend.setLayout(hor)
+
+
+layerPanel.add(checkEG);
+layerPanel.add(checkDD);
+layerPanel.add(checkMX);
+layerPanel.add(checkOV);
+layerPanel.add(layerInformation);
+Map.add(layerPanel);
+
 Map.add(legend);
 Map.setLocked(false, 5, 18);
 
