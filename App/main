@@ -155,15 +155,17 @@ var panel = ui.Panel({style: {width: '300px', height: 'auto', textAlign: 'center
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
 var infobox = ui.Panel({style: {width: '250px', height: '70%', position : 'middle-right'}});
 var infolabel = ui.Label('Project Information');
-var infotext = ui.Label('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
+var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+                  style : {position : 'bottom-left', stretch :'vertical'}
+});
 var moreInfoButton = ui.Button({
   label: 'more Information',
   style: {position: 'bottom-right'},
   // onClick: 
 });
-// var years = ee.List.sequence(2017, 2022);
 
-var years = ee.List.sequence(2017, 2022).map(function(year) {
+
+var years = ee.List.sequence(2017, 2023).map(function(year) {
   return {label: ee.Number(year).format('%.0f'), value: year };
 });
 
