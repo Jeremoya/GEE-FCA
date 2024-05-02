@@ -1,0 +1,34 @@
+
+
+var hexGrid = function(proj, diameter) {
+  var size = ee.Number(diameter).divide(Math.sqrt(3)) // Distance from center to vertex
+  
+  var coords = ee.Image.pixelCoordinates(proj)
+  var vals = {
+    // Switch x and y here to get flat top instead of pointy top hexagons.
+    x: coords.select("x"),
+    u: coords.select("x").divide(diameter),  // term 1
+    v: coords.select("y").divide(size),      // term 2
+    r: ee.Number(diameter).divide(2),
+  }
+  var i = ee.Image().expression("floor((floor(u - v) + floor(x / r))/3)", vals)
+  var j = ee.Image().expression("floor((floor(u + v) + floor(v - u))/3)", vals)
+  
+  // Turn the hex coordinates into a single "ID" number.
+  Map.addLayer(i, {min:50, max: 100})
+  Map.addLayer(j, {min:50, max: 100})
+  var cells = i.add(j);
+  return cells
+}
+
+// Define a region for masking hexagons.
+var region = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+    .filter("country_na == 'United States'")
+    .union().first().geometry()
+
+// Generate a hex grid and mask off cells that don't touch the region.
+var grid = hexGrid(ee.Projection('EPSG:5070'), 70000)
+
+var regionImg = ee.Image(0).byte().paint(region, 1)
+Map.addLayer(grid, {min: 130, max: 160});
+Map.addLayer(regionImg, {min:0, max:1})
