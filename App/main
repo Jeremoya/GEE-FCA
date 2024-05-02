@@ -40,10 +40,10 @@ var viz = FCA.getFCAviz();
 // Globale Variablen
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
-var classNames = ['1 (critical)', '2', '3', '4', '5', '6', '7', '8 (good)'];//{min: -0.8, max: 0.5} ;
+var classNames = ['1 (critical)', '2', '3', '4', '5', '6', '7', '8 (good)'];//{min: -0.75, max: 0.5} ;
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
 var year = 2019;
-var month = 7;
+var month = [7];
 var dates = ee.DateRange('2019-07-01', '2019-08-01');
 
 
@@ -149,6 +149,7 @@ function createRefImage(imgCol){
 
 // Aktualisieren des Zeitraumes für Beobachtungsbild
 function updateDateRange(){
+  print(ee.List(month).get(0));
   var startDate = ee.Date.fromYMD(year, month, 1);
   var endDate = startDate.advance(1, 'month');
   var dr = ee.DateRange(startDate, endDate);
@@ -213,7 +214,7 @@ var yearSelect = ui.Select({
   }
 });
 
-var months = {May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10};
+var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10], Spring: [], Summer: [], Autumn: [], Yearly: [1,,12]};
 
 var monthSelect = ui.Select({
   placeholder : 'Jul',
