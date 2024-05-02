@@ -3,7 +3,6 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     geometry = 
     /* color: #98ff00 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -15,8 +14,29 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.391457371544888, 52.06777475205635],
           [9.391457371544888, 52.1571704946266]]], null, false),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
-    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+    geometry2 = /* color: #ffc82d */ee.Geometry.MultiPoint(
+        [[6.874484637543565, 50.151492001063204],
+         [6.874484637543565, 47.311939443007496],
+         [5.281467059418565, 48.71553975616514],
+         [8.599338153168565, 48.73728132448715]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var dates = ee.DateRange('2017-03-01', '2017-04-01');
-var filteredS2 = s2Data.filterDate(dates);
-print(filteredS2);
+Map.addLayer(table)
+
+
+
+// for(var x = 40; x <= 60; x+=2){
+// var p1 = ee.Geometry.Point([-5, x]);
+// var p2 = ee.Geometry.Point([0, x+2]);
+// var p3 = ee.Geometry.Point([5, x]);
+// var line = ee.Geometry.LineString([p1, p2, p3]);
+// Map.addLayer(line);
+  
+// }
+
+var polList = table.toList(500);
+polList = polList.map(function(feature){
+  feature = ee.Feature(feature);
+  return feature.area();
+})
+print(table.toList(500).zip(polList))
