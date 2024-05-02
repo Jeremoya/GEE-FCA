@@ -5,7 +5,6 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV"),
     aoi1 = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -101,30 +100,37 @@ function configLayout(deviceInfo) {
 function startCalc(){
   print('Start');
   
-  months.map(function(el){
+  var ddImg = month.map(function(oneMonth){
     
-    updateDateRange(month);
-    // Erstellung Beobachtung und Referenz
+    updateDateRange(oneMonth);
     var img = createObsImage();
-    var refDD = createRefImage(dd);
-    var refEG = createRefImage(eg);
-    var refMX = createRefImage(mx);
-    var refOV = createRefImage(ov);
-    
-    // Einordnung
+    var refDD = createRefImage(dd, oneMonth);
     var fcaDD = compareImages(refDD, img);
-    var fcaEG = compareImages(refEG, img);
-    var fcaMX = compareImages(refMX, img);
-    var fcaOV = compareImages(refOV, img);
     
-    // Karte Aktualisieren
-    Map.layers().reset();
-    Map.addLayer(fcaDD, viz, 'Deciduous Forest');
-    Map.addLayer(fcaEG, viz, 'Evergreen Forest');
-    Map.addLayer(fcaMX, viz, 'Mixed Forest');
-    Map.addLayer(fcaOV, viz, 'Other Vegetation');
+    return fcaDD;
   });
+  print('ddImg', ddImg);
+  ddImg = ee.ImageCollection(ddImg).median();
   
+  // Erstellung Beobachtung und Referenz
+  var img = createObsImage();
+  var refDD = createRefImage(dd);
+  var refEG = createRefImage(eg);
+  var refMX = createRefImage(mx);
+  var refOV = createRefImage(ov);
+  
+  // Einordnung
+  var fcaDD = compareImages(refDD, img);
+  var fcaEG = compareImages(refEG, img);
+  var fcaMX = compareImages(refMX, img);
+  var fcaOV = compareImages(refOV, img);
+  
+  // Karte Aktualisieren
+  Map.layers().reset();
+  Map.addLayer(ddImg, viz, 'Deciduous Forest');
+  // Map.addLayer(fcaEG, viz, 'Evergreen Forest');
+  // Map.addLayer(fcaMX, viz, 'Mixed Forest');
+  // Map.addLayer(fcaOV, viz, 'Other Vegetation');
 }
 
 // Erstellen des Beobachtungsbildes
@@ -132,7 +138,7 @@ function startCalc(){
 
 // Aktualisieren des Zeitraumes für Beobachtungsbild
 function updateDateRange(month){
-  var startDate = ee.Date.fromYMD(year, ee.List(month).get(0), 1);
+  var startDate = ee.Date.fromYMD(year, month, 1);
   var endDate = startDate.advance(1, 'month');
   var dr = ee.DateRange(startDate, endDate);
   dates = dr;
@@ -155,10 +161,10 @@ function createObsImage(){
   return s2Data;
 }
 
-function createRefImage(imgCol){
+function createRefImage(imgCol, oneMonth){
   
   imgCol = ee.ImageCollection(imgCol);
-  return imgCol.filter(ee.Filter.eq('month', month)).first();
+  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
 }
 
 
@@ -213,13 +219,12 @@ var yearSelect = ui.Select({
     
     year = value;
     print('year', year);
-    updateDateRange();
     startCalc();
   }
 });
 
-var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10],
-  Spring: [5,6], Summer: [7,8], Autumn: [9,10], Yearly: ee.List.sequence(1,12,1)};
+var months = {Jan: [1], Dec: [12], May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10],
+  Spring: [5,6], Summer: [7,8], Autumn: [9,10], Yearly: [1,2,3,4,5,6,7,8,9,10,11,12]};
 print(months);
 
 var monthSelect = ui.Select({
@@ -228,7 +233,6 @@ var monthSelect = ui.Select({
   onChange: function(key){
     month = months[key];
     print('month',month);
-    updateDateRange();
     startCalc();
   }
 });
