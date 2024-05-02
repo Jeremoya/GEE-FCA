@@ -106,6 +106,7 @@ function startCalc(){
 }
 
 // Erstellen des Beobachtungsbildes
+//jährlich/saisonal
 
 function createObsImage(){
   
