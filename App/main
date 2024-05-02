@@ -214,7 +214,9 @@ var yearSelect = ui.Select({
   }
 });
 
-var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10], Spring: [], Summer: [], Autumn: [], Yearly: [1,,12]};
+var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10],
+  Spring: [5,6], Summer: [7,8], Autumn: [9,10], Yearly: ee.List.sequence(1,12,1)};
+print(months);
 
 var monthSelect = ui.Select({
   placeholder : 'Jul',
@@ -240,15 +242,14 @@ for (var i = 0; i < classNames.length; i++) {
   legend.add(makeLegendRow(classNames[i], palette[i], false));
 }
 inputPanel = inputPanel.setLayout(hor);
-var nxPanel = ui.Panel({style: {position : 'top-center'}})
 inputPanel.add(yearSelect);
 inputPanel.add(monthSelect);
 inputPanel.add(calcButton);
 infobox.add(infolabel);
 infobox.add(infotext);
 infobox.add(moreInfoButton);
-nxPanel.add(inputPanel);
-Map.add(nxPanel);
+Map.add(inputPanel);
+
 Map.add(infobox);
 
 
