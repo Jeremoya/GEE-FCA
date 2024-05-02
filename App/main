@@ -101,30 +101,44 @@ function configLayout(deviceInfo) {
 function startCalc(){
   print('Start');
   
-  // Erstellung Beobachtung und Referenz
-  var img = createObsImage();
-  var refDD = createRefImage(dd);
-  var refEG = createRefImage(eg);
-  var refMX = createRefImage(mx);
-  var refOV = createRefImage(ov);
-  
-  // Einordnung
-  var fcaDD = compareImages(refDD, img);
-  var fcaEG = compareImages(refEG, img);
-  var fcaMX = compareImages(refMX, img);
-  var fcaOV = compareImages(refOV, img);
-  
-  // Karte Aktualisieren
-  Map.layers().reset();
-  Map.addLayer(fcaDD, viz, 'Deciduous Forest');
-  Map.addLayer(fcaEG, viz, 'Evergreen Forest');
-  Map.addLayer(fcaMX, viz, 'Mixed Forest');
-  Map.addLayer(fcaOV, viz, 'Other Vegetation');
+  months.map(function(el){
+    
+    updateDateRange(month);
+    // Erstellung Beobachtung und Referenz
+    var img = createObsImage();
+    var refDD = createRefImage(dd);
+    var refEG = createRefImage(eg);
+    var refMX = createRefImage(mx);
+    var refOV = createRefImage(ov);
+    
+    // Einordnung
+    var fcaDD = compareImages(refDD, img);
+    var fcaEG = compareImages(refEG, img);
+    var fcaMX = compareImages(refMX, img);
+    var fcaOV = compareImages(refOV, img);
+    
+    // Karte Aktualisieren
+    Map.layers().reset();
+    Map.addLayer(fcaDD, viz, 'Deciduous Forest');
+    Map.addLayer(fcaEG, viz, 'Evergreen Forest');
+    Map.addLayer(fcaMX, viz, 'Mixed Forest');
+    Map.addLayer(fcaOV, viz, 'Other Vegetation');
+  });
   
 }
 
 // Erstellen des Beobachtungsbildes
 //jährlich/saisonal
+
+// Aktualisieren des Zeitraumes für Beobachtungsbild
+function updateDateRange(month){
+  var startDate = ee.Date.fromYMD(year, ee.List(month).get(0), 1);
+  var endDate = startDate.advance(1, 'month');
+  var dr = ee.DateRange(startDate, endDate);
+  dates = dr;
+  print(dates);
+  
+}
 
 function createObsImage(){
   
@@ -147,16 +161,6 @@ function createRefImage(imgCol){
   return imgCol.filter(ee.Filter.eq('month', month)).first();
 }
 
-// Aktualisieren des Zeitraumes für Beobachtungsbild
-function updateDateRange(){
-  print(ee.List(month).get(0));
-  var startDate = ee.Date.fromYMD(year, month, 1);
-  var endDate = startDate.advance(1, 'month');
-  var dr = ee.DateRange(startDate, endDate);
-  dates = dr;
-  print(dates);
-  
-}
 
 // Vergleich Beobachtung Referenz
 
