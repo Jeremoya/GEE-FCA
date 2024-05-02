@@ -2,7 +2,8 @@
 var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
-    ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV");
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV"),
+    hex = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -96,6 +97,7 @@ function startCalc(){
   
   // Karte Aktualisieren
   Map.layers().reset();
+  Map.addLayer(hex);
   Map.addLayer(fcaDD, viz, 'Deciduous Forest');
   Map.addLayer(fcaEG, viz, 'Evergreen Forest');
   Map.addLayer(fcaMX, viz, 'Mixed Forest');
@@ -219,6 +221,7 @@ Map.add(infobox);
 // legend.setLayout(hor)
 Map.add(legend);
 Map.setLocked(false, 5, 18);
+
 
 
 ui.root.onResize(configLayout);
