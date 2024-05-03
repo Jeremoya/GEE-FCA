@@ -22,8 +22,10 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
          [8.599338153168565, 48.73728132448715]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var mayImg = s2Data.filterDate(ee.DateRange(['2022-05-01','2022-06-01']))
+var mayImg = s2Data.filterDate(ee.DateRange('2022-05-01','2022-06-01'))
                   .filterBounds(geometry)
-                  .select(['B4', 'B3', 'B2']);
+                  .map(function(img){
+                    return 
+                  });
                   
 Map.addLayer(mayImg);
