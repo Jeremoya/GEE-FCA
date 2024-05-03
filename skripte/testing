@@ -21,8 +21,8 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
          [5.281467059418565, 48.71553975616514],
          [8.599338153168565, 48.73728132448715]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var a = ee.Image([1,2,3]).toArray()
+var a = ee.Image([125,115,115,115,115]).toArray()
 Map.addLayer(a)
-var b = a.arrayMask([ee.Image(1,3,3]))
+var b = a.eq(115).reduce(ee.Reducer.max()).and(a.neq(125).reduce(ee.Reducer.min()))
 print(b)
 Map.addLayer(b)
