@@ -21,22 +21,8 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
          [5.281467059418565, 48.71553975616514],
          [8.599338153168565, 48.73728132448715]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(table)
-
-
-
-// for(var x = 40; x <= 60; x+=2){
-// var p1 = ee.Geometry.Point([-5, x]);
-// var p2 = ee.Geometry.Point([0, x+2]);
-// var p3 = ee.Geometry.Point([5, x]);
-// var line = ee.Geometry.LineString([p1, p2, p3]);
-// Map.addLayer(line);
-  
-// }
-
-var polList = table.toList(500);
-polList = polList.map(function(feature){
-  feature = ee.Feature(feature);
-  return feature.area();
-})
-print(table.toList(500).zip(polList))
+var a = ee.Image([1,2,3]).toArray()
+Map.addLayer(a)
+var b = a.arrayMask([ee.Image(1,3,3]))
+print(b)
+Map.addLayer(b)
