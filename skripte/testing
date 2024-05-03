@@ -21,15 +21,9 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
          [5.281467059418565, 48.71553975616514],
          [8.599338153168565, 48.73728132448715]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var a = ee.Image([125,115,116,11,115]).toArray()
-//Map.addLayer(a)
-var b = a.eq([116,117]).toArray().arrayReduce(ee.Reducer.max(), [0])
-print('b',b);
-var c = a.neq([125, 126]).toArray().arrayReduce(ee.Reducer.min(), [0])
-print('c', c)
 
-var d = b.and(c).arrayGet(0);
-print(d)
-Map.addLayer(b)
-Map.addLayer(c)
-Map.addLayer(d)
+var mayImg = s2Data.filterDate(ee.DateRange(['2022-05-01','2022-06-01']))
+                  .filterBounds(geometry)
+                  .select(['B4', 'B3', 'B2']);
+                  
+Map.addLayer(mayImg);
