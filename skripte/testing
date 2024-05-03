@@ -23,19 +23,17 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //calc ndvi for s2
 var s2ndvi = function(image) {
-  var red = image.select('B4');
-  var nir = image.select('B8');
+  var RED = image.select('B4');
+  var NIR = image.select('B8');
   
-  return image.expression(s2expressions.NDVI,
-                            createS2BandDict(image)
-                          ).rename('NDVI');
+  return image.expression('(NIR - RED) / (NIR + RED)').rename('NDVI');
 };
 
 
 var mayImg = s2Data.filterDate(ee.DateRange('2022-05-01','2022-06-01'))
                   .filterBounds(geometry)
                   .map(function(img){
-                    return 
+                    return s2ndvi((img))
                   });
                   
 Map.addLayer(mayImg);
