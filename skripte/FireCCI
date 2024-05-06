@@ -1,0 +1,65 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
+    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.211556248498013, 52.1571704946266],
+          [9.211556248498013, 52.06777475205635],
+          [9.391457371544888, 52.06777475205635],
+          [9.391457371544888, 52.1571704946266]]], null, false),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+    clipReg = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.037050892738314, 51.97245090568793],
+          [9.037050892738314, 51.969833508686065],
+          [9.043187786964388, 51.969833508686065],
+          [9.043187786964388, 51.97245090568793]]], null, false),
+    dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Visualize FireCCI51 for one year
+
+var burnedArea = dataset.filterDate('2016-01-01', '2020-12-31');
+
+// Use a circular palette to assign colors to date of first detection
+var monthVis = {
+  min: 1,
+  max: 12,
+  palette: ['darkblue', 'blue', 'red', 'yellow', 'blue']
+};
+var yearVis = {
+  min: 2016,
+  max: 2020,
+  palette: ['blue', 'white', 'red']
+};
+print(burnedArea);
+var maxBA = burnedArea.map(function(img){
+  var date = ee.Date(img.get('system:time_start'));
+  var month = ee.Number(date.get('month'));
+  var year = ee.Number(date.get('year'));
+  img = img.select('BurnDate').gt(0).updateMask(img.select('ConfidenceLevel').gt(95));
+  var monthImg = img.multiply(month).rename('burnMonth').cast({burnMonth:'int'});
+  var yearImg = img.multiply(year).rename('burnYear').cast({burnYear:'int'});
+  return monthImg.addBands(yearImg);
+});
+
+maxBA = maxBA.reduce(ee.Reducer.firstNonNull())
+
+
+//Map.addLayer(maxBA, baVis, 'Burned Area');
+Map.addLayer(maxBA.select('burnYear_first'), yearVis, 'year');
+Map.addLayer(maxBA.select('burnMonth_first'), monthVis, 'month');
