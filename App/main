@@ -34,6 +34,7 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
+var tb = AOIs.getTB().get('');
 
 
 
@@ -177,7 +178,39 @@ function createFCAImage(type){
   return ee.ImageCollection(retImg).median();
 }
 
-//GUI
+// Switch to normal Mode
+
+function normalMode(){
+  
+}
+
+//Switch to example Mode
+
+function exampleMode(){
+  ui.root.clear()
+  var p1 = ui.Panel();
+  var p2 = ui.Panel();
+  var m1 = ui.Map();
+  var m2 = ui.Map();
+  
+  m1.centerObject(geometry)
+  m2.centerObject(geometry)
+  ui.Map.Linker([m1,m2]);
+  
+  var sp = ui.SplitPanel(m1,m2,'horizontal', true)
+  
+  
+  
+  var s1 = ui.Button('switch', og);
+  var s2 = ui.Button('switch', split);
+  
+  split()
+}
+
+    //////////////////////////////////
+    //  GUI                         //
+    //////////////////////////////////
+    
 var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
 var infobox = ui.Panel({style: {width: '250px', height: '70%', maxHeight: '500px', position : 'middle-right'}});
@@ -240,33 +273,45 @@ var calcButton = ui.Button({
 });
 
 
+var exButton = ui.Button({
+  label: 'Example Maps',
+  onClick: exampleMode
+});
+
+var homeButton = ui.Button({
+  label: 'Back to normal mode',
+  onClick: normalMode
+});
+
+
 
 for (var i = 0; i < classNames.length; i++) {
   legend.add(makeLegendRow(classNames[i], palette[i], false));
 }
+
 inputPanel = inputPanel.setLayout(hor);
 inputPanel.add(yearSelect);
 inputPanel.add(monthSelect);
 inputPanel.add(calcButton);
+
 infobox.add(infolabel);
 infobox.add(infotext);
 infobox.add(moreInfoButton);
-Map.add(inputPanel);
-
-Map.add(infobox);
-
 
 layerPanel.add(checkEG);
 layerPanel.add(checkDD);
 layerPanel.add(checkMX);
 layerPanel.add(checkOV);
 layerPanel.add(layerInformation);
-Map.add(layerPanel);
 
+Map.add(inputPanel);
+Map.add(infobox);
+Map.add(layerPanel);
 Map.add(legend);
 Map.setLocked(false, 5, 18);
 
+var ogMap = ui.root.widgets().get(0)
 
 
-ui.root.onResize(configLayout);
+
 
