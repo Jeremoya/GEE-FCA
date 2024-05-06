@@ -31,35 +31,16 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.043187786964388, 51.97245090568793]]], null, false),
     dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Visualize FireCCI51 for one year
+ui.root.clear();
 
-var burnedArea = dataset.filterDate('2016-01-01', '2020-12-31');
-
-// Use a circular palette to assign colors to date of first detection
-var monthVis = {
-  min: 1,
-  max: 12,
-  palette: ['darkblue', 'blue', 'red', 'yellow', 'blue']
-};
-var yearVis = {
-  min: 2016,
-  max: 2020,
-  palette: ['blue', 'white', 'red']
-};
-print(burnedArea);
-var maxBA = burnedArea.map(function(img){
-  var date = ee.Date(img.get('system:time_start'));
-  var month = ee.Number(date.get('month'));
-  var year = ee.Number(date.get('year'));
-  img = img.select('BurnDate').gt(0).updateMask(img.select('ConfidenceLevel').gt(75));
-  var monthImg = img.multiply(month).rename('burnMonth').cast({burnMonth:'int'});
-  var yearImg = img.multiply(year).rename('burnYear').cast({burnYear:'int'});
-  return monthImg.addBands(yearImg);
-});
-
-maxBA = maxBA.reduce(ee.Reducer.firstNonNull())
+var p1 = ui.Panel();
+var p2 = ui.Panel();
+var m1 = ui.Map();
+var m2 = ui.Map();
 
 
-//Map.addLayer(maxBA, baVis, 'Burned Area');
-Map.addLayer(maxBA.select('burnYear_first'), yearVis, 'year');
-Map.addLayer(maxBA.select('burnMonth_first'), monthVis, 'month');
+ui.Map.Linker([m1,m2]);
+
+var sp = ui.SplitPanel(m1,m2,'horizontal', true)
+
+ui.root.add(sp);
