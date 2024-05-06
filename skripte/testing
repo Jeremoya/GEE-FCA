@@ -31,7 +31,6 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.043187786964388, 51.97245090568793]]], null, false),
     dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-ui.root.clear();
 
 var p1 = ui.Panel();
 var p2 = ui.Panel();
@@ -44,4 +43,7 @@ ui.Map.Linker([m1,m2]);
 
 var sp = ui.SplitPanel(m1,m2,'horizontal', true)
 
-ui.root.add(sp);
+
+var ogMap = ui.root.widgets().get(0)
+ui.root.clear();
+ui.root.add(ogMap)
