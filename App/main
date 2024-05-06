@@ -34,8 +34,8 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
-var tb = ee.Dictionary(AOIs.getAOI('Treuenbrietzen'));
-print('tb', tb)
+var aoi = ee.Dictionary(AOIs.getAOI('Treuenbrietzen'));
+print('aoi', aoi)
 
 
 
@@ -193,9 +193,9 @@ function normalMode(){
 function exampleMode(){
   ui.root.clear();
   month = [1,2,3,4,5,6,7,8,9,10,11,12];
-  year = tb.get('start');
+  year = aoi.get('start');
   startCalc(m1);
-  year = tb.get('compareYear');
+  year = aoi.get('compareYear');
   startCalc(m2);
   ui.root.add(sp);
   
@@ -278,7 +278,7 @@ var homeButton = ui.Button({
   onClick: normalMode
 });
 
-
+var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen19', 'Luebtheen23', 'Hrensko', 'Harz']
 
 for (var i = 0; i < classNames.length; i++) {
   legend.add(makeLegendRow(classNames[i], palette[i], false));
@@ -307,7 +307,7 @@ Map.add(legend);
 Map.setLocked(false, 5, 18);
 
 var ogMap = ui.root.widgets().get(0);
-ui.root.clear()
+ui.root.clear();
 ui.root.add(ogMap);
 
 var currGeo = ee.Geometry(tb.get('geo'));
