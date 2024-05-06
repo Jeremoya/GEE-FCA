@@ -99,7 +99,7 @@ function configLayout(deviceInfo) {
 
 // Berechnen eines neuen Bildes
 
-function startCalc(){
+function startCalc(baseMap){
   print('Start');
   
   var ddImg = createFCAImage(dd);
@@ -109,11 +109,11 @@ function startCalc(){
   
   
   // Karte Aktualisieren
-  Map.layers().reset();
-  Map.addLayer(ddImg, viz, 'Deciduous Forest');
-  Map.addLayer(egImg, viz, 'Evergreen Forest');
-  Map.addLayer(mxImg, viz, 'Mixed Forest');
-  Map.addLayer(ovImg, viz, 'Other Vegetation', false);
+  baseMap.layers().reset();
+  baseMap.addLayer(ddImg, viz, 'Deciduous Forest');
+  baseMap.addLayer(egImg, viz, 'Evergreen Forest');
+  baseMap.addLayer(mxImg, viz, 'Mixed Forest');
+  baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
 }
 
 // Erstellen des Beobachtungsbildes
@@ -169,10 +169,10 @@ function createFCAImage(type){
     
     updateDateRange(oneMonth);
     var img = createObsImage();
-    var refDD = createRefImage(type, oneMonth);
-    var fcaDD = compareImages(refDD, img);
+    var refImg = createRefImage(type, oneMonth);
+    var fcaImg = compareImages(refImg, img);
     
-    return fcaDD;
+    return fcaImg;
   });
   
   return ee.ImageCollection(retImg).median();
@@ -189,21 +189,12 @@ function normalMode(){
 
 function exampleMode(){
   ui.root.clear();
-  var currGeo = ee.Geometry(tb.get('geo'));
-  var p1 = ui.Panel();
-  var p2 = ui.Panel();
-  var m1 = ui.Map();
-  var m2 = ui.Map();
-  
-  m1.centerObject(currGeo);
-  m2.centerObject(currGeo);
-  ui.Map.Linker([m1,m2]);
-  
-  var sp = ui.SplitPanel(m1,m2,'horizontal', true);
-  
+  month = [1,2,3,4,5,6,7,8,9,10,11,12];
+  year = tb.get('start');
+  startCalc(m1);
+  year = tb.get('compareYear');
+  startCalc(m2);
   ui.root.add(sp);
-  
-  
   
 }
 
@@ -247,7 +238,7 @@ var yearSelect = ui.Select({
     
     year = value;
     print('year', year);
-    startCalc();
+    startCalc(ogMap);
   }
 });
 
@@ -261,7 +252,7 @@ var monthSelect = ui.Select({
   onChange: function(key){
     month = months[key];
     print('month',month);
-    startCalc();
+    startCalc(ogMap);
   }
 });
 
@@ -280,6 +271,7 @@ var exButton = ui.Button({
 
 var homeButton = ui.Button({
   label: 'Back to normal mode',
+  style : {position : 'top-left'},
   onClick: normalMode
 });
 
@@ -308,10 +300,26 @@ Map.add(inputPanel);
 Map.add(infobox);
 Map.add(layerPanel);
 Map.add(legend);
+Map.add(exButton);
 Map.setLocked(false, 5, 18);
 
-var ogMap = ui.root.widgets().get(0)
+var ogMap = ui.root.widgets().get(0);
+ui.root.clear()
+ui.root.add(ogMap);
 
+var currGeo = ee.Geometry(tb.get('geo'));
+var p1 = ui.Panel();
+var p2 = ui.Panel();
+var m1 = ui.Map();
+var m2 = ui.Map();
+m1.setLocked(false, 10, 16);
+m2.setLocked(false, 10, 16);
+m1.add(homeButton);
+m1.centerObject(currGeo, 12);
+m2.centerObject(currGeo, 12);
+ui.Map.Linker([m1,m2]);
+  
+var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 
 
