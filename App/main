@@ -197,8 +197,8 @@ function exampleMode(){
   startCalc(m1);
   year = aoi.get('compareYear');
   startCalc(m2);
-  m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 13);
+  m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 13);
   ui.root.add(sp);
   
 }
