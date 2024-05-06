@@ -45,7 +45,7 @@ var p1 = ui.Panel();
 var p2 = ui.Panel();
 var m1 = ui.Map();
 var m2 = ui.Map();
-var ogMap = ui.root.widgets().get(0)
+// var ogMap = ui.root.widgets().get(0)
 
 m1.centerObject(geometry)
 m2.centerObject(geometry)
