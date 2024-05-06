@@ -35,6 +35,7 @@ var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
 var tb = ee.Dictionary(AOIs.getAOI('Treuenbrietzen'));
+print('tb', tb)
 
 
 
