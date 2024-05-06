@@ -124,7 +124,8 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [14.249010875619556, 50.88307657619751],
           [14.240213028539962, 50.88529681078208],
           [14.238239212359913, 50.87720085836018],
-          [14.238325042368706, 50.87395129925092]]]);
+          [14.238325042368706, 50.87395129925092]]]),
+    harz = /* color: #d63000 */ee.Geometry.Point([10.7554, 51.7269]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 exports.getAOI = function(aoi){
@@ -145,4 +146,4 @@ var falkenbergData = {geo: falkenberg250722, start: 2022, compareYear: 2023};
 var luebtheen19Data = {geo: luebtheen300619, start: 2019, compareYear: 2020};
 var luebtheen23Data = {geo: luebtheen300619, start: 2022, compareYear: 2023};
 var hrenskoData = {geo: hrensko24072022, start: 2022, compareYear: 2023};
-var harzData = {geo: ee.Geometry.Point([10.7554, 51.7269]), start: 2019, compareYear: 2020};
+var harzData = {geo: harz, start: 2019, compareYear: 2020};
