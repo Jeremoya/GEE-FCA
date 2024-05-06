@@ -128,5 +128,9 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 exports.getTB = function(){
-  return treuenbrietzen230818;
+  
+  
+  var data = ee.Dictionary({geo : treuenbrietzen230818, start : 2018, compareYear: 2019});
+  
+  return data;
 };
