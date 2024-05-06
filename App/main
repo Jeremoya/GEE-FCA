@@ -248,14 +248,12 @@ var yearSelect = ui.Select({
   onChange: function(value){
     
     year = value;
-    print('year', year);
     startCalc(ogMap);
   }
 });
 
 var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10],
   Spring: [5,6], Summer: [7,8], Autumn: [9,10], Yearly: [1,2,3,4,5,6,7,8,9,10,11,12]};
-print(months);
 
 var monthSelect = ui.Select({
   placeholder : 'Jul',
