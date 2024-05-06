@@ -34,7 +34,7 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
-var tb = AOIs.getTB().get('');
+var tb = ee.Dictionary(AOIs.getTB());
 
 
 
@@ -188,23 +188,22 @@ function normalMode(){
 
 function exampleMode(){
   ui.root.clear()
+  var currGeo = ee.Geometry(tb.get('geo'));
   var p1 = ui.Panel();
   var p2 = ui.Panel();
   var m1 = ui.Map();
   var m2 = ui.Map();
   
-  m1.centerObject(geometry)
-  m2.centerObject(geometry)
+  m1.centerObject(currGeo)
+  m2.centerObject(currGeo)
   ui.Map.Linker([m1,m2]);
   
   var sp = ui.SplitPanel(m1,m2,'horizontal', true)
   
+  ui.root.add(sp);
   
   
-  var s1 = ui.Button('switch', og);
-  var s2 = ui.Button('switch', split);
   
-  split()
 }
 
     //////////////////////////////////
