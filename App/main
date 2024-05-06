@@ -335,7 +335,7 @@ m1.add(homeButton);
 m2.add(exampleMapSelect)
 m1.centerObject(currGeo, 12);
 m2.centerObject(currGeo, 12);
-ui.Map.Linker([m1,m2]);
+//ui.Map.Linker([m1,m2]);
   
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
