@@ -181,24 +181,25 @@ function createFCAImage(type){
 // Switch to normal Mode
 
 function normalMode(){
-  
+  ui.root.clear();
+  ui.root.add(ogMap);
 }
 
 //Switch to example Mode
 
 function exampleMode(){
-  ui.root.clear()
+  ui.root.clear();
   var currGeo = ee.Geometry(tb.get('geo'));
   var p1 = ui.Panel();
   var p2 = ui.Panel();
   var m1 = ui.Map();
   var m2 = ui.Map();
   
-  m1.centerObject(currGeo)
-  m2.centerObject(currGeo)
+  m1.centerObject(currGeo);
+  m2.centerObject(currGeo);
   ui.Map.Linker([m1,m2]);
   
-  var sp = ui.SplitPanel(m1,m2,'horizontal', true)
+  var sp = ui.SplitPanel(m1,m2,'horizontal', true);
   
   ui.root.add(sp);
   
