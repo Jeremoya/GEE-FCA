@@ -32,6 +32,7 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
+var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
 
 
