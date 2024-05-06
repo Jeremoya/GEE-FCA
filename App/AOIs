@@ -128,15 +128,15 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 exports.getAOI = function(aoi){
-  var dict = {Treuenbrietzen : treuenbrietzen230818,
-    Fichtenwalde : fichtenwalde,
-    Falkenberg : falkenberg,
-    Luebtheen19 : luebtheen300619,
-    Luebtheen23 : luebtheen120623,
-    hrensko : hrensko24072022
+  var dict = {Treuenbrietzen : treuenbrietzenData,
+    Fichtenwalde : fichtenwaldeData,
+    Falkenberg : falkenbergData,
+    Luebtheen19 : luebtheen19Data,
+    Luebtheen23 : luebtheen23Data,
+    hrensko : hrenskoData
   };
-  return dict.get(aoi)
-}
+  return dict.get(aoi);
+};
 
 var treuenbrietzenData = {geo: treuenbrietzen230818, start: 2018, compareYear: 2019};
 var fichtenwaldeData = {geo: fichtenwalde260718, start: 2018, compareYear: 2019};
