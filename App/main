@@ -182,6 +182,7 @@ function createFCAImage(type){
 
 function normalMode(){
   ui.root.clear();
+  ogMap.centerObject(ee.Geometry.Point([10.798, 51.7328]),12)
   ui.root.add(ogMap);
 }
 
@@ -288,6 +289,7 @@ inputPanel.add(calcButton);
 
 infobox.add(infolabel);
 infobox.add(infotext);
+infobox.add(exButton);
 infobox.add(moreInfoButton);
 
 layerPanel.add(checkEG);
@@ -300,7 +302,6 @@ Map.add(inputPanel);
 Map.add(infobox);
 Map.add(layerPanel);
 Map.add(legend);
-Map.add(exButton);
 Map.setLocked(false, 5, 18);
 
 var ogMap = ui.root.widgets().get(0);
