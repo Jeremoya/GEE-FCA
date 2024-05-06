@@ -134,7 +134,7 @@ exports.getAOI = function(aoi){
     Luebtheen19 : luebtheen19Data,
     Luebtheen23 : luebtheen23Data,
     Harz : harzData,
-    hrensko : hrenskoData
+    Hrensko : hrenskoData
   };
   return dict[aoi];
 };
