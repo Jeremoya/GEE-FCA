@@ -141,7 +141,7 @@ exports.getAOI = function(aoi){
 
 var treuenbrietzenData = {geo: treuenbrietzen230818, start: 2018, compareYear: 2019};
 var fichtenwaldeData = {geo: fichtenwalde260718, start: 2018, compareYear: 2019};
-var falkenbergeData = {geo: falkenberg250722, start: 2022, compareYear: 2023};
+var falkenbergData = {geo: falkenberg250722, start: 2022, compareYear: 2023};
 var luebtheen19Data = {geo: luebtheen300619, start: 2019, compareYear: 2020};
 var luebtheen23Data = {geo: luebtheen300619, start: 2022, compareYear: 2023};
 var hrenskoData = {geo: hrensko24072022, start: 2022, compareYear: 2023};
