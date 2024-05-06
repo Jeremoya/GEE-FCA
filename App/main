@@ -197,16 +197,14 @@ function exampleMode(){
   startCalc(m1);
   year = aoi.get('compareYear');
   startCalc(m2);
-  sp = ui.SplitPanel(m1,m2,'horizontal', true);
+  m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
   ui.root.add(sp);
   
 }
 
 function reloadExample(newAOI){
   aoi = ee.Dictionary(AOIs.getAOI(newAOI));
-  print(aoi);
-  m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
   exampleMode();
   return 1;
 }
