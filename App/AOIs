@@ -18,7 +18,7 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [12.916893031254268, 52.04719526890587],
           [12.91908171381042, 52.04466142500384],
           [12.9056062957196, 52.039434918230356]]]),
-    fichtenwalde = 
+    fichtenwalde260718 = 
     /* color: #0b4a8b */
     /* shown: false */
     ee.Geometry.Polygon(
@@ -38,7 +38,7 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [12.909009530047268, 52.27957791094283],
           [12.909588879706437, 52.27884274376493],
           [12.911005086485785, 52.27861956347989]]]),
-    falkenberg = /* color: #d63000 */ee.Geometry.Polygon(
+    falkenberg250722 = /* color: #d63000 */ee.Geometry.Polygon(
         [[[13.175060019228129, 51.54968414371374],
           [13.178965315553812, 51.55037798211377],
           [13.178836569521097, 51.55331333517807],
@@ -127,16 +127,20 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [14.238325042368706, 50.87395129925092]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-exports getAOI = function(aoi){
+exports.getAOI = function(aoi){
   var dict = {Treuenbrietzen : treuenbrietzen230818,
     Fichtenwalde : fichtenwalde,
     Falkenberg : falkenberg,
     Luebtheen19 : luebtheen300619,
     Luebtheen23 : luebtheen120623,
     hrensko : hrensko24072022
-  }
+  };
   return dict.get(aoi)
 }
 
 var treuenbrietzenData = {geo: treuenbrietzen230818, start: 2018, compareYear: 2019};
-var fichtenwaldeData = {geo: fichtenwalde, start: 2018, compareYear: 2019};
+var fichtenwaldeData = {geo: fichtenwalde260718, start: 2018, compareYear: 2019};
+var falkenbergeData = {geo: falkenberg250722, start: 2022, compareYear: 2023};
+var luebtheen19Data = {geo: luebtheen300619, start: 2019, compareYear: 2020};
+var luebtheen23Data = {geo: luebtheen300619, start: 2022, compareYear: 2023};
+var hrenskoData = {geo: hrensko24072022, start: 2022, compareYear: 2023};
