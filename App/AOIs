@@ -136,7 +136,7 @@ exports.getAOI = function(aoi){
     Harz : harzData,
     hrensko : hrenskoData
   };
-  return dict.aoi;
+  return dict[aoi];
 };
 
 var treuenbrietzenData = {geo: treuenbrietzen230818, start: 2018, compareYear: 2019};
