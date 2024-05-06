@@ -205,14 +205,14 @@ function exampleMode(){
     
 var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
 var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
-var infobox = ui.Panel({style: {width: '250px', height: '70%', maxHeight: '500px', position : 'middle-right'}});
+var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '600px', position : 'middle-right'}});
 var infolabel = ui.Label('Project Information');
 var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
                   style : {position : 'bottom-left', stretch :'vertical'}
 });
 var moreInfoButton = ui.Button({
   label: 'ℹ - more Information' ,
-  style: {position: 'bottom-right'},
+  //style: {position: 'bottom-right'},
   // onClick: 
 });
 
