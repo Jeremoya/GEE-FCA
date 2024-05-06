@@ -201,6 +201,14 @@ function exampleMode(){
   
 }
 
+function reloadExample(newAOI){
+  aoi = ee.Dictionary(AOIs.getAOI(newAOI));
+  m1.centerObject(aoi.get('geo'), 12);
+  m2.centerObject(aoi.get('geo'), 12);
+  exampleMode();
+  return 1;
+}
+
     //////////////////////////////////
     //  GUI                         //
     //////////////////////////////////
@@ -278,7 +286,15 @@ var homeButton = ui.Button({
   onClick: normalMode
 });
 
-var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen19', 'Luebtheen23', 'Hrensko', 'Harz']
+var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen19', 'Luebtheen23', 'Hrensko', 'Harz'];
+
+var exampleMapSelect = ui.Select({items: aoiList,
+  placeholder:'Treuenbrietzen',
+  value:'Treuenbrietzen',
+  style:{position: 'middle-right'},
+  onChange: reloadExample
+});
+
 
 for (var i = 0; i < classNames.length; i++) {
   legend.add(makeLegendRow(classNames[i], palette[i], false));
@@ -310,7 +326,7 @@ var ogMap = ui.root.widgets().get(0);
 ui.root.clear();
 ui.root.add(ogMap);
 
-var currGeo = ee.Geometry(tb.get('geo'));
+var currGeo = ee.Geometry(aoi.get('geo'));
 var p1 = ui.Panel();
 var p2 = ui.Panel();
 var m1 = ui.Map();
@@ -318,6 +334,7 @@ var m2 = ui.Map();
 m1.setLocked(false, 10, 16);
 m2.setLocked(false, 10, 16);
 m1.add(homeButton);
+m2.add(exampleMapSelect)
 m1.centerObject(currGeo, 12);
 m2.centerObject(currGeo, 12);
 ui.Map.Linker([m1,m2]);
