@@ -203,8 +203,8 @@ function exampleMode(){
 
 function reloadExample(newAOI){
   aoi = ee.Dictionary(AOIs.getAOI(newAOI));
-  m1.centerObject(aoi.get('geo'), 12);
-  m2.centerObject(aoi.get('geo'), 12);
+  m1.centerObject(ee.Geometry(aoi.get('geo'), 12));
+  m2.centerObject(ee.Geometry(aoi.get('geo'), 12);
   exampleMode();
   return 1;
 }
