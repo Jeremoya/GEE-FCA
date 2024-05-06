@@ -31,11 +31,21 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.043187786964388, 51.97245090568793]]], null, false),
     dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
+function og(){
+  ui.root.clear();
+  ui.root.add(ogMap)
+  ui.root.add(s2)
+}
+function split(){
+  ui.root.clear();
+  ui.root.add(sp)
+  ui.root.add(s1)
+}
 var p1 = ui.Panel();
 var p2 = ui.Panel();
 var m1 = ui.Map();
 var m2 = ui.Map();
+var ogMap = ui.root.widgets().get(0)
 
 m1.centerObject(geometry)
 m2.centerObject(geometry)
@@ -44,6 +54,8 @@ ui.Map.Linker([m1,m2]);
 var sp = ui.SplitPanel(m1,m2,'horizontal', true)
 
 
-var ogMap = ui.root.widgets().get(0)
-ui.root.clear();
-ui.root.add(ogMap)
+
+var s1 = ui.Button('switch', og);
+var s2 = ui.Button('switch', split);
+
+split()
