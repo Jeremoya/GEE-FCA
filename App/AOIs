@@ -133,6 +133,7 @@ exports.getAOI = function(aoi){
     Falkenberg : falkenbergData,
     Luebtheen19 : luebtheen19Data,
     Luebtheen23 : luebtheen23Data,
+    Harz : harzData,
     hrensko : hrenskoData
   };
   return dict.get(aoi);
@@ -144,4 +145,4 @@ var falkenbergeData = {geo: falkenberg250722, start: 2022, compareYear: 2023};
 var luebtheen19Data = {geo: luebtheen300619, start: 2019, compareYear: 2020};
 var luebtheen23Data = {geo: luebtheen300619, start: 2022, compareYear: 2023};
 var hrenskoData = {geo: hrensko24072022, start: 2022, compareYear: 2023};
-var harzData = {geo: ee.Geometry.Point([]), start: 2019, compareYear: 2020}
+var harzData = {geo: ee.Geometry.Point([10.7554, 51.7269]), start: 2019, compareYear: 2020};
