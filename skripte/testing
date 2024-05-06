@@ -38,7 +38,8 @@ var p2 = ui.Panel();
 var m1 = ui.Map();
 var m2 = ui.Map();
 
-
+m1.centerObject(geometry)
+m2.centerObject(geometry)
 ui.Map.Linker([m1,m2]);
 
 var sp = ui.SplitPanel(m1,m2,'horizontal', true)
