@@ -115,6 +115,7 @@ function startCalc(baseMap){
   baseMap.addLayer(egImg, viz, 'Evergreen Forest');
   baseMap.addLayer(mxImg, viz, 'Mixed Forest');
   baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
+  print(baseMap.layers())
 }
 
 // Erstellen des Beobachtungsbildes
