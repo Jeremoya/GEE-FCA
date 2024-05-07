@@ -34,7 +34,7 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
-var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
+var aoi = ee.Dictionary(AOIs.getAOI('Treuenbrietzen'));
 print('aoi', aoi)
 
 
