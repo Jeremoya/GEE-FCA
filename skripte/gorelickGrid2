@@ -13,7 +13,7 @@ var hexGrid = function(proj, diameter) {
     r: ee.Number(diameter).divide(2),
   }
   //i = xi + yi / 3
-  //xi = Aix + Biy | u - v
+  //xi = Aix + Biy | u - v | x/d - sqrt(3)*y/d
   //yi = Cix + Diy | x / r
   var i = ee.Image().expression("floor((floor(u - v) + floor(x / r))/3)", vals)
   //j = xj + yj / 3
