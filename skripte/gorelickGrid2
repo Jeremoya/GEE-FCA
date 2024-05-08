@@ -6,9 +6,9 @@ var hexGrid = function(proj, diameter) {
   var coords = ee.Image.pixelCoordinates(proj)
   var vals = {
     // Switch x and y here to get flat top instead of pointy top hexagons.
-    x: coords.select("y"),
-    u: coords.select("y").divide(diameter),  // term 1
-    v: coords.select("x").divide(size),      // term 2
+    x: coords.select("x"),
+    u: coords.select("x").divide(diameter),  // term 1
+    v: coords.select("y").divide(size),      // term 2
     r: ee.Number(diameter).divide(2),
   }
   var i = ee.Image().expression("floor((floor(u - v) + floor(x / r))/3)", vals)
@@ -27,7 +27,7 @@ var region = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
     .union().first().geometry()
 
 // Generate a hex grid and mask off cells that don't touch the region.
-var grid = hexGrid(ee.Projection('EPSG:3857'), 1000000)
+var grid = hexGrid(ee.Projection('EPSG:5070'), 70000)
 
 var regionImg = ee.Image(0).byte().paint(region, 1)
 Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'yellow', 'orange', 'red']});
