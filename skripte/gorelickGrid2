@@ -1,7 +1,8 @@
 
 
 var hexGrid = function(proj, diameter) {
-  var size = ee.Number(diameter).divide(Math.sqrt(3)) // Distance from center to vertex
+  // Distance from center to vertex
+  var size = ee.Number(diameter).divide(Math.sqrt(3)) 
   
   var coords = ee.Image.pixelCoordinates(proj)
   var vals = {
@@ -11,12 +12,19 @@ var hexGrid = function(proj, diameter) {
     v: coords.select("y").divide(size),      // term 2
     r: ee.Number(diameter).divide(2),
   }
+  //i = xi + yi / 3
+  //xi = Aix + Biy | u - v
+  //yi = Cix + Diy | x / r
   var i = ee.Image().expression("floor((floor(u - v) + floor(x / r))/3)", vals)
+  //j = xj + yj / 3
+  //xj = Ajx + Bjy | u + v
+  //yj = Cjx + Djy | v - u
   var j = ee.Image().expression("floor((floor(u + v) + floor(v - u))/3)", vals)
   
   // Turn the hex coordinates into a single "ID" number.
   Map.addLayer(i, {min:-32, max: 31}, 'i')
   Map.addLayer(j, {min:-23, max: 22}, 'j')
+  //long + leftshift(32) -> 32 bit x und 32 bit y
   var cells = i.add(j);
   return cells
 }
