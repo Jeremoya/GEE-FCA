@@ -1,3 +1,18 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var euro = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[3.0720063277339182, 57.474688166517815],
+          [3.0720063277339182, 45.220993375464346],
+          [20.034896952733916, 45.220993375464346],
+          [20.034896952733916, 57.474688166517815]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
 var hexGrid = function(proj, diameter) {
@@ -35,8 +50,15 @@ var region = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
     .union().first().geometry()
 
 // Generate a hex grid and mask off cells that don't touch the region.
-var grid = hexGrid(ee.Projection('EPSG:3857'), 500000)
+var grid = hexGrid(ee.Projection('EPSG:3857'), 500000).cast({x: 'int'})
 
 var regionImg = ee.Image(0).byte().paint(region, 1)
 Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'yellow', 'orange', 'red']});
+var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
+  geometry: euro, 
+  scale: 100,
+  maxPixels	: 15157171632
+  
+})
+Map.addLayer(hexGrid);
 Map.addLayer(regionImg, {min:0, max:1})
