@@ -80,7 +80,7 @@ for (var m = 1; m < 13; m++){
   var img = createPercentiles(type, m);
   img = img.set({'month' : m});
   img = img.set({'type' : type});
-  Export.image.toAsset({image: img, description: m + '_' + type + '_export_px1km100m', assetId : 'EG_PX/' + m + '_' + type, scale: 100, maxPixels: 9000000000000});
+  // Export.image.toAsset({image: img, description: m + '_' + type + '_export_px1km100m', assetId : 'EG_PX/' + m + '_' + type, scale: 100, maxPixels: 9000000000000});
   
   
 }
