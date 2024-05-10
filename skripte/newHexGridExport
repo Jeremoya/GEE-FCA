@@ -69,12 +69,12 @@ var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
 })
 hexGrid = hexGrid.map(function(ft){
   var area = ft.area(1);
-  ft = ft.simplify(10000);
+  ft = ft.simplify(5000);
   return ft.set('gr', area);
-}).filterBounds(ROI);
+}).filterBounds(ROI.geometry().convexHull(1000));
 print(hexGrid);
 Map.addLayer(hexGrid);
-Export.table.toAsset(hexGrid, 'hexgrid_for_Africa', 'Grids/HexgridAfrica')
+// Export.table.toAsset(hexGrid, 'hexgrid_for_Africa', 'Grids/HexgridAfrica')
 
 
 Map.addLayer(regionImg, {min:0, max:1})
