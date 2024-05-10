@@ -14,7 +14,7 @@ var euro =
           [71.70218191824873, 85.59602085970546]]], null, false),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var rgn = 'Europe';
+var rgn = 'Africa';
 var borderFilter = ee.Filter.stringContains('wld_rgn' , rgn );
 var ROI = LSIB.filter(borderFilter)
 Map.addLayer(ROI.geometry().convexHull().buffer(300000), {}, 'ROI');
@@ -74,7 +74,7 @@ hexGrid = hexGrid.map(function(ft){
 }).filterBounds(ROI);
 print(hexGrid);
 Map.addLayer(hexGrid);
-//Export.table.toAsset(hexGrid, 'hexgrid_for_europe', 'HexgridEU')
+Export.table.toAsset(hexGrid, 'hexgrid_for_Africa', 'HexgridEU')
 
 
 Map.addLayer(regionImg, {min:0, max:1})
