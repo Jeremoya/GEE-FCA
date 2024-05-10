@@ -1,3 +1,6 @@
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
 
 /**
  * Generates a hex grid with a unique ID in each grid cell.
@@ -28,9 +31,19 @@ var hexGrid = function(proj, diameter) {
   return cells
 }
 
+var createImage = function(type, month){
+  
+  var img = s2Data.filter(ee.Filter.calendarRange(month, month, 'month'))
+                  // .filterBounds(region)
+                  .median()
+                  .updateMask(vegMask.createCopernicusMask(type));
+
+  return img;
+};
+
 // Define a region for masking hexagons.
 var region = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
-    .filter("country_na == 'United States'")
+    .filter("wld_rgn == 'Europe'")
     .union().first().geometry()
 
 // Generate a hex grid and mask off cells that don't touch the region.
@@ -40,11 +53,27 @@ var mask = grid.addBands(regionImg)
     .reduceConnectedComponents(ee.Reducer.max(), "hexgrid", 256)
 grid = grid.updateMask(mask)
 
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                     return img.updateMask(img.select(['SCL']).eq(4));
+                     })
+                    .select(['B5'/*, 'B8A', 'B11'*/]);
+var egImg = createImage('Evergreen', 6).addBands(grid);
+
 // Import MODIS veg. indices; calculate mean NDVI for April, 2020. 
 var ndvi = ee.ImageCollection('MODIS/006/MOD13A2')
   .filterDate('2020-04-01', '2020-05-01').mean().select('NDVI')
   .addBands(grid);
+  
 
+var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
+                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
+                    
+
+print('eg', egImg)
+var redImg = egImg.reduceConnectedComponents(ee.Reducer.mean(), "hexgrid" , 16)
+print('red', redImg)
 // Calculate mean NDVI per hexagon.
 var meanNdvi = ndvi.reduceConnectedComponents(ee.Reducer.mean(), "hexgrid", 256)
 
@@ -67,5 +96,6 @@ var ndvi = ndvi.select('NDVI').visualize({
 var composite = background.blend(ndvi).blend(meanNdvi.visualize(vis))
 
 // Display the results to the map.
-Map.addLayer(composite)
+// Map.addLayer(composite)
+Map.addLayer(redImg.select('B5'))
 // Map.setLocked(false, 3, 7)
