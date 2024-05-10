@@ -74,4 +74,7 @@ hexGrid = hexGrid.map(function(ft){
 }).filterBounds(ROI);
 print(hexGrid);
 Map.addLayer(hexGrid);
+//Export.table.toAsset(hexGrid, 'hexgrid_for_europe', 'HexgridEU')
+
+
 Map.addLayer(regionImg, {min:0, max:1})
