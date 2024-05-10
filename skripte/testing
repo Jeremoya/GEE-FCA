@@ -30,6 +30,15 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.043187786964388, 51.969833508686065],
           [9.043187786964388, 51.97245090568793]]], null, false),
     dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1"),
-    HGEU = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU");
+    HGEU = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU"),
+    qr = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(HGEU)
+
+
+var rea = qr.map(function(ft){
+  
+  var area = ft.geometry().area();
+  return ee.Feature(ft).set('area', area);
+})
+
+Map.addLayer(rea)
