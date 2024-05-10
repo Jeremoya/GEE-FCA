@@ -8,12 +8,17 @@ var euro =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-25.75611867226608, 71.96889886335167],
-          [-25.75611867226608, 35.46990792290435],
-          [50.26927195273392, 35.46990792290435],
-          [50.26927195273392, 71.96889886335167]]], null, false),
+        [[[-24.801726678684073, 85.59602085970546],
+          [-24.801726678684073, -62.09857531435678],
+          [71.70218191824873, -62.09857531435678],
+          [71.70218191824873, 85.59602085970546]]], null, false),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var rgn = 'Europe';
+var borderFilter = ee.Filter.stringContains('wld_rgn' , rgn );
+var ROI = LSIB.filter(borderFilter).geometry().bounds()
+// Map.addLayer(ROI, {}, 'ROI');
+
 
 
 var hexGrid = function(proj, diameter) {
@@ -58,7 +63,7 @@ var regionImg = ee.Image(0).byte().paint(region, 1)
 Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'yellow', 'orange', 'red']});
 var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
   geometry: euro, 
-  scale: 100,
+  scale: 1000,
   maxPixels	: 15157171632
   
 })
