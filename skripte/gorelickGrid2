@@ -8,10 +8,11 @@ var euro =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[3.0720063277339182, 57.474688166517815],
-          [3.0720063277339182, 45.220993375464346],
-          [20.034896952733916, 45.220993375464346],
-          [20.034896952733916, 57.474688166517815]]], null, false);
+        [[[-25.75611867226608, 71.96889886335167],
+          [-25.75611867226608, 35.46990792290435],
+          [50.26927195273392, 35.46990792290435],
+          [50.26927195273392, 71.96889886335167]]], null, false),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
@@ -40,7 +41,8 @@ var hexGrid = function(proj, diameter) {
   Map.addLayer(i, {min:-32, max: 31}, 'i')
   Map.addLayer(j, {min:-23, max: 22}, 'j')
   //long + leftshift(32) -> 32 bit x und 32 bit y
-  var cells = i.add(j);
+  var cells = i.add(j).add(i).rename("hexgrid");
+  // var cells = i.long().leftShift(32).add(j.long()).rename("hexgrid");
   return cells
 }
 
@@ -50,7 +52,7 @@ var region = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
     .union().first().geometry()
 
 // Generate a hex grid and mask off cells that don't touch the region.
-var grid = hexGrid(ee.Projection('EPSG:3857'), 500000).cast({x: 'int'})
+var grid = hexGrid(ee.Projection('EPSG:5070'), 300000).cast({hexgrid: 'int'})
 
 var regionImg = ee.Image(0).byte().paint(region, 1)
 Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'yellow', 'orange', 'red']});
@@ -60,5 +62,10 @@ var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
   maxPixels	: 15157171632
   
 })
+hexGrid = hexGrid.map(function(ft){
+  var area = ft.area(1);
+  return ft.set('gr', area);
+})
+print(hexGrid);
 Map.addLayer(hexGrid);
 Map.addLayer(regionImg, {min:0, max:1})
