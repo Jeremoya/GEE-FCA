@@ -24,13 +24,13 @@ var dr = ee.DateRange('2018-10-01', '2018-11-01')
 //truecolor images to compare with deviations
 var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .map(cloudMask.S2CloudMask)
-                    // .map(function(img){
-                    // return img.updateMask(img.select(['SCL']).eq(4));
-                    // })
-                     .filterDate(dr)
-                    // .filter(ee.Filter.calendarRange(6, 6, 'month'))
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(4));
+                    })
+                    // .filterDate(dr)
+                    .filter(ee.Filter.calendarRange(6, 6, 'month'))
                     .median()
-                    // .updateMask(vegMask.createCopernicusMask('Evergreen'));
+                    .updateMask(vegMask.createCopernicusMask('Evergreen'));
                     
 Map.addLayer(tc.select(['B5']), {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc-IR')    
 Map.addLayer(tc.select(['B4','B3','B2']), {min: 0, max: 2000}, 'tc-RGB')    
