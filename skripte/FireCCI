@@ -1,12 +1,26 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1");
+var cci = ee.ImageCollection("ESA/CCI/FireCCI/5_1"),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Visualize FireCCI51 for one year
+//////////
+//Hansen
+//////////
+
+
+
+print(hansen)
+Map.addLayer(hansen.select('lossyear'), {min : 16, max : 23}, 'hansen-lossyear')
+
+
+
+
+
 //////////
 //FIRECCI
 //////////
 
-var burnedArea = dataset.filterDate('2016-01-01', '2020-12-31');
+var burnedArea = cci.filterDate('2016-01-01', '2020-12-31');
 
 // Use a circular palette to assign colors to date of first detection
 var monthVis = {
@@ -19,7 +33,7 @@ var yearVis = {
   max: 2020,
   palette: ['blue', 'white', 'red']
 };
-print(burnedArea);
+
 var maxBA = burnedArea.map(function(img){
   var date = ee.Date(img.get('system:time_start'));
   var month = ee.Number(date.get('month'));
@@ -30,9 +44,9 @@ var maxBA = burnedArea.map(function(img){
   return monthImg.addBands(yearImg);
 });
 
-maxBA = maxBA.reduce(ee.Reducer.firstNonNull())
+maxBA = maxBA.reduce(ee.Reducer.firstNonNull());
 
 
 //Map.addLayer(maxBA, baVis, 'Burned Area');
-// Map.addLayer(maxBA.select('burnYear_first'), yearVis, 'year');
+Map.addLayer(maxBA.select('burnYear_first'), yearVis, 'year');
 // Map.addLayer(maxBA.select('burnMonth_first'), monthVis, 'month');
