@@ -2,6 +2,9 @@
 var dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Visualize FireCCI51 for one year
+//////////
+//FIRECCI
+//////////
 
 var burnedArea = dataset.filterDate('2016-01-01', '2020-12-31');
 
@@ -31,5 +34,5 @@ maxBA = maxBA.reduce(ee.Reducer.firstNonNull())
 
 
 //Map.addLayer(maxBA, baVis, 'Burned Area');
-Map.addLayer(maxBA.select('burnYear_first'), yearVis, 'year');
-Map.addLayer(maxBA.select('burnMonth_first'), monthVis, 'month');
+// Map.addLayer(maxBA.select('burnYear_first'), yearVis, 'year');
+// Map.addLayer(maxBA.select('burnMonth_first'), monthVis, 'month');
