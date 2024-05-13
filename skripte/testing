@@ -33,12 +33,30 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     HGEU = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU"),
     qr = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var generateHexagonalSeeds = function(size, crs, scale) {
+  crs = crs || 'EPSG:3857'
 
-
-var rea = qr.map(function(ft){
+  scale = scale || Map.getScale()
   
-  var area = ft.geometry().area();
-  return ee.Feature(ft).set('area', area);
-})
+  var step = ee.Number(scale).multiply(size)
 
-Map.addLayer(rea)
+  var image1 = ee.Image.pixelCoordinates(crs)
+    .mod(ee.Image.constant([step.multiply(2), step.multiply(3)]))
+    .abs()
+    .gt(scale)
+    .reduce(ee.Reducer.anyNonZero())
+    .not()
+
+  var image2 = ee.Image.pixelCoordinates(crs).add(ee.Image.constant([step, step.multiply(1.5)]))
+    .mod(ee.Image.constant([step.multiply(2), step.multiply(3)]))
+    .abs()
+    .gt(scale)
+    .reduce(ee.Reducer.anyNonZero())
+    .not()
+
+  return ee.Image([image1, image2]).reduce(ee.Reducer.anyNonZero())
+}
+
+var i = generateHexagonalSeeds(30, 'EPSG:5070', 2000)
+print(Map.getScale())
+Map.addLayer(i)
