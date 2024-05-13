@@ -1,21 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
-    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
-    geometry = 
-    /* color: #98ff00 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[9.211556248498013, 52.1571704946266],
-          [9.211556248498013, 52.06777475205635],
-          [9.391457371544888, 52.06777475205635],
-          [9.391457371544888, 52.1571704946266]]], null, false),
-    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
-    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     clipReg = 
     /* color: #d63000 */
     /* shown: false */
@@ -29,9 +13,7 @@ var table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [9.037050892738314, 51.969833508686065],
           [9.043187786964388, 51.969833508686065],
           [9.043187786964388, 51.97245090568793]]], null, false),
-    dataset = ee.ImageCollection("ESA/CCI/FireCCI/5_1"),
-    HGEU = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU"),
-    qr = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var generateHexagonalSeeds = function(size, crs, scale) {
   crs = crs || 'EPSG:3857'
@@ -62,3 +44,5 @@ var generateHexagonalSeeds = function(size, crs, scale) {
 var i = generateHexagonalSeeds(30, 'EPSG:5070', 2000)
 print(Map.getScale())
 Map.addLayer(i)
+
+Map.addLayer(ba)
