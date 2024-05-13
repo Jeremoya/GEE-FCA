@@ -53,6 +53,8 @@ var generateHexagonalSeeds = function(size, crs, scale) {
     .gt(scale)
     .reduce(ee.Reducer.anyNonZero())
     .not()
+  Map.addLayer(image1)
+  Map.addLayer(image2)
 
   return ee.Image([image1, image2]).reduce(ee.Reducer.anyNonZero())
 }
