@@ -1,0 +1,36 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    roi = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[12.7122421814739, 52.38203758299133],
+          [12.7122421814739, 52.0277233443725],
+          [13.4593124939739, 52.0277233443725],
+          [13.4593124939739, 52.38203758299133]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Bilder per eq/neq verknüpfen -> ee.Reducer.count();
+//Unterscheidung zwischen FN/TN FP/TP
+//Welcher Waldzustandswert als schlechter Pixel??
+
+//1. FCA auf binär reduzieren
+
+
+var idFilter = ee.Filter.eq('id', '14433')
+var testArea = ee.FeatureCollection(burntAreas).filter(idFilter).first();
+Map.addLayer(ee.Feature(testArea))
+
+Map.centerObject(testArea,13)
+
+var fcaThreshhold = 0;
+
+function getConfusionmatrix(area, prediction, actual){
+  
+  
+}
+
