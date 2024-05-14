@@ -25,7 +25,7 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
 var idFilter = ee.Filter.eq('id', '14433')
 var testArea = ee.FeatureCollection(burntAreas).filter(idFilter).first();
 Map.addLayer(ee.Feature(testArea))
-Map.addLayer(hansen.select('lossyear'))
+Map.addLayer(hansen.select('lossyear').clip(testArea.geometry()), {min:16, max: 23})
 
 Map.centerObject(testArea,13)
 
@@ -33,6 +33,10 @@ var fcaThreshhold = 0;
 
 function getConfusionmatrix(area, prediction, actual){
   
+  var tpImg = prediction.eq(actual);
+  var tp = tpImg.reduceRegion(ee.Reducer.count(), area);
+  
+  return tp;
   
 }
 
