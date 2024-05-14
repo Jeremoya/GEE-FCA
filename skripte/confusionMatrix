@@ -3,17 +3,13 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
     roi = 
     /* color: #d63000 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
-        [[[12.7122421814739, 52.38203758299133],
-          [12.7122421814739, 52.0277233443725],
-          [13.4593124939739, 52.0277233443725],
-          [13.4593124939739, 52.38203758299133]]], null, false),
-    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
+        [[[12.820045526200463, 52.10286144850254],
+          [12.83583837288015, 52.01251150217602],
+          [13.06105809944265, 51.998985521605476],
+          [13.05556493538015, 52.11129603305777]]], null, false),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
+    fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Bilder per eq/neq verknüpfen -> ee.Reducer.count();
 //Unterscheidung zwischen FN/TN FP/TP
@@ -24,22 +20,51 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
 
 var idFilter = ee.Filter.eq('id', '14433')
 var testArea = ee.FeatureCollection(burntAreas).filter(idFilter).first();
-Map.addLayer(ee.Feature(testArea))
-var hansi = hansen.select('lossyear').clip(testArea.geometry())
-Map.addLayer(hansi.updateMask(hansi.eq(19)) , {min:16, max: 23})
+var fcaThreshhold = -0.75;
+var hansi = hansen.select('lossyear').clip(roi)
+hansi = hansi.eq(19).unmask(0)
+// Map.addLayer(ee.Feature(testArea))
+Map.addLayer(hansi , {min:0, max: 1}, 'hansen')
+Map.addLayer(fcaImg, {}, 'fca')
+Map.addLayer(fcaImg.lte(fcaThreshhold).clip(roi), {}, 'fca_threshhold')
 
 Map.centerObject(testArea,13)
 
-var fcaThreshhold = 0;
 
 function getConfusionmatrix(area, prediction, actual){
-  
+  //prediction : Hansen
+  //actual: fca
   // Werte < Threshhold 1 sonst 0
-  prediction = prediction.lte(fcaThreshhold);
-  var tpImg = prediction.eq(actual);
-  var tp = tpImg.reduceRegion(ee.Reducer.count(), area);
+  var predictionPos = prediction.lte(fcaThreshhold);
+  predictionPos = predictionPos.updateMask(predictionPos);
+  var predictionNeg = prediction.gt(fcaThreshhold);
+  predictionNeg = predictionNeg.updateMask(predictionNeg);
+  Map.addLayer(predictionPos, {}, 'pos');
+  Map.addLayer(predictionNeg, {}, 'neg');
   
-  return tp;
+  //true Positive -> prediction & actual pos
+  var tpImg = predictionPos.eq(actual);
+  Map.addLayer(tpImg, {}, 'tp')
+  var tp = tpImg.updateMask(tpImg).reduceRegion(ee.Reducer.count(), area);
+  
+  //false Positive -> prediction pos, actual neg
+  var fpImg = predictionPos.neq(actual);
+  Map.addLayer(fpImg, {}, 'fp')
+  var fp = fpImg.updateMask(fpImg).reduceRegion(ee.Reducer.count(), area);
+  
+  //false Negative -> prediction neg, actual pos
+  var fnImg = predictionNeg.eq(actual)
+  Map.addLayer(fnImg, {}, 'fn')
+  var fn = fnImg.updateMask(fnImg).reduceRegion(ee.Reducer.count(), area);
+  
+  //true Negative -> prediction neg, actual neg
+  var tnImg = predictionNeg.neq(actual)
+  Map.addLayer(tnImg, {}, 'tn')
+  var tn = tnImg.updateMask(tnImg).reduceRegion(ee.Reducer.count(), area);
+  
+  return [tp, fp, fn, tn];
   
 }
 
+var trueP = getConfusionmatrix(roi, fcaImg, hansi)
+print(trueP)
