@@ -21,7 +21,19 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
          [[[23.716602092816654, 45.231658268944074],
            [23.716602092816654, 45.21618209424559],
            [23.72140861137134, 45.21618209424559],
-           [23.72140861137134, 45.231658268944074]]]], null, false);
+           [23.72140861137134, 45.231658268944074]]]], null, false),
+    geometry = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[12.331275515503458, 52.308622185013476],
+          [12.331275515503458, 51.384784559745],
+          [13.756751589722208, 51.384784559745],
+          [13.756751589722208, 52.308622185013476]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -340,4 +352,7 @@ m2.centerObject(currGeo, 12);
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 
-
+var exporttestimage = function(){
+  month = [1,2,3,4,5,6,7,8,9,10,11,12]
+  year = 2019;
+}
