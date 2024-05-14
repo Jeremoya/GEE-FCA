@@ -4,10 +4,10 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
     /* color: #d63000 */
     /* shown: false */
     ee.Geometry.Polygon(
-        [[[12.820045526200463, 52.10286144850254],
-          [12.83583837288015, 52.01251150217602],
-          [13.06105809944265, 51.998985521605476],
-          [13.05556493538015, 52.11129603305777]]], null, false),
+        [[[12.905876214677026, 52.05200930800797],
+          [12.899696405106713, 52.02539964771115],
+          [12.943298394852807, 52.028568295042],
+          [12.94398504036062, 52.05918697888853]]], null, false),
     hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
     fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -61,6 +61,9 @@ function getConfusionmatrix(area, prediction, actual){
   var tnImg = predictionNeg.neq(actual)
   Map.addLayer(tnImg, {}, 'tn')
   var tn = tnImg.updateMask(tnImg).reduceRegion(ee.Reducer.count(), area);
+  
+  Map.addLayer(tpImg.and(fpImg), {}, 'pos and')
+  Map.addLayer(tnImg.and(fnImg), {}, 'neg and')
   
   return [tp, fp, fn, tn];
   
