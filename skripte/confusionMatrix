@@ -20,7 +20,7 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
 
 var idFilter = ee.Filter.eq('id', '14433')
 var testArea = ee.FeatureCollection(burntAreas).filter(idFilter).first();
-var fcaThreshhold = -0.75;
+var fcaThreshhold = -0.65;
 var hansi = hansen.select('lossyear').clip(roi)
 hansi = hansi.eq(19).unmask(0)
 // Map.addLayer(ee.Feature(testArea))
