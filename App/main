@@ -128,15 +128,15 @@ function startCalc(baseMap){
   baseMap.addLayer(mxImg, viz, 'Mixed Forest');
   baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
   print(baseMap.layers())
-  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
-  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  Export.image.toAsset({image: allImgs, 
-    description: 'testConf',
-    assetId: 'testConf', 
-    region: geometry, 
-    scale: 10
-    
-  })
+  // var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
+  // allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  // Export.image.toAsset({image: allImgs, 
+  //   description: 'testConf',
+  //   assetId: 'testConf', 
+  //   region: geometry, 
+  //   scale: 10,
+  //   maxPixels : 1632126650
+  // })
 }
 
 // Erstellen des Beobachtungsbildes
@@ -290,7 +290,7 @@ var monthSelect = ui.Select({
 var calcButton = ui.Button({
   label: 'Calculate FCA',
   style: {stretch: 'horizontal'},
-  onClick: exporttestimage
+  onClick: startCalc
 });
 
 
@@ -370,4 +370,4 @@ var exporttestimage = function(){
   
 }
 
-exporttestimage()
+// exporttestimage()
