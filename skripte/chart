@@ -2,18 +2,17 @@
 var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(fcaImg, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']})
-
+var old = null;
 
 function createHisto(coords){
   coords = ee.Dictionary(coords)
   var center = ee.Geometry.Point(coords.values().reverse());
-  var rg = center.buffer(5000);
+  Map.layers().remove(old)
+  var rg = center.buffer(2000);
   Map.centerObject(rg)
   print(rg)
-  var old = Map.layers().get(1)
-  Map.layers().remove(old)
   Map.addLayer(rg)
-  
+  old = Map.layers().get(Map.layers().length() - 1)
   var chart =
     ui.Chart.image.histogram({image: fcaImg, scale : 20, maxPixels: 100000000, region: rg
   });
