@@ -15,7 +15,6 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
 //Unterscheidung zwischen FN/TN FP/TP
 //Welcher Waldzustandswert als schlechter Pixel??
 
-//1. FCA auf binär reduzieren
 
 
 var idFilter = ee.Filter.eq('id', '14433')
@@ -44,28 +43,31 @@ function getConfusionmatrix(area, prediction, actual){
   
   //true Positive -> prediction & actual pos
   var tpImg = predictionPos.eq(actual);
+  tpImg = tpImg.updateMask(tpImg);
   Map.addLayer(tpImg, {}, 'tp')
-  var tp = tpImg.updateMask(tpImg).reduceRegion(ee.Reducer.count(), area);
+  var tp = tpImg.reduceRegion(ee.Reducer.count(), area).values();
   
   //false Positive -> prediction pos, actual neg
   var fpImg = predictionPos.neq(actual);
+  fpImg = fpImg.updateMask(fpImg);
   Map.addLayer(fpImg, {}, 'fp')
-  var fp = fpImg.updateMask(fpImg).reduceRegion(ee.Reducer.count(), area);
+  var fp = fpImg.reduceRegion(ee.Reducer.count(), area).values();
   
   //false Negative -> prediction neg, actual pos
   var fnImg = predictionNeg.eq(actual)
+  fnImg = fnImg.updateMask(fnImg);
   Map.addLayer(fnImg, {}, 'fn')
-  var fn = fnImg.updateMask(fnImg).reduceRegion(ee.Reducer.count(), area);
+  var fn = fnImg.reduceRegion(ee.Reducer.count(), area).values();
   
   //true Negative -> prediction neg, actual neg
   var tnImg = predictionNeg.neq(actual)
+  tnImg = tnImg.updateMask(tnImg);
   Map.addLayer(tnImg, {}, 'tn')
-  var tn = tnImg.updateMask(tnImg).reduceRegion(ee.Reducer.count(), area);
+  var tn = tnImg.reduceRegion(ee.Reducer.count(), area).values();
   
-  Map.addLayer(tpImg.and(fpImg), {}, 'pos and')
-  Map.addLayer(tnImg.and(fnImg), {}, 'neg and')
   
-  return [tp, fp, fn, tn];
+  
+  return ee.Dictionary.fromLists(['tp', 'fp', 'fn', 'tn'], ee.List([tp, fp, fn, tn]).flatten());
   
 }
 
