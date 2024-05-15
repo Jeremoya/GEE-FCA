@@ -13,36 +13,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [9.037050892738314, 51.969833508686065],
           [9.043187786964388, 51.969833508686065],
           [9.043187786964388, 51.97245090568793]]], null, false),
-    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
+    eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var generateHexagonalSeeds = function(size, crs, scale) {
-  crs = crs || 'EPSG:3857'
-
-  scale = scale || Map.getScale()
-  
-  var step = ee.Number(scale).multiply(size)
-
-  var image1 = ee.Image.pixelCoordinates(crs)
-    .mod(ee.Image.constant([step.multiply(2), step.multiply(3)]))
-    .abs()
-    .gt(scale)
-    .reduce(ee.Reducer.anyNonZero())
-    .not()
-
-  var image2 = ee.Image.pixelCoordinates(crs).add(ee.Image.constant([step, step.multiply(1.5)]))
-    .mod(ee.Image.constant([step.multiply(2), step.multiply(3)]))
-    .abs()
-    .gt(scale)
-    .reduce(ee.Reducer.anyNonZero())
-    .not()
-  Map.addLayer(image1)
-  Map.addLayer(image2)
-
-  return ee.Image([image1, image2]).reduce(ee.Reducer.anyNonZero())
-}
-
-var i = generateHexagonalSeeds(30, 'EPSG:5070', 2000)
-print(Map.getScale())
-Map.addLayer(i)
-
 Map.addLayer(ba)
