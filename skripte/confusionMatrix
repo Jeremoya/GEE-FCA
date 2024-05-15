@@ -16,7 +16,6 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
 //Welcher Waldzustandswert als schlechter Pixel??
 
 
-
 var idFilter = ee.Filter.eq('id', '14433')
 var testArea = ee.FeatureCollection(burntAreas).filter(idFilter).first();
 var fcaThreshhold = -0.65;
