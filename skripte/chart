@@ -1,5 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf");
+var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
+    s2data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(fcaImg, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']})
 var old = null;
@@ -16,7 +17,22 @@ function createHisto(coords){
   var chart =
     ui.Chart.image.histogram({image: fcaImg, scale : 20, maxPixels: 100000000, region: rg
   });
-  print(chart)
+  print(chart);
 }
 
-Map.onClick(createHisto)
+// Map.onClick(createHisto)
+
+function createTimeSeries(){
+  
+}
+var col;
+
+function groupImages(){
+  col = s2data.map(function(img) {
+    var month = ee.Date(img.get('system:time_start')).getRelative('month', 'year');
+    return img.set('month', month);
+  });
+}
+
+groupImages();
+print(col.first())
