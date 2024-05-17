@@ -67,7 +67,7 @@ function calcNDVI(image){
 
 
 
-var ttt = s2data.filterDate('2018-02-01','2019-11-01').map(calcNDVI);
+var ttt = s2data.map(cm.s2CloudMask).filterDate('2018-02-01','2019-11-01').map(calcNDVI);
 Map.addLayer(ttt.median().select('NDVI'), {min: -0.1, max: 0.9, palette: ['blue', 'brown', 'white', 'green']})
 
 print(ttt.first())
