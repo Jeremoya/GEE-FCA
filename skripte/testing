@@ -20,3 +20,11 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(eu.map(function(ft){return ft.buffer(3500)}))
 Map.addLayer(eu2, {color: 'green'})
+
+var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
+                  .filterBounds(eu2)
+                  .select('SCL')
+                  .map(function(img){return img.eq(4)})
+                  .max().selfMask();
+
+Map.addLayer(s2Veg)
