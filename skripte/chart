@@ -17,6 +17,8 @@ var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
 Map.addLayer(fcaImg, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']})
 var old = null;
 
+var cm = require('users/fichtnej/modules:CloudMasks');
+
 function createHisto(coords){
   coords = ee.Dictionary(coords)
   var center = ee.Geometry.Point(coords.values().reverse());
@@ -35,11 +37,10 @@ function createHisto(coords){
 function createTimeSeries(coords){
   coords = ee.Dictionary(coords)
   var center = ee.Geometry.Point(coords.values().reverse());
-  
-  Map.add(x)
+  var x = ui.Chart.image.doySeriesByYear(ttt.select('NDVI'), 'NDVI', center, ee.Reducer.mean(), 20)
+  print(x)
 }
 
-print(x)
 // Map.onClick(createHisto)
 Map.onClick(createTimeSeries)
 
@@ -57,7 +58,7 @@ function groupImages(){
 function calcNDVI(image){
   var red = image.select('B4');
   var nir = image.select('B8');
-  return image.addBands(nir.subtract(red)).divide(nir.add(red)).rename('NDVI');
+  return image.addBands(ee.Image(nir.subtract(red)).divide(nir.add(red)).rename('NDVI'));
   /*
   return image.expression('(NIR - RED) / (NIR + RED)',
                              {'RED' : red,'NIR' : nir})
@@ -66,13 +67,10 @@ function calcNDVI(image){
 
 
 
-var ttt = s2data.filterDate('2019-02-01','2019-11-01').map(calcNDVI);
-Map.addLayer(ttt.median(), {min: -0.1, max: 0.9, palette: ['blue', 'brown', 'white', 'green']})
+var ttt = s2data.filterDate('2018-02-01','2019-11-01').map(calcNDVI);
+Map.addLayer(ttt.median().select('NDVI'), {min: -0.1, max: 0.9, palette: ['blue', 'brown', 'white', 'green']})
 
 print(ttt.first())
-var coords = geometry;
-var x = ui.Chart.image.doySeriesByYear(ttt.select('NDVI'), 'NDVI', coords, ee.Reducer.mean(), 20)
-print(x)
 
 groupImages();
 print(col.first())
