@@ -17,4 +17,4 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(ba)
+Map.addLayer(eu.map(function(ft){return ft.buffer(3500)}))
