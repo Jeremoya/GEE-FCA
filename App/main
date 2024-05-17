@@ -5,14 +5,7 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV"),
     aoi1 = 
     /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      },
-      {
-        "type": "rectangle"
-      }
-    ] */
+    /* shown: false */
     ee.Geometry.MultiPolygon(
         [[[[23.645476277373046, 45.27204716831395],
            [23.645476277373046, 45.18875133788677],
@@ -24,11 +17,7 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
            [23.72140861137134, 45.231658268944074]]]], null, false),
     geometry = 
     /* color: #98ff00 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
+    /* shown: false */
     ee.Geometry.Polygon(
         [[[12.331275515503458, 52.308622185013476],
           [12.331275515503458, 51.384784559745],
