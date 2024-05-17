@@ -12,6 +12,15 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                      return img.updateMask(img.select(['SCL']).eq(4));
                      })
                     .select(['B5', 'B8A', 'B11']);
+                    
+function createModis(){
+  
+  return modisData.map(cloudMasks.modisCloudMask)
+                    .select(['sur_refl_b01', 'sur_refl_b02', 'sur_refl_b06'])
+                    .map(function(image){
+                      return image.rename(['B5', 'B8A', 'B11']);
+                    });
+
 
 
 //Global variables
