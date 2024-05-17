@@ -64,7 +64,7 @@ Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'ye
 var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
   geometry: ROI.geometry().convexHull(10000).buffer(300000), 
   scale: 100,
-  maxPixels	: 15157171632
+  maxPixels	: 1515717163200
   
 })
 hexGrid = hexGrid.map(function(ft){
@@ -74,7 +74,7 @@ hexGrid = hexGrid.map(function(ft){
 }).filterBounds(ROI.geometry().convexHull(1000));
 print(hexGrid);
 Map.addLayer(hexGrid);
-Export.table.toAsset(hexGrid, 'hexgrid_for_EU', 'Grids/HexgridEU_higherRes')
+//Export.table.toAsset(hexGrid, 'hexgrid_for_EU2', 'Grids/HexgridEU_higherRes2')
 
 
 Map.addLayer(regionImg, {min:0, max:1})
