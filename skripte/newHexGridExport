@@ -71,6 +71,6 @@ hexGrid = hexGrid.map(function(ft){
 }).filterBounds(ROI.geometry().convexHull(1000));
 print(hexGrid);
 Map.addLayer(hexGrid);
-Export.table.toAsset(hexGrid, 'hexgrid_for_' + rgn, 'Grids/Hexgrid_' + rgn)
+// Export.table.toAsset(hexGrid, 'hexgrid_for_' + rgn, 'Grids/Hexgrid_' + rgn)
 
 
