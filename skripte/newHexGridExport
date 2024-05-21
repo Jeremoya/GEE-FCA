@@ -63,14 +63,14 @@ var regionImg = ee.Image(0).byte().paint(region, 1)
 Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'yellow', 'orange', 'red']});
 var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
   geometry: ROI.geometry().convexHull(10000).buffer(300000), 
-  scale: 50,
+  scale: 100,
   maxPixels	: 1515717163200
   
 })
 hexGrid = hexGrid.map(function(ft){
   var area = ft.area(1);
   ft = ft.simplify(1000);
-  return ft.set('gr', area);
+  return ft.set('gr', area).buffer(200);
 }).filterBounds(ROI.geometry().convexHull(1000));
 print(hexGrid);
 Map.addLayer(hexGrid);
