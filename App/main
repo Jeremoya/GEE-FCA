@@ -3,18 +3,11 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV"),
-    aoi1 = 
-    /* color: #d63000 */
-    /* shown: false */
-    ee.Geometry.MultiPolygon(
-        [[[[23.645476277373046, 45.27204716831395],
-           [23.645476277373046, 45.18875133788677],
-           [23.715342457792968, 45.18875133788677],
-           [23.715342457792968, 45.27204716831395]]],
-         [[[23.716602092816654, 45.231658268944074],
-           [23.716602092816654, 45.21618209424559],
-           [23.72140861137134, 45.21618209424559],
-           [23.72140861137134, 45.231658268944074]]]], null, false),
+    aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[23.645476277373046, 45.27204716831395],
+          [23.645476277373046, 45.18875133788677],
+          [23.715342457792968, 45.18875133788677],
+          [23.715342457792968, 45.27204716831395]]], null, false),
     geometry = 
     /* color: #98ff00 */
     /* shown: false */
