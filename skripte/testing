@@ -15,16 +15,16 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [9.043187786964388, 51.97245090568793]]], null, false),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
-    eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU"),
-    eu2 = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU_higherRes2");
+    eu2 = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU_higherRes2"),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(eu.map(function(ft){return ft.buffer(3500)}))
-Map.addLayer(eu2.map(function(ft){return ft.buffer(200)}), {color: 'green'})
 
-var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
-                  .filterBounds(eu2)
-                  .select('SCL')
-                  .map(function(img){return img.eq(4)})
-                  .max().selfMask();
+// var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
+//                   .filterBounds(eu2)
+//                   .select('SCL')
+//                   .map(function(img){return img.eq(4)})
+//                   .max().selfMask();
 
-Map.addLayer(s2Veg)
+// Map.addLayer(s2Veg)
+
+print(LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().distinct())
