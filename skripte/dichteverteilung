@@ -5,3 +5,11 @@ var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
 var rng = ee.Image.random();
 var sample = fcaImg.updateMask(rng.gt(0.9))
 Map.addLayer(sample, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']}, 'sample')
+
+var hansi = hansen.select('lossyear')
+hansi = hansi.eq(19).selfMask()
+Map.addLayer(hansi)
+
+var lossSample = sample.updateMask(hansi);
+var lossHisto = lossSample.reduce(ee.Reducer.histogram())
+print(lossHisto)
