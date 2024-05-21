@@ -27,4 +27,6 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 // Map.addLayer(s2Veg)
 
-print(LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().distinct())
+// print(LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().distinct())
+
+Map.addLayer(eu2.map)
