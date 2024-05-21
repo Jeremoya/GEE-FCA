@@ -3,13 +3,28 @@ var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
     hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var rng = ee.Image.random();
-var sample = fcaImg.updateMask(rng.gt(0.9))
+var sample = fcaImg//.updateMask(rng.gt(0.5))
 Map.addLayer(sample, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']}, 'sample')
 
 var hansi = hansen.select('lossyear')
-hansi = hansi.eq(19).selfMask()
+hansi = hansi.eq(19).unmask(0)
 Map.addLayer(hansi)
 
 var lossSample = sample.updateMask(hansi);
-var lossHisto = lossSample.reduce(ee.Reducer.histogram())
+var lossHisto = ui.Chart.image.histogram({image: lossSample, scale: 10, maxBuckets: 16, maxPixels: 2000000000})
+var noLossSample = sample.updateMask(hansi.not());
+var noLossHisto = ui.Chart.image.histogram({image: noLossSample, scale: 10, maxBuckets: 32, maxPixels: 2000000000})
 print(lossHisto)
+print(noLossHisto)
+
+function histoPercs(img){
+  var histo = img.reduceRegion({reducer: ee.Reducer.histogram(32), geometry: img.geometry(1), scale: 10, maxPixels: 200000000});
+  var pxCount = img.reduceRegion({reducer: ee.Reducer.count(), geometry: img.geometry(1), scale: 10, maxPixels: 200000000});
+
+  print(pxCount)
+  print(histo)
+  
+  var wd = ee.List(histo.get('histogram')).map(function(el) {return ee.Number(el).divide(pxCount.get('FCA_first'))})}
+  print(wd)
+
+histoPercs(lossSample)
