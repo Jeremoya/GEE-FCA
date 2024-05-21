@@ -14,8 +14,18 @@ var euro =
           [71.70218191824873, 85.59602085970546]]], null, false),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var rgn = 'Africa';
-var borderFilter = ee.Filter.stringContains('wld_rgn' , rgn );
+var af = ['Africa'];
+var eu = ['Europe'];
+var na = ['North America'];
+var ca = ['Central America', 'Caribbean']
+var sa = ['South America']
+var aus = ['Australia', 'Oceania'];
+var rgn = ['S Atlantic', 'Indian Ocean', 'Antarctica']
+var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
+var nAsia = ['N Asia']
+var eAsia = ['SE Asia', 'E Asia']
+
+var borderFilter = ee.Filter.inList('wld_rgn' , af );
 var ROI = LSIB.filter(borderFilter)
 Map.addLayer(ROI.geometry().convexHull().buffer(300000), {}, 'ROI');
 
