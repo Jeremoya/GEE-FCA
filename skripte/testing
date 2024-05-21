@@ -17,7 +17,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     eu2 = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU_higherRes2"),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    table2 = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
+    table2 = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    uslar = ee.FeatureCollection("projects/ee-fichtnej/assets/Friederike/USLAR");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -43,8 +44,8 @@ var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
 var nAsia = ['N Asia']
 var eAsia = ['SE Asia', 'E Asia']
 
-var borderFilter = ee.Filter.inList('wld_rgn' , sa );
-var ROI = LSIB.filter(borderFilter)
-Map.addLayer(ROI, {}, 'ROI');
+// var borderFilter = ee.Filter.inList('wld_rgn' , sa );
+// var ROI = LSIB.filter(borderFilter)
+// Map.addLayer(ROI, {}, 'ROI');
 
-// Map.addLayer(table2)
+Map.addLayer(uslar)
