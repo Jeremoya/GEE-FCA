@@ -1,6 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
-    roi = /* color: #d63000 */ee.Geometry.Polygon(
+    roi = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
         [[[12.905876214677026, 52.05200930800797],
           [12.899696405106713, 52.02539964771115],
           [12.943298394852807, 52.028568295042],
