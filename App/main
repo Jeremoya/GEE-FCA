@@ -12,10 +12,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     /* color: #98ff00 */
     /* shown: false */
     ee.Geometry.Polygon(
-        [[[12.331275515503458, 52.308622185013476],
-          [12.331275515503458, 51.384784559745],
-          [13.756751589722208, 51.384784559745],
-          [13.756751589722208, 52.308622185013476]]], null, false);
+        [[[8.464088015503458, 58.87070606583288],
+          [1.8283458280034592, 45.690037563806676],
+          [31.203040652222207, 46.512732087122615],
+          [29.577064089722207, 58.802483554149624]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -113,8 +113,8 @@ function startCalc(baseMap){
   // var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   // allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
   // Export.image.toAsset({image: allImgs, 
-  //   description: 'testConf',
-  //   assetId: 'testConf', 
+  //   description: 'sampleImg',
+  //   assetId: 'sampleImg', 
   //   region: geometry, 
   //   scale: 10,
   //   maxPixels : 1632126650
