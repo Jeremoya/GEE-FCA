@@ -16,6 +16,8 @@ var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
           [17.31016707547363, 55.201055506038]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(fcaImg, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']})
+// var sample = fcaImg.sample({scale: 10, numPixels: 4000})
+// print(sample)
 var old = null;
 
 var cm = require('users/fichtnej/modules:CloudMasks');
