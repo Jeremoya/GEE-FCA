@@ -16,7 +16,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
     eu2 = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU_higherRes2"),
-    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    table2 = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -29,4 +30,4 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 // print(LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().distinct())
 
-Map.addLayer(eu2.map)
+Map.addLayer(table2)
