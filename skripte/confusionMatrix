@@ -1,13 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
-    roi = 
-    /* color: #d63000 */
-    /* shown: false */
-    ee.Geometry.Polygon(
-        [[[12.905876214677026, 52.05200930800797],
-          [12.899696405106713, 52.02539964771115],
-          [12.943298394852807, 52.028568295042],
-          [12.94398504036062, 52.05918697888853]]], null, false),
+    roi = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[12.9814072205364, 51.85565557058258],
+          [12.858497674637963, 51.65716335811041],
+          [13.268768365555932, 51.68931277659659],
+          [13.283187921219994, 51.8751600792505]]], null, false),
     hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
     fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -18,7 +15,7 @@ var burntAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly")
 
 var idFilter = ee.Filter.eq('id', '14433')
 var testArea = ee.FeatureCollection(burntAreas).filter(idFilter).first();
-var fcaThreshhold = -0.65;
+var fcaThreshhold = -0.25;
 var hansi = hansen.select('lossyear').clip(roi)
 hansi = hansi.eq(19).unmask(0)
 // Map.addLayer(ee.Feature(testArea))
@@ -26,7 +23,7 @@ Map.addLayer(hansi , {min:0, max: 1}, 'hansen')
 Map.addLayer(fcaImg, {}, 'fca')
 Map.addLayer(fcaImg.lte(fcaThreshhold).clip(roi), {}, 'fca_threshhold')
 
-Map.centerObject(testArea,13)
+// Map.centerObject(testArea,13)
 
 
 function getConfusionmatrix(area, prediction, actual){
