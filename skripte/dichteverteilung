@@ -24,7 +24,7 @@ function histoPercs(img){
   print(pxCount)
   print(histo)
   
-  var wd = ee.List(histo.get('histogram')).map(function(el) {return ee.Number(el).divide(pxCount.get('FCA_first'))})}
+  var wd = ee.List(histo.get('histogram')).map(function(el) {return ee.Number(el).divide(pxCount.get('FCA_first'))})
   print(wd)
-
+}
 histoPercs(lossSample)
