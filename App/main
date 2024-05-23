@@ -120,7 +120,7 @@ function startCalc(baseMap){
   baseMap.addLayer(mxImg, viz, 'Mixed Forest');
   baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
   print(baseMap.layers())
-  var landFilter = ee.Filter.eq();
+  var landFilter = ee.Filter.eq('country_na', 'Romania');
   // var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   // allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
   // Export.image.toAsset({image: allImgs, 
