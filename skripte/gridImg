@@ -13,7 +13,8 @@ var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
           [8.92014815453952, 47.45576259738118],
           [20.95017745141452, 47.45576259738118],
           [20.95017745141452, 52.68786831200015]]], null, false),
-    gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
+    gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer"),
+    clipEU = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/clip_EU");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -109,7 +110,7 @@ var startImageExports = function(type){
 var a = createPercentiles('Evergreen', 7);
 print(a);
 
-startImageExports('Other_Vegetation');
+//startImageExports('Evergreen');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
