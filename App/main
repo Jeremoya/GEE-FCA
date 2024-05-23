@@ -120,16 +120,22 @@ function startCalc(baseMap){
   baseMap.addLayer(mxImg, viz, 'Mixed Forest');
   baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
   print(baseMap.layers())
-  var landFilter = ee.Filter.eq('country_na', 'Romania');
-  // var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
-  // allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  // Export.image.toAsset({image: allImgs, 
-  //   description: 'sampleImg',
-  //   assetId: 'sampleImg', 
-  //   region: geometry, 
-  //   scale: 10,
-  //   maxPixels : 1632126650
-  // })
+
+/*
+  var countryFilter = ee.Filter.eq('country_na', 'Germany')
+  var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  print('Export for:', month, year);
+  Export.image.toAsset({image: allImgs, 
+    description: 'sampleImg',
+    assetId: 'sampleImg', 
+    priority: 200,
+    region: exportGeo, 
+    scale: 10,
+    maxPixels : 1632126650,
+  })
+  */
 }
 
 // Erstellen des Beobachtungsbildes
@@ -358,12 +364,12 @@ var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 
 var exporttestimage = function(){
-  print('should export')
+  
   month = [1,2,3,4,5,6,7,8,9,10,11,12]
-  year = 2019;
+  year = 2020;
   startCalc(ogMap)
   
   
 }
 
-// exporttestimage()
+//exporttestimage()
