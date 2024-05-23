@@ -235,7 +235,7 @@ var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipsci
 var moreInfoButton = ui.Button({
   label: 'ℹ - more Information' ,
   //style: {position: 'bottom-right'},
-  onClick: showMoreInfo 
+  onClick: showMoreInformation 
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
@@ -281,7 +281,7 @@ var monthSelect = ui.Select({
 var calcButton = ui.Button({
   label: 'Calculate FCA',
   style: {stretch: 'horizontal'},
-  onClick: startCalc
+  onClick: function() {startCalc(ogMap)}
 });
 
 
