@@ -324,6 +324,7 @@ Map.add(legend);
 Map.setLocked(false, 5, 18);
 
 var ogMap = ui.root.widgets().get(0);
+ogMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
 ui.root.clear();
 ui.root.add(ogMap);
 
