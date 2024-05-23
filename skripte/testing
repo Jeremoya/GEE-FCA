@@ -27,6 +27,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 // Map.addLayer(s2Veg)
 
 
+alert('Test');
+
 
 
 /*
