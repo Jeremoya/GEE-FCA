@@ -26,6 +26,10 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 // Map.addLayer(s2Veg)
 
+
+
+
+/*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
 
@@ -41,6 +45,7 @@ var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
 var nAsia = ['N Asia']
 var eAsia = ['SE Asia', 'E Asia']
 
+
 var borderFilter = ee.Filter.inList('wld_rgn' , eu );
 var ROI = LSIB.filter(borderFilter)
 Map.addLayer(ROI, {}, 'ROI');
@@ -49,4 +54,4 @@ Map.addLayer(euGrid)
 var a = ee.FeatureCollection(euGrid.filterBounds(ROI))
 Export.table.toAsset(a)
 print(a)
-Map.addLayer(a)
+Map.addLayer(a)*/
