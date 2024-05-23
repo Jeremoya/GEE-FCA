@@ -3,19 +3,12 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     clipReg = 
     /* color: #d63000 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[9.037050892738314, 51.97245090568793],
           [9.037050892738314, 51.969833508686065],
           [9.043187786964388, 51.969833508686065],
           [9.043187786964388, 51.97245090568793]]], null, false),
-    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    euGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU"),
-    table = ee.FeatureCollection("projects/ee-fichtnej/assets/ff");
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -26,14 +19,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 // Map.addLayer(s2Veg)
 
-function info(){
-  
-  alert('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.');
-}
-
-var tB = ui.Button('Test', info)
-
-Map.add(tB)
+var countryFilter = ee.Filter.eq('country_na', 'Sweden')
+Map.addLayer(LSIB.filter(countryFilter).geometry().simplify(10000))
 
 /*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
