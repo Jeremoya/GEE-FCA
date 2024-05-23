@@ -14,7 +14,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [9.043187786964388, 51.969833508686065],
           [9.043187786964388, 51.97245090568793]]], null, false),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    euGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU");
+    euGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexgridEU"),
+    table = ee.FeatureCollection("projects/ee-fichtnej/assets/ff");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -45,6 +46,7 @@ var ROI = LSIB.filter(borderFilter)
 Map.addLayer(ROI, {}, 'ROI');
 
 Map.addLayer(euGrid)
-var a = ee.FeatureCollection(euGrid.filterBounds(ROI).geometry())
-//Export.table.toAsset(a)
+var a = ee.FeatureCollection(euGrid.filterBounds(ROI))
+Export.table.toAsset(a)
+print(a)
 Map.addLayer(a)
