@@ -92,6 +92,15 @@ function configLayout(deviceInfo) {
    
 }
 
+// Funktion zum Anzeigen von zusätzlichen Informationen
+
+function showMoreInformation(){
+  alert('Der Waldzustandsmonitor ist ein Projekt des Helmholtz Zentrums für Umweltforschung in Leipzig. ' + 
+  'Die Arbeitsgruppe Remote Sensing hat dabei unter anderem eine Methode entwickelt, welche aus Reflektionen ' +
+  'im Infraroten Wellenlängenbereich Rückschlüsse auf den Waldzustand getroffen werden können.')
+  
+}
+
 // Berechnen eines neuen Bildes
 
 function startCalc(baseMap){
@@ -226,7 +235,7 @@ var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipsci
 var moreInfoButton = ui.Button({
   label: 'ℹ - more Information' ,
   //style: {position: 'bottom-right'},
-  // onClick: 
+  onClick: showMoreInfo 
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
