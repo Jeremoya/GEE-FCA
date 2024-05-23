@@ -25,9 +25,9 @@ var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
 var nAsia = ['N Asia']
 var eAsia = ['SE Asia', 'E Asia']
 
-var borderFilter = ee.Filter.inList('wld_rgn' , na );
+var borderFilter = ee.Filter.inList('wld_rgn' , eu );
 var ROI = LSIB.filter(borderFilter)
-Map.addLayer(ROI.union(1000).geometry(), {}, 'ROI');
+Map.addLayer(ROI, {}, 'ROI');
 
 
 
@@ -74,11 +74,13 @@ var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
   maxPixels	: 1515717163200
   
 })
+
+var iFilter = ee.Filter.intersects({leftField: 'geo', rightValue : ROI.geometry()})
 hexGrid = hexGrid.map(function(ft){
   var area = ft.area(1);
   ft = ft.simplify(1000);
   return ft.set('gr', area).buffer(200);
-}).filterBounds(ROI.geometry().convexHull(1000));
+}).filter(iFilter);
 print(hexGrid);
 Map.addLayer(hexGrid);
 Export.table.toAsset(hexGrid, 'hexgrid_for_NA', 'Grids/Hexgrid_NA')
