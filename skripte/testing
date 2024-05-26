@@ -3,12 +3,37 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     clipReg = 
     /* color: #d63000 */
     /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "polygon"
+      },
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.MultiPolygon(
+        [[[[9.037050892738314, 51.97245090568793],
+           [9.037050892738314, 51.969833508686065],
+           [9.043187786964388, 51.969833508686065],
+           [9.043187786964388, 51.97245090568793]]],
+         [[[-49.08439759915857, 81.16001474845883],
+           [-49.08439759915857, 35.24040344396876],
+           [58.84528990084142, 35.24040344396876],
+           [58.84528990084142, 81.16001474845883]]]], null, false),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    rekt = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
     ee.Geometry.Polygon(
-        [[[9.037050892738314, 51.97245090568793],
-          [9.037050892738314, 51.969833508686065],
-          [9.043187786964388, 51.969833508686065],
-          [9.043187786964388, 51.97245090568793]]], null, false),
-    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+        [[[-33.61564759915857, 81.81037554725187],
+          [-33.61564759915857, 29.911316877559905],
+          [55.32966490084142, 29.911316877559905],
+          [55.32966490084142, 81.81037554725187]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -21,7 +46,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 var countryFilter = ee.Filter.eq('country_na', 'Sweden')
 Map.addLayer(LSIB.filter(countryFilter).geometry().simplify(10000))
-
+print(eu)
+Map.addLayer(eu.filterBounds(rekt));
 /*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
