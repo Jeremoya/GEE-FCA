@@ -46,7 +46,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 //                   .max().selfMask();
 
 // Map.addLayer(s2Veg)
-
+var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600']};
 var countryFilter = ee.Filter.eq('country_na', 'Sweden')
 Map.addLayer(LSIB.filter(countryFilter).geometry().simplify(10000))
 print(eu)
