@@ -51,8 +51,8 @@ var countryFilter = ee.Filter.eq('country_na', 'Sweden')
 Map.addLayer(LSIB.filter(countryFilter).geometry().simplify(10000))
 print(eu)
 Map.addLayer(eu.filterBounds(rekt));
-Map.addLayer(fcaImg, {min:-0.75, max: 0.5, palette: ['magenta', 'yellow', 'green']})
-Map.addLayer(romania, {min:-0.75, max: 0.5, palette: ['magenta', 'yellow', 'green']})
+Map.addLayer(fcaImg, viz)
+Map.addLayer(romania, viz)
 /*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
