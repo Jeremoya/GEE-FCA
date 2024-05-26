@@ -109,7 +109,7 @@ var startImageExports = function(type){
 var a = createPercentiles('Evergreen', 7);
 print(a);
 
-startImageExports('Mixed');
+startImageExports('Evergreen');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
