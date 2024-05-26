@@ -4,7 +4,7 @@ var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
     portugalFCA = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var rng = ee.Image.random();
-var sample = fcaImg//.updateMask(rng.gt(0.5))
+var sample = portugalFCA//.updateMask(rng.gt(0.5))
 Map.addLayer(sample, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']}, 'sample')
 
 var hansi = hansen.select('lossyear')
@@ -28,4 +28,4 @@ function histoPercs(img){
   var wd = ee.List(histo.get('histogram')).map(function(el) {return ee.Number(el).divide(pxCount.get('FCA_first'))})
   print(wd)
 }
-histoPercs(lossSample)
+//histoPercs(lossSample)
