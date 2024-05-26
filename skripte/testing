@@ -24,6 +24,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
     rekt = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -33,7 +34,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
         [[[-33.61564759915857, 81.81037554725187],
           [-33.61564759915857, 29.911316877559905],
           [55.32966490084142, 29.911316877559905],
-          [55.32966490084142, 81.81037554725187]]], null, false);
+          [55.32966490084142, 81.81037554725187]]], null, false),
+    fcaImg = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -48,6 +50,7 @@ var countryFilter = ee.Filter.eq('country_na', 'Sweden')
 Map.addLayer(LSIB.filter(countryFilter).geometry().simplify(10000))
 print(eu)
 Map.addLayer(eu.filterBounds(rekt));
+Map.addLayer(fcaImg, {min:-0.8, max: 0.5, palette: ['magenta', 'yellow', 'green']})
 /*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
