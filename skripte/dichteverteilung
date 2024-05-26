@@ -13,7 +13,7 @@ hansi = hansi.eq(19).unmask(0)
 Map.addLayer(hansi)
 
 var lossSample = sample.updateMask(hansi);
-var lossHisto = ui.Chart.image.histogram({image: lossSample, scale: 10, maxBuckets: 64, maxPixels: 20000000000})
+var lossHisto = ui.Chart.image.histogram({image: lossSample, scale: 10, maxBuckets: 4, maxPixels: 20000000000})
 var noLossSample = sample.updateMask(hansi.not());
 var noLossHisto = ui.Chart.image.histogram({image: noLossSample, scale: 10, maxBuckets: 64, maxPixels: 20000000000})
 print(lossHisto)
