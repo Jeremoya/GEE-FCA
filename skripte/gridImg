@@ -24,8 +24,8 @@ var rekt =
     ee.Geometry.Polygon(
         [[[-33.61564759915857, 81.81037554725187],
           [-33.61564759915857, 29.911316877559905],
-          [55.32966490084142, 29.911316877559905],
-          [55.32966490084142, 81.81037554725187]]], null, false);
+          [50.58357115084142, 29.911316877559905],
+          [50.58357115084142, 81.81037554725187]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -116,14 +116,14 @@ var startImageExports = function(type){
     img = img.set({'month' : month});
     img = img.set({'type' : type});
     img = img.updateMask(vegMask.createCopernicusMask(type));
-    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : 'percs/EG_2/' + month + '_' + type, scale: 50, maxPixels: 900000000000});
+    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : 'percs/DD_2/' + month + '_' + type, scale: 50, maxPixels: 900000000000});
   }
   
 };
 var a = createPercentiles('Evergreen', 7);
 print(a);
 
-startImageExports('Evergreen');
+startImageExports('Deciduous');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
