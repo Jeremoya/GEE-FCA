@@ -121,8 +121,8 @@ function startCalc(baseMap){
   baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
   print(baseMap.layers())
 
-
-  var countryFilter = ee.Filter.eq('country_na', 'Romania')
+  /*
+  var countryFilter = ee.Filter.eq('country_na', 'Sweden')
   var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
@@ -133,9 +133,9 @@ function startCalc(baseMap){
     priority: 200,
     region: exportGeo, 
     scale: 10,
-    maxPixels : 10000000000,
+    maxPixels : 100000000000,
   })
-  
+  */
 }
 
 // Erstellen des Beobachtungsbildes
