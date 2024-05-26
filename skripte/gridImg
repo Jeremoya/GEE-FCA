@@ -13,11 +13,25 @@ var rekt =
           [20.95017745141452, 47.45576259738118],
           [20.95017745141452, 52.68786831200015]]], null, false),
     gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer"),
-    grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU");
+    grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    rect = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-33.61564759915857, 81.81037554725187],
+          [-33.61564759915857, 29.911316877559905],
+          [55.32966490084142, 29.911316877559905],
+          [55.32966490084142, 81.81037554725187]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
+
+grid = grid.filterBounds(rect);
 
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
@@ -96,7 +110,7 @@ var percentileToImage = function(fc){
 
 var startImageExports = function(type){
   
-  for(var month = 1; month <= 12; month++){
+  for(var month = 2; month <= 2; month++){
     var values = createPercentiles(type, month);
     var img = percentileToImage(values);
     img = img.set({'month' : month});
