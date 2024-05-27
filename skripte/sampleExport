@@ -1,34 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
-    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
-    portugalFCA = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
+var hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
+    portugal = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
     romania = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var rng = ee.Image.random();
-var studyImage = romania;
-var sample = studyImage.updateMask(rng.gt(0.95)).updateMask(studyImage.neq(0.24439999999999995)).updateMask(studyImage.neq(-0.24439999999999995))
-
-Map.addLayer(studyImage, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']}, 'fca')
-Map.addLayer(sample, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']}, 'sample')
-var hansen_loss = hansen.select('lossyear')
-hansen_loss = hansen_loss.lt(20).unmask(0) //Zeitraum ~5 jahre
-Map.addLayer(hansen_loss)
-
-var lossSample = sample.updateMask(hansen_loss);
-var lossHisto = ui.Chart.image.histogram({image: lossSample, scale: 10, maxBuckets: 256, maxPixels: 20000000000})
-var noLossSample = sample.updateMask(hansen_loss.not());
-var noLossHisto = ui.Chart.image.histogram({image: noLossSample, scale: 10, maxBuckets: 256, maxPixels: 20000000000})
-print(lossHisto)
-print(noLossHisto)
-
-function histoPercs(img){
-  var histo = img.reduceRegion({reducer: ee.Reducer.histogram(32), geometry: img.geometry(1), scale: 10, maxPixels: 200000000});
-  var pxCount = img.reduceRegion({reducer: ee.Reducer.count(), geometry: img.geometry(1), scale: 10, maxPixels: 200000000});
-
-  print(pxCount)
-  print(histo)
-  
-  var wd = ee.List(histo.get('histogram')).map(function(el) {return ee.Number(el).divide(pxCount.get('FCA_first'))})
-  print(wd)
-}
-//histoPercs(lossSample)
