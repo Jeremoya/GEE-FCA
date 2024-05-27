@@ -15,9 +15,9 @@ hansen_loss = hansen_loss.eq(20).unmask(0)
 Map.addLayer(hansen_loss)
 
 var lossSample = sample.updateMask(hansen_loss);
-var lossHisto = ui.Chart.image.histogram({image: lossSample, scale: 10, maxBuckets: 32, maxPixels: 20000000000})
+var lossHisto = ui.Chart.image.histogram({image: lossSample, scale: 10, maxBuckets: 256, maxPixels: 20000000000})
 var noLossSample = sample.updateMask(hansen_loss.not());
-var noLossHisto = ui.Chart.image.histogram({image: noLossSample, scale: 10, maxBuckets: 64, maxPixels: 20000000000})
+var noLossHisto = ui.Chart.image.histogram({image: noLossSample, scale: 10, maxBuckets: 256, maxPixels: 20000000000})
 print(lossHisto)
 print(noLossHisto)
 
