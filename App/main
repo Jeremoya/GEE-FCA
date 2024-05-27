@@ -122,10 +122,13 @@ function startCalc(baseMap){
   print(baseMap.layers())
 
   
-  var countryFilter = ee.Filter.eq('country_na', 'Sweden')
+  /*
+  var countryFilter = ee.Filter.eq('country_na', 'Germany')
   var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  var rng = ee.Image.random();
+  allImgs = allImgs.updateMask(rng.gt(0.5))
   print('Export for:', month, year);
   Export.image.toAsset({image: allImgs, 
     description: 'sampleImg',
@@ -135,7 +138,7 @@ function startCalc(baseMap){
     scale: 10,
     maxPixels : 100000000000,
   })
-  
+  */
 }
 
 // Erstellen des Beobachtungsbildes
