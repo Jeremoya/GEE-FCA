@@ -16,4 +16,4 @@ Map.addLayer(rngermany, viz)
 var c = rngermany.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000})
 print(c)
 
-//Export.image.toDrive({image: rngermany, description: 'rngermany', folder: 'fcaEval', fileNamePrefix: 'Germany_FCA_loss', region: a, scale: 10})
+Export.image.toDrive({image: rngermany, description: 'rngermany', folder: 'fcaEval', fileNamePrefix: 'Germany_FCA_loss', region: a, scale: 10})
