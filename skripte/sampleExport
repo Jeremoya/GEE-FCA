@@ -10,8 +10,10 @@ var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff
 
 var rng = ee.Image.random();
 
-var rngermany = germany.updateMask(rng.gt(0.95))
+var rngermany = germany.updateMask(rng.gt(0.999))
 Map.addLayer(rngermany, viz)
 
-var c = rngermany.reduceConnectedComponents(ee.Reducer.count())
+var c = rngermany.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000})
 print(c)
+
+//Export.image.toDrive({image: rngermany, description: 'rngermany', folder: 'fcaEval', fileNamePrefix: 'Germany_FCA_loss', region: a, scale: 10})
