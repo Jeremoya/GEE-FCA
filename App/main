@@ -121,7 +121,7 @@ function startCalc(baseMap){
   baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
   print(baseMap.layers())
 
-  /*
+  
   var countryFilter = ee.Filter.eq('country_na', 'Sweden')
   var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
@@ -135,7 +135,7 @@ function startCalc(baseMap){
     scale: 10,
     maxPixels : 100000000000,
   })
-  */
+  
 }
 
 // Erstellen des Beobachtungsbildes
