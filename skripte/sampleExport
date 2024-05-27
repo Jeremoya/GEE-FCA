@@ -25,13 +25,14 @@ Map.addLayer(hansen.gt(0).unmask(0));
 
 //Random Image for sampling
 var rng = ee.Image.random();
+Map.addLayer(rng, {}, 'rng')
 
 
 var studyImage = germany;
 studyImage = studyImage.updateMask(hansen);
 var exportImage = studyImage.updateMask(rng.gt(0.9)).clip(exportGeo);
 Map.addLayer(exportImage, viz);
-//Export.image.toDrive({image: exportImage, description: 'rngermany', folder: 'fcaEval', fileNamePrefix: 'Germany_FCA_loss', region: a, scale: 10})
+// Export.image.toDrive({image: exportImage, description: 'rngermany', folder: 'fcaEval', fileNamePrefix: 'Germany_FCA_loss', scale: 10})
 
 
 
