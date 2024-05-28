@@ -21,19 +21,19 @@ hansen = hansen.updateMask(rangeMask);
 Map.addLayer(hansen.gt(0).unmask(0));
 
 
-
 //FCA Data
 
 //Random Image for sampling
-var rng = ee.Image.random();
+var rng = ee.Image.random().setDefaultProjection('EPSG:4326', null, 10).reduceResolution(ee.Reducer.first(), true);
 Map.addLayer(rng, {}, 'rng')
+Map.addLayer(germany, viz)
 
-
-var studyImage = sweden;
+var studyImage = germany;
+print(studyImage.projection())
 studyImage = studyImage.updateMask(hansen);
-var exportImage = studyImage.updateMask(rng.gt(0.9)).clip(exportGeo);
+var exportImage = studyImage.updateMask(rng.gt(0.99)).clip(exportGeo);
 Map.addLayer(exportImage, viz);
-// Export.image.toDrive({image: exportImage, description: 'rngermany', folder: 'fcaEval', fileNamePrefix: 'Germany_FCA_loss', scale: 10})
+Export.image.toDrive({image: exportImage, description: 'rngermany', folder: 'fcaEval2', fileNamePrefix: 'Germany_FCA_loss', scale: 10, maxPixels: 100000000000, region: geometry})
 
 
 
