@@ -86,7 +86,6 @@ var rekt =
           [13.172613844606547, 51.560650889196],
           [13.173901304933695, 51.558383044351174]]]),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
-    px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
     luebtheen300619 = 
     /* color: #d63000 */
     /* shown: false */
@@ -150,7 +149,8 @@ var rekt =
           [14.238239212359913, 50.87720085836018],
           [14.238325042368706, 50.87395129925092]]]),
     egs = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
-    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD");
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+    table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -171,7 +171,7 @@ function getFCA(img){
 
 //Globale Variablen
 var dates = ee.DateRange('2022-06-01', '2022-07-01');
-var refImg = px//eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
+var refImg = eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -204,16 +204,19 @@ rcomp = rcomp.subtract(9.5).divide(9.5);
 //Indexberechnung
 var fcaIndex = getFCA(rcomp);
 //Extremwerte
-var fcaLow = fcaIndex.lte(-0.95).updateMask(fcaIndex.lte(-0.95));
+var fcaHi = fcaIndex.updateMask(fcaIndex.eq(0.24439999999999995));
+var fcaLo = fcaIndex.updateMask(fcaIndex.eq(-0.24439999999999995));
 
 
 
 /*
 Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');
-*/
 Map.addLayer(refImg, {}, 'percs');
 Map.addLayer(s2Data, {}, 's2Data');
 Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
+*/
 Map.addLayer(fcaIndex, viz, 'FCA');
-Map.addLayer(fcaLow, {palette: ['orange']}, 'FCA-extreme-low');
+Map.addLayer(fcaHi, {palette: ['green']}, 'FCA-extreme-hi');
+Map.addLayer(fcaLo, {palette: ['red']}, 'FCA-extreme-lo');
+Map.addLayer(table)
