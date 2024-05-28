@@ -4,7 +4,20 @@ var hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
     romania = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca"),
     germany = ee.Image("projects/ee-fichtnej/assets/germany_2020_fca"),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    sweden = ee.Image("projects/ee-fichtnej/assets/sweden_2020_fca");
+    sweden = ee.Image("projects/ee-fichtnej/assets/sweden_2020_fca"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.599256254911385, 52.202198589077504],
+          [9.599256254911385, 51.20135433995263],
+          [11.598767973661385, 51.20135433995263],
+          [11.598767973661385, 52.202198589077504]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // Variables
@@ -40,3 +53,5 @@ Export.image.toDrive({image: exportImage, description: 'rngermany', folder: 'fca
 //Pixelcount
 var c = exportImage.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000});
 print(c);
+
+
