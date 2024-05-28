@@ -30,8 +30,8 @@ var exportGeo = LSIB.filter(countryFilter).geometry().simplify(5000);
 
 hansen = hansen.select(['lossyear']);
 var rangeMask = hansen.gt(15).and(hansen.lte(20));
-hansen = hansen.updateMask(rangeMask);
-Map.addLayer(hansen.gt(0).unmask(0));
+hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
+Map.addLayer(hansen);
 
 
 //FCA Data
@@ -43,10 +43,11 @@ Map.addLayer(germany, viz)
 
 var studyImage = germany;
 print(studyImage.projection())
-studyImage = studyImage.updateMask(hansen);
+studyImage = studyImage.updateMask(hansen.not());
+Map.addLayer(studyImage, viz, 'noLoss?')
 var exportImage = studyImage.updateMask(rng.gt(0.99)).clip(exportGeo);
 Map.addLayer(exportImage, viz);
-Export.image.toDrive({image: exportImage, description: 'rngermany', folder: 'fcaEval2', fileNamePrefix: 'Germany_FCA_loss', scale: 10, maxPixels: 100000000000, region: geometry})
+Export.image.toDrive({image: exportImage, description: 'rngermany_not', folder: 'fcaEval2', fileNamePrefix: 'Germany_FCA_loss', scale: 10, maxPixels: 100000000000, region: geometry})
 
 
 
