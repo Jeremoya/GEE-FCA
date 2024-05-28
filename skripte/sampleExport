@@ -47,7 +47,7 @@ studyImage = studyImage.updateMask(hansen.not());
 Map.addLayer(studyImage, viz, 'noLoss?')
 var exportImage = studyImage.updateMask(rng.gt(0.99)).clip(exportGeo);
 Map.addLayer(exportImage, viz);
-Export.image.toDrive({image: exportImage, description: 'rngermany_not', folder: 'fcaEval2', fileNamePrefix: 'Germany_FCA_loss', scale: 10, maxPixels: 100000000000, region: geometry})
+// Export.image.toDrive({image: exportImage, description: 'rngermany_not', folder: 'fcaEval2', fileNamePrefix: 'Germany_FCA_loss', scale: 10, maxPixels: 100000000000, region: geometry})
 
 
 
