@@ -2,11 +2,6 @@
 var rekt = 
     /* color: #d63000 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[7.203194722216897, 52.690581120322484],
           [7.203194722216897, 46.64288924156801],
@@ -204,19 +199,20 @@ rcomp = rcomp.subtract(9.5).divide(9.5);
 //Indexberechnung
 var fcaIndex = getFCA(rcomp);
 //Extremwerte
-var fcaHi = fcaIndex.updateMask(fcaIndex.eq(0.24439999999999995));
-var fcaLo = fcaIndex.updateMask(fcaIndex.eq(-0.24439999999999995));
+var fcaHi = fcaIndex.updateMask(fcaIndex.eq(0.2444000));
+//var fcaLo = fcaIndex.updateMask(fcaIndex.eq(-0.24439999999999995));
 
 
 
 Map.addLayer(refImg, {}, 'percs');
 /*
 Map.addLayer(tc, {min: 0, max: 3000}, 'truecolor');
+*/
 Map.addLayer(s2Data, {}, 's2Data');
 Map.addLayer(comp, {}, 'comp');
 Map.addLayer(rcomp, {min: 0, max: 19}, 'rcomp');
-*/
 Map.addLayer(fcaIndex, viz, 'FCA');
 Map.addLayer(fcaHi, {palette: ['green']}, 'FCA-extreme-hi');
-Map.addLayer(fcaLo, {palette: ['red']}, 'FCA-extreme-lo');
+//Map.addLayer(fcaLo, {palette: ['red']}, 'FCA-extreme-lo');
 Map.addLayer(table)
+Map.centerObject(ee.Geometry.Point([10.296625, 51.20312], 'EPSG:4326'))
