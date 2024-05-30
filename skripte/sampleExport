@@ -49,7 +49,7 @@ studyImageNoLoss = studyImage.updateMask(hansen.not());
 Map.addLayer(studyImage, viz, 'noLoss?')
 var exportImageLoss = studyImageLoss.updateMask(rng.gt(0.999)).clip(exportGeo);
 var exportImageNoLoss = studyImageNoLoss.updateMask(rng.gt(0.9999)).clip(exportGeo);
-Map.addLayer(exportImage, viz);
+Map.addLayer(exportImageLoss, viz);
 
 var time = new Date(Date.now())
 time = time.toISOString();
@@ -58,7 +58,7 @@ Export.image.toDrive({image: exportImageLoss, description: time + '_fca_loss_' +
 // Export.image.toDrive({image: exportImageNoLoss, description: time + '_fca_noLoss_' + cname, folder: 'index_eval', fileNamePrefix: time + '_fca_noLoss_' + cname, scale: 10, maxPixels: 100000000000, region: exportGeo})
 
 //Pixelcount
-var c = exportImage.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000});
+var c = exportImageLoss.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000});
 print(c);
 
 
