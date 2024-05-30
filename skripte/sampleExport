@@ -22,7 +22,8 @@ var hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
 
 // Variables
 var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600']};
-var countryFilter = ee.Filter.eq('country_na', 'Germany');
+var cname = 'Germany';
+var countryFilter = ee.Filter.eq('country_na', cname);
 var exportGeo = LSIB.filter(countryFilter).geometry().simplify(5000);
 
 
@@ -43,13 +44,18 @@ Map.addLayer(germany, viz)
 
 var studyImage = germany;
 print(studyImage.projection())
-studyImage = studyImage.updateMask(hansen.not());
+studyImageLoss = studyImage.updateMask(hansen);
+studyImageNoLoss = studyImage.updateMask(hansen.not());
 Map.addLayer(studyImage, viz, 'noLoss?')
-var exportImage = studyImage.updateMask(rng.gt(0.99)).clip(exportGeo);
+var exportImageLoss = studyImageLoss.updateMask(rng.gt(0.999)).clip(exportGeo);
+var exportImageNoLoss = studyImageNoLoss.updateMask(rng.gt(0.9999)).clip(exportGeo);
 Map.addLayer(exportImage, viz);
-// Export.image.toDrive({image: exportImage, description: 'rngermany_not', folder: 'fcaEval2', fileNamePrefix: 'Germany_FCA_loss', scale: 10, maxPixels: 100000000000, region: geometry})
 
+var time = new Date(Date.now())
+time = time.toISOString();
 
+Export.image.toDrive({image: exportImageLoss, description: time + '_fca_loss_' + cname, folder: 'index_eval', fileNamePrefix: time + '_fca_loss_' + cname, scale: 10, maxPixels: 100000000000, region: exportGeo})
+// Export.image.toDrive({image: exportImageNoLoss, description: time + '_fca_noLoss_' + cname, folder: 'index_eval', fileNamePrefix: time + '_fca_noLoss_' + cname, scale: 10, maxPixels: 100000000000, region: exportGeo})
 
 //Pixelcount
 var c = exportImage.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000});
