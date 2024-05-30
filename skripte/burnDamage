@@ -1,0 +1,4 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    portugalFCA = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
