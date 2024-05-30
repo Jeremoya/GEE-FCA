@@ -1,4 +1,35 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
-    portugalFCA = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca");
+    portugalFCA = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-9.7565924181, 42.52770927817651],
+          [-9.7565924181, 36.843280314504206],
+          [-6.1530767931, 36.843280314504206],
+          [-6.1530767931, 42.52770927817651]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600']};
+Map.addLayer(portugalFCA, viz, 'portugal')
+
+
+burnedAreas = burnedAreas.filterBounds(geometry).map(function(ft){
+  var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
+  return ft.set('YEAR', year);
+}).filter(ee.Filter.eq('YEAR', '2019'))
+
+Map.addLayer(burnedAreas);
+print(burnedAreas.first());
+
+var fireDamage = portugalFCA.clip(burnedAreas);
+var noDamage = portugalFCA.updateMask(fireDamage.not())
+
+Map.addLayer(fireDamage. viz, 'fireDamage')
+Map.addLayer(noDamage. viz, 'noDamage')
