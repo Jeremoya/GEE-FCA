@@ -47,7 +47,7 @@ Map.addLayer(noDamage, viz, 'noDamage')
 var bHisto = ui.Chart.image.histogram({image:fireDamage,
                 region: bounds,
                 scale: 10,
-                maxBuckets: 128,
+                maxBuckets: 64,
                 maxPixels: 10000000000
   
 })
