@@ -28,7 +28,7 @@ Map.addLayer(bounds)
 burnedAreas = burnedAreas.filterBounds(bounds).map(function(ft){
   var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
   return ft.set('YEAR', year);
-}).filter(ee.Filter.eq('YEAR', '2019'))
+}).filter(ee.Filter.eq('YEAR', '2020'))
 
 Map.addLayer(burnedAreas, {color: 'red'}, 'burn');
 
@@ -40,8 +40,8 @@ var noDamage = researchImage.updateMask(fireDamage.unmask(-2).lt(-1))
 Map.addLayer(fireDamage, viz, 'fireDamage')
 Map.addLayer(noDamage, viz, 'noDamage')
 
-var bHisto = ui.Chart.image.histogram({image:fireDamage, region: bounds, scale: 10, maxBuckets: 32, maxPixels: 10000000000})
-var nHisto = ui.Chart.image.histogram({image:noDamage, region: bounds, scale: 10, maxBuckets: 32, maxPixels: 10000000000})
+var bHisto = ui.Chart.image.histogram({image:fireDamage, region: bounds, scale: 10, maxBuckets: 128, maxPixels: 10000000000})
+var nHisto = ui.Chart.image.histogram({image:noDamage, region: bounds, scale: 10, maxBuckets: 128, maxPixels: 10000000000})
 print(bHisto)
 print(nHisto)
 
@@ -50,9 +50,9 @@ Map.centerObject(researchImage);
 
 //"Truecolor" zum abgleich
 var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
-                    .filterDate(ee.DateRange('2020-01-01', '2021-01-01'))
+                    .filterDate(ee.DateRange('2020-07-01', '2020-10-01'))
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',10))
                     .select(['B4', 'B3', 'B2'])
                     .median();
                     
-Map.addLayer(tc, {}, 'tc')                    
+Map.addLayer(tc, {min: 0, max: 3000}, 'tc')                    
