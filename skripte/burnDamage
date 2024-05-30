@@ -50,6 +50,7 @@ Map.centerObject(researchImage);
 
 //"Truecolor" zum abgleich
 var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterBounds(bounds)
                     .filterDate(ee.DateRange('2020-07-01', '2020-10-01'))
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',10))
                     .select(['B4', 'B3', 'B2'])
