@@ -14,12 +14,14 @@ var burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"
           [-9.7565924181, 36.843280314504206],
           [-6.1530767931, 36.843280314504206],
           [-6.1530767931, 42.52770927817651]]], null, false),
-    romaniaFCA = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca");
+    romaniaFCA = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca"),
+    swedenFCA = ee.Image("projects/ee-fichtnej/assets/sweden_2020_fca"),
+    germanyFCA = ee.Image("projects/ee-fichtnej/assets/germany_2020_fca");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600']};
 
-var researchImage = romaniaFCA;
+var researchImage = germanyFCA;
 var bounds = researchImage.geometry();
 Map.addLayer(bounds)
 
@@ -31,7 +33,9 @@ burnedAreas = burnedAreas.filterBounds(bounds).map(function(ft){
 }).filter(ee.Filter.eq('YEAR', '2020'))
 
 Map.addLayer(burnedAreas, {color: 'red'}, 'burn');
+var leMask = researchImage.neq(0.24439999999999995).and(researchImage.neq(0.24439999999999995))
 
+researchImage = researchImage.updateMask(leMask);
 
 var fireDamage = researchImage.clip(burnedAreas);
 var noDamage = researchImage.updateMask(fireDamage.unmask(-2).lt(-1))
@@ -40,8 +44,18 @@ var noDamage = researchImage.updateMask(fireDamage.unmask(-2).lt(-1))
 Map.addLayer(fireDamage, viz, 'fireDamage')
 Map.addLayer(noDamage, viz, 'noDamage')
 
-var bHisto = ui.Chart.image.histogram({image:fireDamage, region: bounds, scale: 10, maxBuckets: 128, maxPixels: 10000000000})
-var nHisto = ui.Chart.image.histogram({image:noDamage, region: bounds, scale: 10, maxBuckets: 128, maxPixels: 10000000000})
+var bHisto = ui.Chart.image.histogram({image:fireDamage,
+                region: bounds,
+                scale: 10,
+                maxBuckets: 256,
+                maxPixels: 10000000000
+  
+})
+var nHisto = ui.Chart.image.histogram({image:noDamage, 
+                region: bounds, 
+                scale: 10, 
+                maxBuckets: 256, 
+                maxPixels: 10000000000})
 print(bHisto)
 print(nHisto)
 
