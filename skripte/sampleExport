@@ -44,8 +44,8 @@ Map.addLayer(germany, viz)
 
 var studyImage = germany;
 print(studyImage.projection())
-studyImageLoss = studyImage.updateMask(hansen);
-studyImageNoLoss = studyImage.updateMask(hansen.not());
+var studyImageLoss = studyImage.updateMask(hansen);
+var studyImageNoLoss = studyImage.updateMask(hansen.not());
 Map.addLayer(studyImage, viz, 'noLoss?')
 var exportImageLoss = studyImageLoss.updateMask(rng.gt(0.999)).clip(exportGeo);
 var exportImageNoLoss = studyImageNoLoss.updateMask(rng.gt(0.9999)).clip(exportGeo);
