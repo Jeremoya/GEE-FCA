@@ -24,7 +24,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
     fcaImg = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
     romania = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca"),
-    uslar = ee.FeatureCollection("projects/ee-fichtnej/assets/Friederike/USLAR");
+    uslar = ee.FeatureCollection("projects/ee-fichtnej/assets/Friederike/USLAR"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -34,14 +35,15 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 //                   .max().selfMask();
 
 // Map.addLayer(s2Veg)
-var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600']};
-var countryFilter = ee.Filter.eq('country_na', 'Sweden')
-Map.addLayer(LSIB.filter(countryFilter).geometry().simplify(10000))
-print(eu)
-// Map.addLayer(eu.filterBounds(rekt));
-Map.addLayer(fcaImg, viz)
-Map.addLayer(romania, viz)
-Map.addLayer(uslar)
+
+print(eg)
+var one = eg.first()
+print(one)
+Map.addLayer(one, {}, '320')
+var two = eg.toList(2);
+two = ee.Image(ee.List(two).get(1));
+print(two)
+Map.addLayer(two, {}, '200')
 
 
 /*
