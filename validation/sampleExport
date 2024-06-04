@@ -48,6 +48,7 @@ Map.addLayer(allTogether, {}, 'all')
 var s = allTogether.stratifiedSample(200, 'lossyear', geometry, 10)
 print(s)
 Export.table.toDrive(s)
+
 /*
 print(studyImage.projection())
 var studyImageLoss = studyImage.updateMask(hansen);
