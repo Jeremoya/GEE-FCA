@@ -48,6 +48,17 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 //(in dictionaries p5 is located between p45 and p50 because of the alphabetical order of keys)
 var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
                             'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
+var onePercs = []
+
+
+for (var i = 1; i < 100; i++){
+  var str = 'p';
+  if (i < 10){str += '0'}
+  str += i;
+  onePercs.push(str);
+}
+onePercs = ee.List(onePercs);
+
 var bands = ee.List(['B5_', 'B8A_', 'B11_']);
 var bandnames = bands.map(function(el){
      return outputnames.map(function(innerel){
@@ -110,20 +121,20 @@ var percentileToImage = function(fc){
 
 var startImageExports = function(type){
   
-  for(var month = 1; month <= 12; month++){
+  for(var month = 6; month <= 6; month++){
     var values = createPercentiles(type, month);
     var img = percentileToImage(values);
     img = img.set({'month' : month});
     img = img.set({'type' : type});
     img = img.updateMask(vegMask.createCopernicusMask(type));
-    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : 'percs/OV_2/' + month + '_' + type, scale: 50, maxPixels: 900000000000});
+    Export.image.toAsset({image: img, description: month + '_' + type + '_export', assetId : 'percs/testing/' + month + '_' + type, scale: 50, maxPixels: 900000000000});
   }
   
 };
 var a = createPercentiles('Evergreen', 7);
 print(a);
 
-startImageExports('Other_Vegetation');
+startImageExports('Evergreen');
 
 var himgs = percentileToImage(a); 
 print('himgs', himgs);
