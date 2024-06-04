@@ -28,16 +28,17 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[5.056832258045549, 54.96968646329053],
-          [5.056832258045549, 46.002630788951606],
-          [15.16425413304555, 46.002630788951606],
-          [15.16425413304555, 54.96968646329053]]], null, false);
+        [[[6.067574445545549, 52.95355489572554],
+          [6.067574445545549, 50.26647081053361],
+          [10.28632444554555, 50.26647081053361],
+          [10.28632444554555, 52.95355489572554]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
@@ -52,9 +53,16 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 var fImg = s2Data.filterDate('2019-04-18', '2019-04-21')
                   .filterBounds(geometry)
-                  .filter(ee.Filter.neq('system:index', '20190419T105621_20190419T105622_T41XML'));
+                  .filter(ee.Filter.neq('system:index', '20190419T105621_20190419T105622_T41XML'))
+                  .select(['B4', 'B3', 'B2'])
+                  .median();
 print(fImg)
+Map.addLayer(fImg, {min: 0, max: 2500})
 
+var cKernel = ee.Kernel.circle(3)
+var rImg = fImg.reduceNeighborhood(ee.Reducer.median(), cKernel)
+
+Map.addLayer(rImg, {min: 0, max: 2500})
 
 /*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
