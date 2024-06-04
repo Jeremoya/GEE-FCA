@@ -52,18 +52,17 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 
 
 var fImg = s2Data.filterDate('2019-04-18', '2019-04-21')
-                  .filterBounds(geometry)
+                  .filterBounds(eu)
                   .filter(ee.Filter.neq('system:index', '20190419T105621_20190419T105622_T41XML'))
-                  .select(['B4', 'B3', 'B2'])
-                  .median();
+                  .select(['B4'/*, 'B3', 'B2'*/])
+                  // .median();
 print(fImg)
-Map.addLayer(fImg, {min: 0, max: 2500})
+// Map.addLayer(fImg, {min: 0, max: 2500})
 
-var cKernel = ee.Kernel.circle(3)
-var rImg = fImg.reduceNeighborhood(ee.Reducer.median(), cKernel)
-
-Map.addLayer(rImg, {min: 0, max: 2500})
-
+// var a = fImg.map(function(img){
+//   return img.reduce(ee.Reducer.percentile(ee.List.sequence(10, 90, 10)));
+// }).toList(100)
+// print(a)
 /*
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
