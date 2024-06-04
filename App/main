@@ -202,7 +202,7 @@ function createFCAImage(type){
     return fcaImg;
   });
   
-  return ee.ImageCollection(retImg).median();
+  return ee.ImageCollection(retImg).mean();
 }
 
 // Switch to normal Mode
