@@ -1,69 +1,29 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
-    clipReg = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "polygon"
-      },
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.MultiPolygon(
-        [[[[9.037050892738314, 51.97245090568793],
-           [9.037050892738314, 51.969833508686065],
-           [9.043187786964388, 51.969833508686065],
-           [9.043187786964388, 51.97245090568793]]],
-         [[[-49.08439759915857, 81.16001474845883],
-           [-49.08439759915857, 35.24040344396876],
-           [58.84528990084142, 35.24040344396876],
-           [58.84528990084142, 81.16001474845883]]]], null, false),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
     fcaImg = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
-    romania = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca"),
-    uslar = ee.FeatureCollection("projects/ee-fichtnej/assets/Friederike/USLAR"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
-    geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[6.067574445545549, 52.95355489572554],
-          [6.067574445545549, 50.26647081053361],
-          [10.28632444554555, 50.26647081053361],
-          [10.28632444554555, 52.95355489572554]]], null, false);
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-// var s2Veg = s2Data.filterDate('2022-01-01', '2022-12-01')
-//                   .filterBounds(eu2)
-//                   .select('SCL')
-//                   .map(function(img){return img.eq(4)})
-//                   .max().selfMask();
 
-// Map.addLayer(s2Veg)
+print(dd)
+print(eg)
+print(mx)
+print(ov)
+Map.addLayer(dd.first())
 
-
-
+/*
 var fImg = s2Data.filterDate('2019-04-18', '2019-04-21')
                   .filterBounds(eu)
                   .filter(ee.Filter.neq('system:index', '20190419T105621_20190419T105622_T41XML'))
-                  .select(['B4'/*, 'B3', 'B2'*/])
+                  .select(['B4', 'B3', 'B2'])
                   // .median();
-print(fImg)
-// Map.addLayer(fImg, {min: 0, max: 2500})
 
-// var a = fImg.map(function(img){
-//   return img.reduce(ee.Reducer.percentile(ee.List.sequence(10, 90, 10)));
-// }).toList(100)
-// print(a)
-/*
+print(fImg)
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
 
