@@ -1,9 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
-    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
-    mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
-    ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV"),
-    aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
+var aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
         [[[23.645476277373046, 45.27204716831395],
           [23.645476277373046, 45.18875133788677],
           [23.715342457792968, 45.18875133788677],
@@ -16,7 +12,11 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
           [1.8283458280034592, 45.690037563806676],
           [31.203040652222207, 46.512732087122615],
           [29.577064089722207, 58.802483554149624]]], null, false),
-    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -162,7 +162,7 @@ function createObsImage(){
                     return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
                     })
                     .select(['B5', 'B8A', 'B11'])
-                    .median();
+                    .mean();
                     
 
   return s2Data;
