@@ -16,7 +16,19 @@ var aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
-    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2");
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    tb = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[12.876688313089785, 52.06701492145414],
+          [12.876688313089785, 52.011261895989826],
+          [12.972132038675722, 52.011261895989826],
+          [12.972132038675722, 52.06701492145414]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -135,7 +147,7 @@ function startCalc(baseMap){
     assetId: 'sampleImg', 
     priority: 200,
     region: exportGeo, 
-    scale: 10,
+    scale: 20,
     maxPixels : 100000000000,
   })
   */
@@ -368,11 +380,11 @@ var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 var exporttestimage = function(){
   
-  month = [1,2,3,4,5,6,7,8,9,10,11,12]
-  year = 2020;
+  month = [/*1,2,3,4,*/5,6,7/*,8,9,10,11,12*/]
+  year = 2019;
   startCalc(ogMap)
   
   
 }
 
-//exporttestimage()
+// exporttestimage()
