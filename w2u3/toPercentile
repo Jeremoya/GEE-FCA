@@ -80,7 +80,6 @@ var rekt =
           [13.174115881654886, 51.562918620951656],
           [13.172613844606547, 51.560650889196],
           [13.173901304933695, 51.558383044351174]]]),
-    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
     luebtheen300619 = 
     /* color: #d63000 */
     /* shown: false */
@@ -145,7 +144,8 @@ var rekt =
           [14.238325042368706, 50.87395129925092]]]),
     egs = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
-    table = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts");
+    s80 = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen_ts2_80"),
+    table = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -166,7 +166,7 @@ function getFCA(img){
 
 //Globale Variablen
 var dates = ee.DateRange('2022-06-01', '2022-07-01');
-var refImg = eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
+var refImg = s80//eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
