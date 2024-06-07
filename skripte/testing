@@ -7,28 +7,32 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
-    eco = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson");
+    eco = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
+    nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(nn)
+Map.addLayer(eg)
 
-
-print(dd)
-print(eg)
-print(mx)
-print(ov)
-Map.addLayer(eco)
-print(eco.first())
-//Map.addLayer(eco.filterBounds(eu))
-var a = ee.FeatureCollection(eco.filterBounds(eu));
-var ecos = a.reduceColumns(ee.Reducer.toList(), ['ECO_NAME']).values().flatten().distinct();
-print(ecos)
-/*
+var d = new Date();
+var a = d.getTime();
+print(a)
+var b = 0;
+for(var i = 0; i < 10000; i++){
+  b+=i;
+}
+print(b)
 var fImg = s2Data.filterDate('2019-04-18', '2019-04-21')
                   .filterBounds(eu)
                   .filter(ee.Filter.neq('system:index', '20190419T105621_20190419T105622_T41XML'))
                   .select(['B4', 'B3', 'B2'])
-                  // .median();
-
+                  .median();
 print(fImg)
+var e = fImg;
+e = e.add(3)
+ee.Algorithms.If(e.reduce(ee.Reducer.first()) > 5, print('t', new Date().getTime() - a), print('f', new Date().getTime() - a))
+
+/*
+
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
 
