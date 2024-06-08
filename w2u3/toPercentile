@@ -145,7 +145,8 @@ var rekt =
     egs = ee.ImageCollection("projects/ee-fichtnej/assets/evergreens"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
     s80 = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen_ts2_80"),
-    table = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU");
+    table = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen_s80_ts2_p99");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -166,7 +167,7 @@ function getFCA(img){
 
 //Globale Variablen
 var dates = ee.DateRange('2022-06-01', '2022-07-01');
-var refImg = s80//eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
+var refImg = nn//eg.filter(ee.Filter.eq('month', 6)).first()//.select(['B5']);
 //Satellite Data
 var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -195,7 +196,7 @@ var tc  = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 var comp = s2Data.gte(refImg);
 var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
 //Normierung
-rcomp = rcomp.subtract(9.5).divide(9.5);
+rcomp = rcomp.subtract(49.5).divide(49.5);
 //Indexberechnung
 var fcaIndex = getFCA(rcomp);
 //Extremwerte
