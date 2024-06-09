@@ -135,23 +135,7 @@ function startCalc(baseMap){
   print(baseMap.layers())
 
   
-  /*
-  var countryFilter = ee.Filter.eq('country_na', 'Germany')
-  var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
-  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
-  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  var rng = ee.Image.random();
-  allImgs = allImgs.updateMask(rng.gt(0.5))
-  print('Export for:', month, year);
-  Export.image.toAsset({image: allImgs, 
-    description: 'sampleImg',
-    assetId: 'sampleImg', 
-    priority: 200,
-    region: exportGeo, 
-    scale: 20,
-    maxPixels : 100000000000,
-  })
-  */
+  
 }
 
 function exportData(){
@@ -160,7 +144,7 @@ function exportData(){
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
   month = [1,2,3,4,5,6,7,8,9,10,11,12]
-  year = 2019;
+  year = 2020;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -172,12 +156,15 @@ function exportData(){
 
   
   var countryFilter = ee.Filter.eq('country_na', 'Portugal')
-  var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
+  var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
   allImgs = hansen.addBands(allImgs.rename('FCA'))
+  Map.addLayer(allImgs)
   print('Export for:', month, year);
-  var s = allImgs.stratifiedSample(1000, 'lossyear', exportGeo, 10)
+  var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 10, tileScale: 4})
+  print(s)
+  Export.table.toDrive(s)
   /*
   Export.image.toAsset({image: allImgs, 
     description: 'sampleImg',
