@@ -159,7 +159,7 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [/*1,2,3,4,*/5,6,7/*,8,9,10,11,12*/]
+  month = [1,2,3,4,5,6,7,8,9,10,11,12]
   year = 2019;
   
   var ddImg = createFCAImage(dd);
@@ -171,12 +171,13 @@ function exportData(){
   
 
   
-  var countryFilter = ee.Filter.eq('country_na', 'Germany')
+  var countryFilter = ee.Filter.eq('country_na', 'Portugal')
   var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  
+  allImgs = hansen.addBands(allImgs.rename('FCA'))
   print('Export for:', month, year);
+  var s = allImgs.stratifiedSample(1000, 'lossyear', exportGeo, 10)
   /*
   Export.image.toAsset({image: allImgs, 
     description: 'sampleImg',
