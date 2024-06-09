@@ -28,7 +28,8 @@ var aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
         [[[12.876688313089785, 52.06701492145414],
           [12.876688313089785, 52.011261895989826],
           [12.972132038675722, 52.011261895989826],
-          [12.972132038675722, 52.06701492145414]]], null, false);
+          [12.972132038675722, 52.06701492145414]]], null, false),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // typspezifische Layer
 // Nutzungshinweise, Interpretation der Ergebnisse
@@ -142,6 +143,41 @@ function startCalc(baseMap){
   var rng = ee.Image.random();
   allImgs = allImgs.updateMask(rng.gt(0.5))
   print('Export for:', month, year);
+  Export.image.toAsset({image: allImgs, 
+    description: 'sampleImg',
+    assetId: 'sampleImg', 
+    priority: 200,
+    region: exportGeo, 
+    scale: 20,
+    maxPixels : 100000000000,
+  })
+  */
+}
+
+function exportData(){
+  
+  hansen = hansen.select(['lossyear']);
+  var rangeMask = hansen.gt(15).and(hansen.lte(20));
+  hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
+  month = [/*1,2,3,4,*/5,6,7/*,8,9,10,11,12*/]
+  year = 2019;
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  
+
+  
+  var countryFilter = ee.Filter.eq('country_na', 'Germany')
+  var exportGeo = LSIB.filter(countryFilter).geometry().simplify(10000)
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  
+  print('Export for:', month, year);
+  /*
   Export.image.toAsset({image: allImgs, 
     description: 'sampleImg',
     assetId: 'sampleImg', 
@@ -378,13 +414,5 @@ m2.centerObject(currGeo, 12);
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 
-var exporttestimage = function(){
-  
-  month = [/*1,2,3,4,*/5,6,7/*,8,9,10,11,12*/]
-  year = 2019;
-  startCalc(ogMap)
-  
-  
-}
 
-// exporttestimage()
+exportData()
