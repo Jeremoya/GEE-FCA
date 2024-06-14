@@ -5,7 +5,20 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
-    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    exportGeo = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[12.897140904300786, 52.058216149210445],
+          [12.897140904300786, 52.02627652892851],
+          [12.951986714237309, 52.02627652892851],
+          [12.951986714237309, 52.058216149210445]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -60,8 +73,8 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [1,2,3,4,5,6,7,8,9,10,11,12]
-  year = 2020;
+  month = [5,6,7]
+  year = 2018;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -74,27 +87,28 @@ function exportData(){
   
   var countryFilter = ee.Filter.eq('country_na', 'Portugal')
   var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
+  print('year', year, 'month', month, 'dates', dates)
   var tc = createTCimg();
   Map.addLayer(tc, {}, 'TC')
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  allImgs = hansen.addBands(allImgs.rename('FCA'))
-  Map.addLayer(allImgs)
+  //allImgs = hansen.addBands(allImgs.rename('FCA'))
+  //Map.addLayer(allImgs)
   print('Export for:', month, year);
-  var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 10, tileScale: 4})
-  //print(s)
-  //Export.table.toDrive(s)
   /*
-  Export.image.toAsset({image: allImgs, 
-    description: 'sampleImg',
-    assetId: 'sampleImg', 
-    priority: 200,
+  var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 20, tileScale: 4})
+  print(s)
+  Export.table.toDrive(s)
+  */
+  Export.image.toDrive({image: tc, 
+    description: 'tc',
+    folder: 'tb',
+    priority: ee.Number(200),
     region: exportGeo, 
     scale: 20,
     maxPixels : 100000000000,
-  })
-  */
+  });
 }
 
 // Erstellen des Beobachtungsbildes
@@ -110,6 +124,7 @@ function updateDateRange(month){
 }
 
 function createObsImage(){
+  
   
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
@@ -163,8 +178,11 @@ function createFCAImage(type){
 
 
 function createTCimg(){
+  
+  var st = ee.Date.fromYMD(year, 8, 1);
+  var end = ee.Date.fromYMD(year, 11, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
-                    .filterDate(dates)
+                    .filterDate(st, end)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
                     .map(cloudMask.S2CloudMask)
                     .select(['B4', 'B3', 'B2'])
@@ -177,4 +195,6 @@ function createTCimg(){
 
 exportData()
 
-Map.addLayer(ba.filter(ee.Filter.eq('id', '00020000000000002a0d')))
+Map.addLayer(ba.filter(ee.Filter.eq('id', '14433')))
+Export.table.toDrive(ba.filter(ee.Filter.eq('id', '14433')))
+//
