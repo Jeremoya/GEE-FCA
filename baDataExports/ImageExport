@@ -1,0 +1,163 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+var FCA = require('users/fichtnej/modules:fcaUtils');
+var viz = FCA.getFCAviz();
+
+// Globale Variablen
+var year = 2019;
+var month = [7];
+var dates = ee.DateRange('2019-07-01', '2019-08-01');
+
+// Funktionen
+function getFCA(img){
+  
+  var image = ee.Image();
+  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
+                            'RE1': img.select(['B5']),
+                            'RE4': img.select(['B8A']),
+                            'SWIR': img.select(['B11']),
+                          }).rename('FCA');
+}
+
+
+
+
+// Berechnen eines neuen Bildes
+
+function startCalc(baseMap){
+  print('Start');
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  // Karte Aktualisieren
+  baseMap.layers().reset();
+  baseMap.addLayer(ddImg, viz, 'Deciduous Forest');
+  baseMap.addLayer(egImg, viz, 'Evergreen Forest');
+  baseMap.addLayer(mxImg, viz, 'Mixed Forest');
+  baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
+  print(baseMap.layers())
+
+  
+  
+}
+
+function exportData(){
+  
+  hansen = hansen.select(['lossyear']);
+  var rangeMask = hansen.gt(15).and(hansen.lte(20));
+  hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
+  month = [1,2,3,4,5,6,7,8,9,10,11,12]
+  year = 2020;
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  
+
+  
+  var countryFilter = ee.Filter.eq('country_na', 'Portugal')
+  var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  allImgs = hansen.addBands(allImgs.rename('FCA'))
+  Map.addLayer(allImgs)
+  print('Export for:', month, year);
+  var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 10, tileScale: 4})
+  print(s)
+  Export.table.toDrive(s)
+  /*
+  Export.image.toAsset({image: allImgs, 
+    description: 'sampleImg',
+    assetId: 'sampleImg', 
+    priority: 200,
+    region: exportGeo, 
+    scale: 20,
+    maxPixels : 100000000000,
+  })
+  */
+}
+
+// Erstellen des Beobachtungsbildes
+//jährlich/saisonal
+
+// Aktualisieren des Zeitraumes für Beobachtungsbild
+function updateDateRange(month){
+  var startDate = ee.Date.fromYMD(year, month, 1);
+  var endDate = startDate.advance(1, 'month');
+  var dr = ee.DateRange(startDate, endDate);
+  dates = dr;
+  
+}
+
+function createObsImage(){
+  
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                    })
+                    .select(['B5', 'B8A', 'B11'])
+                    .mean();
+                    
+
+  return s2Data;
+}
+
+function createRefImage(imgCol, oneMonth){
+  
+  imgCol = ee.ImageCollection(imgCol);
+  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
+}
+
+
+// Vergleich Beobachtung Referenz
+
+function compareImages(ref, obs){
+  
+  //Einordnen der Beobachtung in Quantile
+  var comp = obs.gte(ref);
+  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+  //Normierung
+  rcomp = rcomp.subtract(9.5).divide(9.5);
+  //Indexberechnung
+  return getFCA(rcomp);
+  
+}
+
+
+
+function createFCAImage(type){
+  var retImg = month.map(function(oneMonth){
+    
+    updateDateRange(oneMonth);
+    var img = createObsImage();
+    var refImg = createRefImage(type, oneMonth);
+    var fcaImg = compareImages(refImg, img);
+    
+    return fcaImg;
+  });
+  
+  return ee.ImageCollection(retImg).mean();
+}
+
+
+
+
+//exportData()
