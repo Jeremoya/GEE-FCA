@@ -158,6 +158,15 @@ function createFCAImage(type){
 }
 
 
+function createTCimg(){
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .map(cloudMask.S2CloudMask)
+                    .select(['B4', 'B3', 'B2'])
+                    .median();
+                    
 
+  return s2Data;
+}
 
 //exportData()
