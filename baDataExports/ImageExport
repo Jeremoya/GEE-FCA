@@ -101,8 +101,8 @@ function exportData(){
   print(s)
   Export.table.toDrive(s)
   */
-  Export.image.toDrive({image: allImgs, 
-    description: 'luebtheen_19',
+  Export.image.toDrive({image: tc, 
+    description: 'tc_luebtheen',
     folder: 'luebtheen',
     priority: ee.Number(200),
     region: exportGeo, 
