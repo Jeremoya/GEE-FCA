@@ -14,6 +14,11 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 Map.addLayer(nn)
 Map.addLayer(eg)
 
+ba = ba.map(function(ft){
+  var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
+  return ft.set('YEAR', year);
+}).filter(ee.Filter.eq('YEAR', '2018'))
+
 Map.addLayer(ba, {color:'red'})
 /*
 
