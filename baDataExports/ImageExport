@@ -102,6 +102,7 @@ function exportData(){
   // var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
   print('year', year, 'month', month, 'dates', dates)
   var tc = createTCimg();
+  
   Map.addLayer(tc, {}, 'TC')
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
@@ -113,10 +114,9 @@ function exportData(){
   var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 20, tileScale: 4})
   print(s)
   Export.table.toDrive(s)
-  */
   
-  Export.image.toDrive({image: allImgs, 
-    description: 'tc_luebtheen',
+  Export.image.toDrive({image: tc, 
+    description: 'tc_luebtheen_brighter',
     folder: 'luebtheen',
     priority: ee.Number(200),
     region: exportGeo2, 
@@ -124,6 +124,7 @@ function exportData(){
     maxPixels : 100000000000,
   });
 }
+  */
 
 // Erstellen des Beobachtungsbildes
 //jährlich/saisonal
@@ -201,6 +202,7 @@ function createTCimg(){
                     .map(cloudMask.S2CloudMask)
                     .select(['B4', 'B3', 'B2'])
                     .median()
+                    //.multiply(2)
                     .visualize({min:0,max:2600});
                     
 
@@ -210,5 +212,5 @@ function createTCimg(){
 exportData()
 
 Map.addLayer(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
-Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
+//Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
 //
