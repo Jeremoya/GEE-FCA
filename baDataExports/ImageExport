@@ -18,7 +18,20 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
         [[[11.120874806278325, 53.2832018931763],
           [11.120874806278325, 53.25214519010509],
           [11.175720616214848, 53.25214519010509],
-          [11.175720616214848, 53.2832018931763]]], null, false);
+          [11.175720616214848, 53.2832018931763]]], null, false),
+    exportGeo2 = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[15.17744076776927, 62.043846259243985],
+          [15.17744076776927, 61.87729344273454],
+          [15.542049532417707, 61.87729344273454],
+          [15.542049532417707, 62.043846259243985]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -73,8 +86,8 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [7, 8, 9]
-  year = 2019;
+  month = [8, 9, 10]
+  year = 2018;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -100,16 +113,16 @@ function exportData(){
   var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 20, tileScale: 4})
   print(s)
   Export.table.toDrive(s)
+  */
   
-  Export.image.toDrive({image: tc, 
+  Export.image.toDrive({image: allImgs, 
     description: 'tc_luebtheen',
     folder: 'luebtheen',
     priority: ee.Number(200),
-    region: exportGeo, 
+    region: exportGeo2, 
     scale: 20,
     maxPixels : 100000000000,
   });
-  */
 }
 
 // Erstellen des Beobachtungsbildes
@@ -180,8 +193,8 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 7, 1);
-  var end = ee.Date.fromYMD(year, 10, 1)
+  var st = ee.Date.fromYMD(year, 8, 1);
+  var end = ee.Date.fromYMD(year, 11, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
@@ -196,6 +209,6 @@ function createTCimg(){
 
 exportData()
 
-Map.addLayer(ba.filter(ee.Filter.eq('id', '18632')))
-//Export.table.toDrive(ba.filter(ee.Filter.eq('id', '18632')))
+Map.addLayer(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
+Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
 //
