@@ -74,7 +74,7 @@ function exportData(){
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
   month = [7, 8, 9]
-  year = 2018;
+  year = 2019;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -188,7 +188,7 @@ function createTCimg(){
                     .map(cloudMask.S2CloudMask)
                     .select(['B4', 'B3', 'B2'])
                     .median()
-                    .visualize({min:0,max:3000});
+                    .visualize({min:0,max:2600});
                     
 
   return s2Data;
