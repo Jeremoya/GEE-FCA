@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[11.120874806278325, 53.2832018931763],
-          [11.120874806278325, 53.25214519010509],
-          [11.175720616214848, 53.25214519010509],
-          [11.175720616214848, 53.2832018931763]]], null, false),
+        [[[9.66904871069727, 51.134203936461255],
+          [9.66904871069727, 51.11060783645398],
+          [9.71024744116602, 51.11060783645398],
+          [9.71024744116602, 51.134203936461255]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -31,7 +31,15 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
         [[[15.17744076776927, 62.043846259243985],
           [15.17744076776927, 61.87729344273454],
           [15.542049532417707, 61.87729344273454],
-          [15.542049532417707, 62.043846259243985]]], null, false);
+          [15.542049532417707, 62.043846259243985]]], null, false),
+    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
+    geometry = 
+    /* color: #f7ff08 */
+    /* shown: false */
+    ee.Geometry.MultiPoint(
+        [[9.693387854105584, 51.1270725307316],
+         [9.563948487485252, 51.54320614254728],
+         [9.732410021732694, 51.02977623334481]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -86,7 +94,7 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [8, 9, 10]
+  month = [5, 6, 7]
   year = 2018;
   
   var ddImg = createFCAImage(dd);
@@ -116,15 +124,15 @@ function exportData(){
   Export.table.toDrive(s)
   
   Export.image.toDrive({image: tc, 
-    description: 'tc_luebtheen_brighter',
-    folder: 'luebtheen',
+    description: 'friederieke_tc',
+    folder: 'friederieke',
     priority: ee.Number(200),
-    region: exportGeo2, 
+    region: exportGeo, 
     scale: 20,
     maxPixels : 100000000000,
   });
-}
   */
+}
 
 // Erstellen des Beobachtungsbildes
 //jährlich/saisonal
@@ -194,8 +202,8 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 8, 1);
-  var end = ee.Date.fromYMD(year, 11, 1)
+  var st = ee.Date.fromYMD(year, 3, 1);
+  var end = ee.Date.fromYMD(year, 6, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
@@ -211,6 +219,9 @@ function createTCimg(){
 
 exportData()
 
+var damageArea = fritzi.filterBounds(exportGeo)
+Map.addLayer(fritzi, {color:"Teal"})
 Map.addLayer(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
 //Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
+//Export.table.toDrive(damageArea)
 //
