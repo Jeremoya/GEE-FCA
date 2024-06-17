@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[12.897140904300786, 52.058216149210445],
-          [12.897140904300786, 52.02627652892851],
-          [12.951986714237309, 52.02627652892851],
-          [12.951986714237309, 52.058216149210445]]], null, false);
+        [[[11.120874806278325, 53.2832018931763],
+          [11.120874806278325, 53.25214519010509],
+          [11.175720616214848, 53.25214519010509],
+          [11.175720616214848, 53.2832018931763]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -73,8 +73,8 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [5,6,7]
-  year = 2018;
+  month = [7, 8, 9, 10]
+  year = 2019;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -86,7 +86,7 @@ function exportData(){
 
   
   var countryFilter = ee.Filter.eq('country_na', 'Portugal')
-  var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
+  // var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
   print('year', year, 'month', month, 'dates', dates)
   var tc = createTCimg();
   Map.addLayer(tc, {}, 'TC')
@@ -101,9 +101,9 @@ function exportData(){
   print(s)
   Export.table.toDrive(s)
   */
-  Export.image.toDrive({image: tc, 
-    description: 'tc',
-    folder: 'tb',
+  Export.image.toDrive({image: allImgs, 
+    description: 'luebtheen_19',
+    folder: 'luebtheen',
     priority: ee.Number(200),
     region: exportGeo, 
     scale: 20,
@@ -179,8 +179,8 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 8, 1);
-  var end = ee.Date.fromYMD(year, 11, 1)
+  var st = ee.Date.fromYMD(year, 7, 1);
+  var end = ee.Date.fromYMD(year, 10, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
@@ -195,6 +195,6 @@ function createTCimg(){
 
 exportData()
 
-Map.addLayer(ba.filter(ee.Filter.eq('id', '14433')))
-Export.table.toDrive(ba.filter(ee.Filter.eq('id', '14433')))
+Map.addLayer(ba.filter(ee.Filter.eq('id', '18632')))
+//Export.table.toDrive(ba.filter(ee.Filter.eq('id', '14433')))
 //
