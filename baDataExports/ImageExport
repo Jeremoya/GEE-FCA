@@ -73,8 +73,8 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [7, 8, 9, 10]
-  year = 2019;
+  month = [7, 8, 9]
+  year = 2018;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -100,7 +100,7 @@ function exportData(){
   var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 20, tileScale: 4})
   print(s)
   Export.table.toDrive(s)
-  */
+  
   Export.image.toDrive({image: tc, 
     description: 'tc_luebtheen',
     folder: 'luebtheen',
@@ -109,6 +109,7 @@ function exportData(){
     scale: 20,
     maxPixels : 100000000000,
   });
+  */
 }
 
 // Erstellen des Beobachtungsbildes
