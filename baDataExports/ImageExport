@@ -196,5 +196,5 @@ function createTCimg(){
 exportData()
 
 Map.addLayer(ba.filter(ee.Filter.eq('id', '18632')))
-//Export.table.toDrive(ba.filter(ee.Filter.eq('id', '14433')))
+//Export.table.toDrive(ba.filter(ee.Filter.eq('id', '18632')))
 //
