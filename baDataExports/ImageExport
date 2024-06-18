@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[9.66904871069727, 51.134203936461255],
-          [9.66904871069727, 51.11060783645398],
-          [9.71024744116602, 51.11060783645398],
-          [9.71024744116602, 51.134203936461255]]], null, false),
+        [[[9.707586689823247, 51.04293124966445],
+          [9.707586689823247, 51.01772273591522],
+          [9.751102848880864, 51.01772273591522],
+          [9.751102848880864, 51.04293124966445]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -95,7 +95,7 @@ function exportData(){
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
   month = [5, 6, 7]
-  year = 2018;
+  year = 2017;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -123,15 +123,15 @@ function exportData(){
   print(s)
   Export.table.toDrive(s)
   
-  Export.image.toDrive({image: tc, 
-    description: 'friederieke_tc',
-    folder: 'friederieke',
+  */
+  Export.image.toDrive({image: allImgs, 
+    description: 'friederieke_17',
+    folder: 'friederieke_set2',
     priority: ee.Number(200),
     region: exportGeo, 
     scale: 20,
     maxPixels : 100000000000,
   });
-  */
 }
 
 // Erstellen des Beobachtungsbildes
@@ -210,7 +210,7 @@ function createTCimg(){
                     .map(cloudMask.S2CloudMask)
                     .select(['B4', 'B3', 'B2'])
                     .median()
-                    //.multiply(2)
+                    .multiply(2)
                     .visualize({min:0,max:2600});
                     
 
@@ -223,5 +223,5 @@ var damageArea = fritzi.filterBounds(exportGeo)
 Map.addLayer(fritzi, {color:"Teal"})
 Map.addLayer(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
 //Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
-//Export.table.toDrive(damageArea)
+Export.table.toDrive(damageArea)
 //
