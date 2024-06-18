@@ -9,7 +9,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
     eco = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
     nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99"),
-    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(nn)
 Map.addLayer(eg)
@@ -20,6 +21,7 @@ ba = ba.map(function(ft){
 }).filter(ee.Filter.eq('YEAR', '2018'))
 
 Map.addLayer(ba, {color:'red'})
+Map.addLayer(fritzi, {color:"teal"})
 /*
 
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
