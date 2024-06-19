@@ -1,6 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2");
+var fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
+    fcaImg = ee.Image("projects/ee-fichtnej/assets/germany_2020_fca");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+require()
 
 Map.addLayer(fritzi, {color:"Teal"})
 
+var stormdamage = fcaImg.clip(fritzi);
+Map.addLayer(stormdamage, {min:-1, max:1, palette: ["magenta", "yellow", "green"]})
