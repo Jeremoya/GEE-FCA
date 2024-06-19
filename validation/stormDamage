@@ -1,0 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+Map.addLayer(fritzi, {color:"Teal"})
+
