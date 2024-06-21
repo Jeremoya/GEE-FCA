@@ -51,7 +51,7 @@ var viz = FCA.getFCAviz();
 var year = 2019;
 var month = [7];
 var dates = ee.DateRange('2019-07-01', '2019-08-01');
-
+Map.addLayer(ee.Image(1), {min:0, max:0.1})
 // Funktionen
 function getFCA(img){
   
@@ -123,7 +123,6 @@ function exportData(){
   print(s)
   Export.table.toDrive(s)
   
-  */
   Export.image.toDrive({image: allImgs, 
     description: 'friederieke_17',
     folder: 'friederieke_set2',
@@ -132,6 +131,7 @@ function exportData(){
     scale: 20,
     maxPixels : 100000000000,
   });
+  */
 }
 
 // Erstellen des Beobachtungsbildes
@@ -202,15 +202,21 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 3, 1);
-  var end = ee.Date.fromYMD(year, 6, 1)
+  var st = ee.Date.fromYMD(year, 5, 1);
+  var end = ee.Date.fromYMD(year, 9, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',40))
                     .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                      img = img.updateMask(img.select('SCL').eq(4))
+                      return img.updateMask(vegMask.createCopernicusMask("Total"))
+                    })
+                    /*
+                    */
                     .select(['B4', 'B3', 'B2'])
                     .median()
-                    .multiply(2)
+                    .multiply(2.5)
                     .visualize({min:0,max:2600});
                     
 
@@ -223,5 +229,5 @@ var damageArea = fritzi.filterBounds(exportGeo)
 Map.addLayer(fritzi, {color:"Teal"})
 Map.addLayer(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
 //Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
-Export.table.toDrive(damageArea)
+//Export.table.toDrive(damageArea)
 //
