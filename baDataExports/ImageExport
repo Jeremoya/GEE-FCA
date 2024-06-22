@@ -206,13 +206,13 @@ function createTCimg(){
   var end = ee.Date.fromYMD(year, 9, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',40))
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
                     .map(cloudMask.S2CloudMask)
+                    /*
                     .map(function(img){
                       img = img.updateMask(img.select('SCL').eq(4))
                       return img.updateMask(vegMask.createCopernicusMask("Total"))
                     })
-                    /*
                     */
                     .select(['B4', 'B3', 'B2'])
                     .median()
