@@ -8,6 +8,7 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     exportGeo = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -38,7 +39,8 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ee.Geometry.MultiPoint(
         [[9.693387854105584, 51.1270725307316],
          [9.563948487485252, 51.54320614254728],
-         [9.732410021732694, 51.02977623334481]]);
+         [9.732410021732694, 51.02977623334481]]),
+    burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -61,6 +63,18 @@ function getFCA(img){
                             'SWIR': img.select(['B11']),
                           }).rename('FCA');
 }
+
+
+
+// Burned Areas
+
+burnedAreas = burnedAreas.map(function(ft){
+  var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
+  return ft.set('YEAR', year);
+}).filter(ee.Filter.eq('YEAR', '2018'))
+
+Map.addLayer(burnedAreas, {color: 'red'}, 'burn');
+
 
 
 
@@ -93,8 +107,8 @@ function exportData(){
   hansen = hansen.select(['lossyear']);
   var rangeMask = hansen.gt(15).and(hansen.lte(20));
   hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [5, 6, 7]
-  year = 2017;
+  month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  year = 2019;
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -114,6 +128,8 @@ function exportData(){
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  var burnedImage = allImgs.clip(burnedAreas)
+  Map.addLayer(burnedImage, viz, 'burnDamage')
   //allImgs = hansen.addBands(allImgs.rename('FCA'))
   //Map.addLayer(allImgs)
   print('Export for:', month, year);
@@ -122,7 +138,6 @@ function exportData(){
   print(s)
   Export.table.toDrive(s)
   
-  */
   Export.image.toDrive({image: allImgs, 
     description: 'friederieke_17',
     folder: 'friederieke_set2',
@@ -131,6 +146,7 @@ function exportData(){
     scale: 20,
     maxPixels : 100000000000,
   });
+  */
 }
 
 // Erstellen des Beobachtungsbildes
