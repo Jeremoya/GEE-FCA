@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[6.527044697635747, 53.89283220078899],
-          [6.527044697635747, 47.2238519204083],
-          [16.694462223880862, 47.2238519204083],
-          [16.694462223880862, 53.89283220078899]]], null, false),
+        [[[-10.699517802364253, 72.20271061862974],
+          [-10.699517802364253, 35.53735901937522],
+          [41.47961847388086, 35.53735901937522],
+          [41.47961847388086, 72.20271061862974]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -76,7 +76,9 @@ burnedAreas = burnedAreas.map(function(ft){
 Map.addLayer(burnedAreas, {color: 'red'}, 'burn');
 
 
-
+var hYears = hansen.select('lossyear').neq(18)
+var noDamageMask = ee.Image(0).clip(burnedAreas).unmask(1).and(hYears);
+Map.addLayer(noDamageMask, {}, "nodmg")
 
 
 // Berechnen eines neuen Bildes
@@ -128,15 +130,16 @@ function exportData(){
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  var burnedImage = allImgs.clip(burnedAreas)
-  Map.addLayer(burnedImage, viz, 'burnDamage')
+  var burnedImage = ee.Image(0).addBands(allImgs.clip(burnedAreas));
+  var notBurned = ee.Image(1).addBands(allImgs.updateMask(noDamageMask))
+  //Map.addLayer(burnedImage, viz, 'burnDamage')
   //allImgs = hansen.addBands(allImgs.rename('FCA'))
   //Map.addLayer(allImgs)
   print('Export for:', month, year);
-  /*
-  var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 20, tileScale: 4})
-  print(s)
+  var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
+  //print(s)
   Export.table.toDrive(s)
+  /*
   
   Export.image.toDrive({image: allImgs, 
     description: 'friederieke_17',
