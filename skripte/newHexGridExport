@@ -44,12 +44,12 @@ var hexGrid = function(proj, diameter) {
     r: ee.Number(diameter).divide(2),
   }
   //i = xi + yi / 3
-  //xi = Aix + Biy | u - v | x/d - sqrt(3)*y/d
+  //xi = Aix + Biy | u - v | x/d - sqrt(3) * y/d
   //yi = Cix + Diy | x / r
   var i = ee.Image().expression("floor((floor(u - v) + floor(x / r))/3)", vals)
   //j = xj + yj / 3
-  //xj = Ajx + Bjy | u + v
-  //yj = Cjx + Djy | v - u
+  //xj = Ajx + Bjy | u + v | x/d + sqrt(3) * y/d
+  //yj = Cjx + Djy | v - u | sqrt(3) * y/d - x/d
   var j = ee.Image().expression("floor((floor(u + v) + floor(v - u))/3)", vals)
   
   // Turn the hex coordinates into a single "ID" number.
