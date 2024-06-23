@@ -14,6 +14,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(nn)
 Map.addLayer(eg)
+Map.addLayer(eu)
 
 ba = ba.map(function(ft){
   var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
