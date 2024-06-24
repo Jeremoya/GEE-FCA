@@ -10,7 +10,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     eco = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
     nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
-    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2");
+    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
+    clg = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(nn)
 Map.addLayer(eg)
@@ -23,6 +24,15 @@ ba = ba.map(function(ft){
 
 Map.addLayer(ba, {color:'red'})
 Map.addLayer(fritzi, {color:"teal"})
+
+
+clg = clg.select("discrete_classification");
+print(clg)
+var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
+var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
+Map.addLayer(clg18)
+Map.addLayer(clg19)
+Map.addLayer(clg18.eq(clg19))
 /*
 
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
