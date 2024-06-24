@@ -13,6 +13,19 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
     clg = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+clg = clg.select("discrete_classification");
+print(clg)
+var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
+clg18 = clg18.updateMask(clg18.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]))
+var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
+clg19 = clg19.updateMask(clg19.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]))
+Map.addLayer(clg18)
+Map.addLayer(clg19)
+Map.addLayer(clg18.eq(clg19))
+
+
+
+/*
 Map.addLayer(nn)
 Map.addLayer(eg)
 Map.addLayer(eu)
@@ -24,18 +37,6 @@ ba = ba.map(function(ft){
 
 Map.addLayer(ba, {color:'red'})
 Map.addLayer(fritzi, {color:"teal"})
-
-
-clg = clg.select("discrete_classification");
-print(clg)
-var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
-clg18 = clg18.updateMask(clg18.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]))
-var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
-clg19 = clg19.updateMask(clg19.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]))
-Map.addLayer(clg18)
-Map.addLayer(clg19)
-Map.addLayer(clg18.eq(clg19))
-/*
 
 var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
 print(rgns)
