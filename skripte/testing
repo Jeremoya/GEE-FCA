@@ -28,6 +28,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
 /***
  * A small utility to show current status (busy or done)
  */
+ 
+ var start, end;
 var StateMonitor = function() {
   this.iconBusy = '⏳ checking ...'
   this.iconDone = '⌛ done'
@@ -43,9 +45,11 @@ StateMonitor.prototype.onBusy = function() {
   this.label.setValue()
 } 
 
-StateMonitor.prototype.onDone = function() {
+StateMonitor.prototype.onDone = function(x) {
+  var img = x;
   this.label.setValue(this.iconDone)
-  print("done",Date.now())
+  end = Date.now()
+  print("done",x,end, end-start)
 } 
 
 var monitor = new StateMonitor()
@@ -53,14 +57,18 @@ var monitor = new StateMonitor()
 
 
 function stopTime(){
-  monitor.onBusy()
-  print("start", Date.now())
-  var med = s2Data.filterBounds(geometry).filterDate("2019-06-01", "2019-07-01").median()
+  monitor.onBusy
+  start = Date.now()
+  print("start", start)
+  var med = s2Data.filterBounds(geometry).filterDate("2018-06-01", "2023-07-01").median()
   Map.addLayer(med)
-  monitor.onDone()
+  med.evaluate(done)
+  print(med.reduce(ee.Reducer.first()))
 }
 
-
+function done(x,y){
+  monitor.onDone(x)
+}
 
 stopTime()
 // ui.util.setInterval(checkForNewImage, 10000)
