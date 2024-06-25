@@ -4,7 +4,11 @@ var LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
-    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
+    center = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([15.604829575590648, 50.56315508062067]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -12,8 +16,7 @@ var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var viz = FCA.getFCAviz();
-var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
-print('aoi', aoi)
+
 
 
 
@@ -49,9 +52,9 @@ function startCalc(){
   // Karte Aktualisieren
   Map.clear()
   Map.addLayer(ddImg, viz, 'Deciduous Forest');
-  Map.addLayer(egImg, viz, 'Evergreen Forest');
-  Map.addLayer(mxImg, viz, 'Mixed Forest');
-  Map.addLayer(ovImg, viz, 'Other Vegetation');
+  Map.addLayer(egImg, viz, 'Evergreen Forest',false);
+  Map.addLayer(mxImg, viz, 'Mixed Forest',false);
+  Map.addLayer(ovImg, viz, 'Other Vegetation',false);
   
 
   
@@ -125,8 +128,9 @@ function createFCAImage(type){
 }
 
 
-var zoomlevel = 2;
-month = [1,2,3,4,5,6,7,8,9,10]
+var zoomlevel = 4;
+month = [7]
 
-Map.setZoom(zoomlevel)
+Map.centerObject(center, zoomlevel)
 
+startCalc()
