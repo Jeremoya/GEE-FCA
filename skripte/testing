@@ -20,22 +20,74 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[5.634754077088311, 54.4421469267696],
-          [5.634754077088311, 45.85660385125722],
-          [38.15428532708831, 45.85660385125722],
-          [38.15428532708831, 54.4421469267696]]], null, false);
+        [[[10.31492985833831, 51.928231815269704],
+          [10.31492985833831, 47.79568791476679],
+          [14.40184392083831, 47.79568791476679],
+          [14.40184392083831, 51.928231815269704]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-clg = clg.select("discrete_classification");
-print(clg)
-var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
-clg18 = clg18.updateMask(clg18.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
-var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
-clg19 = clg19.updateMask(clg19.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
-Map.addLayer(clg18)
-Map.addLayer(clg19)
-var comp = ee.Image(0).addBands(clg18.eq(clg19))
-var s = comp.stratifiedSample({numPoints: 200000, region: geometry, scale:100})
-Export.table.toDrive(s)
+/***
+ * A small utility to show current status (busy or done)
+ */
+var StateMonitor = function() {
+  this.iconBusy = '⏳ checking ...'
+  this.iconDone = '⌛ done'
+  this.label = ui.Label()
+}
+
+StateMonitor.prototype.show = function() {
+  this.onDone()
+  print("show",Date.now())
+} 
+
+StateMonitor.prototype.onBusy = function() {
+  this.label.setValue()
+} 
+
+StateMonitor.prototype.onDone = function() {
+  this.label.setValue(this.iconDone)
+  print("done",Date.now())
+} 
+
+var monitor = new StateMonitor()
+// monitor.show()
+
+
+function stopTime(){
+  monitor.onBusy()
+  print("start", Date.now())
+  var med = s2Data.filterBounds(geometry).filterDate("2019-06-01", "2019-07-01").median()
+  Map.addLayer(med)
+  monitor.onDone()
+}
+
+
+
+stopTime()
+// ui.util.setInterval(checkForNewImage, 10000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+// clg = clg.select("discrete_classification");
+// print(clg)
+// var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
+// clg18 = clg18.updateMask(clg18.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
+// var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
+// clg19 = clg19.updateMask(clg19.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
+// Map.addLayer(clg18)
+// Map.addLayer(clg19)
+// var comp = ee.Image(0).addBands(clg18.eq(clg19))
+// var s = comp.stratifiedSample({numPoints: 200000, region: geometry, scale:100})
+// Export.table.toDrive(s)
 
 
 
