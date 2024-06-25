@@ -37,8 +37,8 @@ function getFCA(img){
 
 
 
-function startCalc(baseMap){
-  print('Start');
+function startCalc(){
+  
   
   var ddImg = createFCAImage(dd);
   var egImg = createFCAImage(eg);
@@ -47,40 +47,18 @@ function startCalc(baseMap){
   
   
   // Karte Aktualisieren
-  baseMap.layers().reset();
-  baseMap.addLayer(ddImg, viz, 'Deciduous Forest');
-  baseMap.addLayer(egImg, viz, 'Evergreen Forest');
-  baseMap.addLayer(mxImg, viz, 'Mixed Forest');
-  baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
-  print(baseMap.layers())
+  Map.clear()
+  Map.addLayer(ddImg, viz, 'Deciduous Forest');
+  Map.addLayer(egImg, viz, 'Evergreen Forest');
+  Map.addLayer(mxImg, viz, 'Mixed Forest');
+  Map.addLayer(ovImg, viz, 'Other Vegetation');
+  
 
   
   
 }
 
-function exportData(){
-  
-  hansen = hansen.select(['lossyear']);
-  var rangeMask = hansen.gt(15).and(hansen.lte(20));
-  hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [1,2,3,4,5,6,7,8,9,10,11,12]
-  year = 2020;
-  
-  var ddImg = createFCAImage(dd);
-  var egImg = createFCAImage(eg);
-  var mxImg = createFCAImage(mx);
-  var ovImg = createFCAImage(ov);
-  
-  
 
-  var countryFilter = ee.Filter.eq('country_na', 'Portugal')
-  var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
-  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
-  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  allImgs = hansen.addBands(allImgs.rename('FCA'))
-  Map.addLayer(allImgs)
-
-}
 
 // Erstellen des Beobachtungsbildes
 //jährlich/saisonal
@@ -146,3 +124,9 @@ function createFCAImage(type){
   return ee.ImageCollection(retImg).mean();
 }
 
+
+var zoomlevel = 2;
+month = [1]
+
+Map.setZoom(zoomlevel)
+startCalc()
