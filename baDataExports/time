@@ -125,12 +125,12 @@ function createFCAImage(type){
 }
 
 
-var zoomlevel = 18;
-month = [10]
-year= 2022
+var zoomlevel = 19;
+month = [7,8]
+year= 2023
 
 
 
-// Map.centerObject(center, zoomlevel)
+Map.centerObject(center, zoomlevel)
 
-// startCalc()
+startCalc()
