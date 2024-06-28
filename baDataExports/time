@@ -5,7 +5,19 @@ var LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
-    center = /* color: #d63000 */ee.Geometry.Point([15.22923448281721, 50.2696264236422]);
+    center = /* color: #d63000 */ee.Geometry.Point([15.22923448281721, 50.2696264236422]),
+    geometry = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[3.3313305785502934, 53.42271283397098],
+          [3.3313305785502934, 46.85277612673683],
+          [26.853059094175293, 46.85277612673683],
+          [26.853059094175293, 53.42271283397098]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -125,7 +137,7 @@ function createFCAImage(type){
 }
 
 
-var zoomlevel = 13;
+var zoomlevel = 7;
 month = [1,2,3,4,5,6,7,8,9,10,11,12]
 year= 2018
 
@@ -133,4 +145,5 @@ year= 2018
 
 Map.centerObject(center, zoomlevel)
 
-startCalc()
+//startCalc()
+print(geometry.area(1))
