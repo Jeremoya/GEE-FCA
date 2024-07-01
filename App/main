@@ -185,10 +185,11 @@ function normalMode(){
 function exampleMode(){
   
   print("aoi", aoi)
-  ui.root.widgets().reset([sp]);
+  ui.root.widgets().clear();
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
   sp = ui.SplitPanel(m1,m2,'horizontal', true);
+  ui.root.add(sp)
   month = [5,6];
   year = aoi.get('start');
   startCalc(m1);
