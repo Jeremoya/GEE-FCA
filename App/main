@@ -316,12 +316,12 @@ var p1 = ui.Panel();
 var p2 = ui.Panel();
 var m1 = ui.Map();
 var m2 = ui.Map();
-m1.setLocked(false, 12, 15);
-m2.setLocked(false, 12, 15);
+m1.setLocked(true, 12, 15);
+m2.setLocked(true, 12, 15);
 m1.add(homeButton);
 m2.add(exampleMapSelect)
-m1.centerObject(currGeo, 12);
-m2.centerObject(currGeo, 12);
+m1.centerObject(currGeo, 13);
+m2.centerObject(currGeo, 13);
 normalMap = ui.root.widgets().get(0)
   
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
