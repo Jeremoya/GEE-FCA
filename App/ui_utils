@@ -83,14 +83,15 @@ var makeLegendRow = function(name, color, mobileStyle) {
 };
 
 
-exports.getLegend(classnames, palette){
+exports.createLegend = function(classnames, palette){
   
+  var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
+  for (var i = 0; i < classNames.length; i++) {
+    legend.add(makeLegendRow(classNames[i], palette[i], false));
+  }
+  return legend;
 }
 
-var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
-for (var i = 0; i < classNames.length; i++) {
-  legend.add(makeLegendRow(classNames[i], palette[i], false));
-}
 
 
 // Funktion zum Anzeigen von zusätzlichen Informationen
