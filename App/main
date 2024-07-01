@@ -199,6 +199,7 @@ function exampleMode(){
 
 function reloadExample(newAOI){
   aoi = ee.Dictionary(AOIs.getAOI(newAOI));
+  print("aoi", aoi)
   exampleMode();
   //return 1;
 }
