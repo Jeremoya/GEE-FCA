@@ -188,7 +188,6 @@ function exampleMode(){
   print("aoi", aoi)
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  sp = ui.SplitPanel(m1,m2,'horizontal', true);
   ui.root.widgets().reset([sp]);
   //ui.Map.Linker([m1,m2]);
   month = [5,6];
