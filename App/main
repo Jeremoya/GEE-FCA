@@ -174,9 +174,8 @@ function createFCAImage(type){
 
 function normalMode(){
   
-  ui.root.clear();
-  ui.root.add(normalMap);
-  Map.centerObject(ee.Geometry.Point([10.798, 51.7328]),12)
+  ui.root.widgets().reset(normalMap);
+
 }
 
 //Switch to example Mode
