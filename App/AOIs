@@ -18,10 +18,7 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [12.916893031254268, 52.04719526890587],
           [12.91908171381042, 52.04466142500384],
           [12.9056062957196, 52.039434918230356]]]),
-    fichtenwalde260718 = 
-    /* color: #0b4a8b */
-    /* shown: false */
-    ee.Geometry.Polygon(
+    fichtenwalde260718 = /* color: #0b4a8b */ee.Geometry.Polygon(
         [[[12.911949224243337, 52.278501408771874],
           [12.915060587622635, 52.28779528472368],
           [12.914202280578928, 52.288294053442655],
@@ -86,10 +83,7 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [11.139233027129745, 53.27594382395728],
           [11.134941492705916, 53.274506742731525],
           [11.123182688384627, 53.26844994100246]]]),
-    luebtheen120623 = 
-    /* color: #98ff00 */
-    /* shown: false */
-    ee.Geometry.Polygon(
+    luebtheen120623 = /* color: #98ff00 */ee.Geometry.Polygon(
         [[[11.118118750282981, 53.26833712177477],
           [11.120264517494896, 53.26646344083233],
           [11.119492041298606, 53.264358660214384],
@@ -99,10 +93,7 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [11.12738846463845, 53.275163812468755],
           [11.124813543984153, 53.274162974887865],
           [11.117045866677024, 53.268901776643006]]]),
-    hrensko24072022 = 
-    /* color: #0b4a8b */
-    /* shown: false */
-    ee.Geometry.Polygon(
+    hrensko24072022 = /* color: #0b4a8b */ee.Geometry.Polygon(
         [[[14.247251366553302, 50.87460122916973],
           [14.270768797556281, 50.86875153329975],
           [14.27523195965242, 50.868914034763655],
@@ -125,7 +116,8 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [14.240213028539962, 50.88529681078208],
           [14.238239212359913, 50.87720085836018],
           [14.238325042368706, 50.87395129925092]]]),
-    harz = /* color: #d63000 */ee.Geometry.Point([10.7554, 51.7269]);
+    harz = /* color: #d63000 */ee.Geometry.Point([10.7554, 51.7269]),
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 exports.getAOI = function(aoi){
@@ -147,3 +139,6 @@ var luebtheen19Data = {geo: luebtheen300619, start: 2019, compareYear: 2020};
 var luebtheen23Data = {geo: luebtheen300619, start: 2022, compareYear: 2023};
 var hrenskoData = {geo: hrensko24072022, start: 2022, compareYear: 2023};
 var harzData = {geo: harz, start: 2019, compareYear: 2020};
+
+
+Map.addLayer(ba, {}, "ba")
