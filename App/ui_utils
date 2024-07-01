@@ -56,17 +56,6 @@ var month = [7];
 var dates = ee.DateRange('2019-07-01', '2019-08-01');
 
 
-// Funktionen
-
-function getFCA(img){
-  
-  var image = ee.Image();
-  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
-                            'RE1': img.select(['B5']),
-                            'RE4': img.select(['B8A']),
-                            'SWIR': img.select(['B11']),
-                          }).rename('FCA');
-}
 
 // Erstellen eines Legendeneintrages
 var makeLegendRow = function(name, color, mobileStyle) {
@@ -94,16 +83,15 @@ var makeLegendRow = function(name, color, mobileStyle) {
 };
 
 
-// Anpassung an Bildschirmgröße
-function configLayout(deviceInfo) {
+exports.getLegend(classnames, palette){
   
-  if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
-    
-  } else {
-    
-  }
-   
 }
+
+var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
+for (var i = 0; i < classNames.length; i++) {
+  legend.add(makeLegendRow(classNames[i], palette[i], false));
+}
+
 
 // Funktion zum Anzeigen von zusätzlichen Informationen
 
@@ -114,254 +102,9 @@ function showMoreInformation(){
   
 }
 
-// Berechnen eines neuen Bildes
-
-function startCalc(baseMap){
-  print('Start');
-  
-  var ddImg = createFCAImage(dd);
-  var egImg = createFCAImage(eg);
-  var mxImg = createFCAImage(mx);
-  var ovImg = createFCAImage(ov);
-  
-  
-  // Karte Aktualisieren
-  baseMap.layers().reset();
-  baseMap.addLayer(ddImg, viz, 'Deciduous Forest');
-  baseMap.addLayer(egImg, viz, 'Evergreen Forest');
-  baseMap.addLayer(mxImg, viz, 'Mixed Forest');
-  baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
-  print(baseMap.layers())
-
-  
-  
-}
-
-
-// Erstellen des Beobachtungsbildes
-//jährlich/saisonal
-
-// Aktualisieren des Zeitraumes für Beobachtungsbild
-function updateDateRange(month){
-  var startDate = ee.Date.fromYMD(year, month, 1);
-  var endDate = startDate.advance(1, 'month');
-  var dr = ee.DateRange(startDate, endDate);
-  dates = dr;
-  
-}
-
-function createObsImage(){
-  
-  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
-                    .filterDate(dates)
-                    .map(cloudMask.S2CloudMask)
-                    .map(function(img){
-                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
-                    })
-                    .select(['B5', 'B8A', 'B11'])
-                    .mean();
-                    
-
-  return s2Data;
-}
-
-function createRefImage(imgCol, oneMonth){
-  
-  imgCol = ee.ImageCollection(imgCol);
-  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
-}
-
-
-// Vergleich Beobachtung Referenz
-
-function compareImages(ref, obs){
-  
-  //Einordnen der Beobachtung in Quantile
-  var comp = obs.gte(ref);
-  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-  //Normierung
-  rcomp = rcomp.subtract(9.5).divide(9.5);
-  //Indexberechnung
-  return getFCA(rcomp);
-  
-}
 
 
 
-function createFCAImage(type){
-  var retImg = month.map(function(oneMonth){
-    
-    updateDateRange(oneMonth);
-    var img = createObsImage();
-    var refImg = createRefImage(type, oneMonth);
-    var fcaImg = compareImages(refImg, img);
-    
-    return fcaImg;
-  });
-  
-  return ee.ImageCollection(retImg).mean();
-}
-
-// Switch to normal Mode
-
-function normalMode(){
-  ui.root.clear();
-  ogMap.centerObject(ee.Geometry.Point([10.798, 51.7328]),12)
-  ui.root.add(ogMap);
-}
-
-//Switch to example Mode
-
-function exampleMode(){
-  ogMap.layers().reset();
-  ui.root.clear();
-  month = [5,6];
-  year = aoi.get('start');
-  startCalc(m1);
-  year = aoi.get('compareYear');
-  startCalc(m2);
-  m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  ui.Map.Linker([m1,m2]);
-  ui.root.add(sp);
-  
-}
-
-function reloadExample(newAOI){
-  aoi = ee.Dictionary(AOIs.getAOI(newAOI));
-  exampleMode();
-  //return 1;
-}
-
-    //////////////////////////////////
-    //  GUI                         //
-    //////////////////////////////////
-    
-var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
-var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
-var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '600px', position : 'middle-right'}});
-var infolabel = ui.Label('Project Information');
-var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-                  style : {position : 'bottom-left', stretch :'vertical'}
-});
-var moreInfoButton = ui.Button({
-  label: 'ℹ - more Information' ,
-  //style: {position: 'bottom-right'},
-  onClick: showMoreInformation 
-});
-
-var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var checkEG = ui.Checkbox('Evergreen', true);
-var checkDD = ui.Checkbox('Decidouos', true);
-var checkMX = ui.Checkbox('Mixed Forest', true);
-var checkOV = ui.Checkbox('Other Vegetation');
-var layerInformation = ui.Button({
-  label : 'i',
-  style : {stretch: 'horizontal'}
-  
-});
-
-
-var years = ee.List.sequence(2017, 2023).map(function(year) {
-  return {label: ee.Number(year).format('%.0f'), value: year };
-});
-
-var yearSelect = ui.Select({
-  placeholder : '2019',
-  items : years.getInfo(),
-  onChange: function(value){
-    
-    year = value;
-    
-  }
-});
-
-var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10],
-  Spring: [5,6], Summer: [7,8], Autumn: [9,10], Yearly: [1,2,3,4,5,6,7,8,9,10,11,12]};
-
-var monthSelect = ui.Select({
-  placeholder : 'Jul',
-  items : Object.keys(months),
-  onChange: function(key){
-    month = months[key];
-    }
-});
-
-
-var calcButton = ui.Button({
-  label: 'Calculate FCA',
-  style: {stretch: 'horizontal'},
-  onClick: function() {startCalc(ogMap)}
-});
-
-
-var exButton = ui.Button({
-  label: 'Example Maps',
-  onClick: exampleMode
-});
-
-var homeButton = ui.Button({
-  label: 'Back to normal mode',
-  style : {position : 'top-left'},
-  onClick: normalMode
-});
-
-var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen19', 'Luebtheen23', 'Hrensko', 'Harz'];
-
-var exampleMapSelect = ui.Select({items: aoiList,
-  placeholder:'Treuenbrietzen',
-  value:'Treuenbrietzen',
-  style:{position: 'middle-right'},
-  onChange: reloadExample
-});
-
-
-for (var i = 0; i < classNames.length; i++) {
-  legend.add(makeLegendRow(classNames[i], palette[i], false));
-}
-
-inputPanel = inputPanel.setLayout(hor);
-inputPanel.add(yearSelect);
-inputPanel.add(monthSelect);
-inputPanel.add(calcButton);
-
-infobox.add(infolabel);
-infobox.add(infotext);
-infobox.add(exButton);
-infobox.add(moreInfoButton);
-
-layerPanel.add(checkEG);
-layerPanel.add(checkDD);
-layerPanel.add(checkMX);
-layerPanel.add(checkOV);
-layerPanel.add(layerInformation);
-
-Map.add(inputPanel);
-Map.add(infobox);
-Map.add(layerPanel);
-Map.add(legend);
-Map.setLocked(false, 5, 18);
-
-var ogMap = ui.root.widgets().get(0);
-ui.root.clear();
-ui.root.add(ogMap);
-ogMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
-
-var currGeo = ee.Geometry(aoi.get('geo'));
-var p1 = ui.Panel();
-var p2 = ui.Panel();
-var m1 = ui.Map();
-var m2 = ui.Map();
-m1.setLocked(false, 10, 16);
-m2.setLocked(false, 10, 16);
-m1.add(homeButton);
-m2.add(exampleMapSelect)
-m1.centerObject(currGeo, 12);
-m2.centerObject(currGeo, 12);
-
-  
-var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 
 
-//exportData()
