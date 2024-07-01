@@ -122,9 +122,10 @@ function createObsImage(){
   
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(dates)
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',40))
                     .map(cloudMask.S2CloudMask)
                     .map(function(img){
-                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                      return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
                     })
                     .select(['B5', 'B8A', 'B11'])
                     .mean();
