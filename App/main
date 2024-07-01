@@ -222,8 +222,8 @@ var moreInfoButton = ui.Button({
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var checkEG = ui.Checkbox('Evergreen', true);
 var checkDD = ui.Checkbox('Decidouos', true);
+var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers.get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true);
 var checkOV = ui.Checkbox('Other Vegetation');
 var layerInformation = ui.Button({
