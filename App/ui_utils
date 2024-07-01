@@ -30,31 +30,8 @@ var aoi1 =
           [12.972132038675722, 52.06701492145414]]], null, false),
     hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// typspezifische Layer
-// Nutzungshinweise, Interpretation der Ergebnisse
-// Hintergründe zur Thematik
-// Hauptprojekt des Waldzustandsmonitors, Forschung am Ufz, Kontext der Arbeit im Projekt
-
-//Imports
-var cloudMask = require('users/fichtnej/modules:CloudMasks');
-var vegMask = require('users/fichtnej/modules:VegMasks');
-var FCA = require('users/fichtnej/modules:fcaUtils');
-var AOIs = require('users/fichtnej/BA:App/AOIs');
-var viz = FCA.getFCAviz();
-var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
-print('aoi', aoi)
-
-
-
-// Globale Variablen
-var vert = ui.Panel.Layout.Flow('vertical');
-var hor = ui.Panel.Layout.Flow('horizontal');
-var classNames = ['1 (critical)', '2', '3', '4', '5', '6', '7', '8 (good)'];//{min: -0.75, max: 0.5} ;
+var classNames = ['1 (critical)', '2', '3', '4', '5', '6', '7', '8 (good)'];
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
-var year = 2019;
-var month = [7];
-var dates = ee.DateRange('2019-07-01', '2019-08-01');
-
 
 
 // Erstellen eines Legendeneintrages
@@ -96,7 +73,7 @@ exports.createLegend = function(classnames, palette){
 
 // Funktion zum Anzeigen von zusätzlichen Informationen
 
-function showMoreInformation(){
+exports.showMoreInformation = function(){
   alert('Der Waldzustandsmonitor ist ein Projekt des Helmholtz Zentrums für Umweltforschung in Leipzig. ' + 
   'Die Arbeitsgruppe Remote Sensing hat dabei unter anderem eine Methode entwickelt, welche aus Reflektionen ' +
   'im Infraroten Wellenlängenbereich Rückschlüsse auf den Waldzustand getroffen werden können.')
