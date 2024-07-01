@@ -318,8 +318,8 @@ normalMap = ui.root.widgets().get(0)
 
 var m1 = ui.Map();
 var m2 = ui.Map();
-m1.setLocked(true, 12, 15);
-m2.setLocked(true, 12, 15);
+m1.setLocked(true, 13, 15);
+m2.setLocked(true, 13, 15);
 m1.add(homeButton);
 m2.add(exampleMapSelect)
 
