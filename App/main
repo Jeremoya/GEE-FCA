@@ -188,7 +188,7 @@ function exampleMode(){
   print("aoi", aoi)
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  ui.root.widgets().reset([sp]);
+  ui.root.widgets().reset([m1, m2]);
   //ui.Map.Linker([m1,m2]);
   month = [5,6];
   year = aoi.get('start');
