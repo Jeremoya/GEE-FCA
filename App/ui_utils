@@ -76,7 +76,7 @@ exports.createLegend = function(classes, colorPalette){
 exports.showMoreInformation = function(){
   alert('Der Waldzustandsmonitor ist ein Projekt des Helmholtz Zentrums für Umweltforschung in Leipzig. ' + 
   'Die Arbeitsgruppe Remote Sensing hat dabei unter anderem eine Methode entwickelt, welche aus Reflektionen ' +
-  'im Infraroten Wellenlängenbereich Rückschlüsse auf den Waldzustand getroffen werden können.')
+  'im Infraroten Wellenlängenbereich Rückschlüsse auf den Waldzustand getroffen werden können. www.google.de')
   
 }
 
