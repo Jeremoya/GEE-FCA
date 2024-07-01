@@ -280,8 +280,8 @@ var homeButton = ui.Button({
 var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen19', 'Luebtheen23', 'Hrensko', 'Harz'];
 
 var exampleMapSelect = ui.Select({items: aoiList,
-  placeholder:'Treuenbrietzen',
-  value:'Treuenbrietzen',
+  placeholder:'Falkenberg',
+  value:'Falkenberg',
   style:{position: 'middle-right'},
   onChange: reloadExample
 });
@@ -311,19 +311,18 @@ Map.add(legend);
 Map.setLocked(false, 5, 18);
 
 Map.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
+Map.setControlVisibility(false)
+normalMap = ui.root.widgets().get(0)
 
-var currGeo = ee.Geometry(aoi.get('geo'));
-var p1 = ui.Panel();
-var p2 = ui.Panel();
+
+
 var m1 = ui.Map();
 var m2 = ui.Map();
 m1.setLocked(true, 12, 15);
 m2.setLocked(true, 12, 15);
 m1.add(homeButton);
 m2.add(exampleMapSelect)
-m1.centerObject(currGeo, 14);
-m2.centerObject(currGeo, 14);
-normalMap = ui.root.widgets().get(0)
+
   
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
