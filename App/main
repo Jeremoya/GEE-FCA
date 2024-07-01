@@ -181,15 +181,15 @@ function normalMode(){
 
 function exampleMode(){
   ui.root.clear();
+  m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  ui.Map.Linker([m1,m2]);
+  ui.root.add(sp);
   month = [5,6];
   year = aoi.get('start');
   startCalc(m1);
   year = aoi.get('compareYear');
   startCalc(m2);
-  m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  ui.Map.Linker([m1,m2]);
-  ui.root.add(sp);
   
 }
 
