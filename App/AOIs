@@ -140,7 +140,7 @@ var fichtenwaldeData = {geo: ba.filter(ee.Filter.eq("id", "14807")).first().geom
 var falkenbergData = {geo: ba.filter(ee.Filter.eq("id", "206858")).first().geometry(), start: 2022, compareYear: 2023};
 var luebtheen19Data = {geo: ba.filter(ee.Filter.eq("id", "18632")).first().geometry(), start: 2019, compareYear: 2020};
 var luebtheen23Data = {geo: ba.filter(ee.Filter.eq("id", "216603")).first().geometry(), start: 2022, compareYear: 2023};
-var hrenskoData = {geo: ba.filter(ee.Filter.eq("id", "208786")).first(), start: 2022, compareYear: 2023};
+var hrenskoData = {geo: ba.filter(ee.Filter.eq("id", "208786")).first().geometry(), start: 2022, compareYear: 2023};
 var harzData = {geo: harz, start: 2019, compareYear: 2020};
 
 
