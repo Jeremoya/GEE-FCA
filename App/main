@@ -206,8 +206,8 @@ function createFCAImage(type){
 
 function normalMode(){
   ui.root.clear();
+  ogMap.centerObject(ee.Geometry.Point([10.798, 51.7328]),12)
   ui.root.add(ogMap);
-  ogMap.centerObject(ee.Geometry.Point([51.7328, 10.798]),12)
 }
 
 //Switch to example Mode
