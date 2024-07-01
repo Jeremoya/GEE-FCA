@@ -185,7 +185,7 @@ function normalMode(){
 function exampleMode(){
   
   print("aoi", aoi)
-  ui.root.widgets().clear();
+  ui.root.clear();
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
   sp = ui.SplitPanel(m1,m2,'horizontal', true);
