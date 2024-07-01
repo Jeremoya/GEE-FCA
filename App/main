@@ -1,5 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
+var aoi1 = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
         [[[23.645476277373046, 45.27204716831395],
           [23.645476277373046, 45.18875133788677],
           [23.715342457792968, 45.18875133788677],
@@ -19,11 +22,7 @@ var aoi1 = /* color: #d63000 */ee.Geometry.Polygon(
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     tb = 
     /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
+    /* shown: false */
     ee.Geometry.Polygon(
         [[[12.876688313089785, 52.06701492145414],
           [12.876688313089785, 52.011261895989826],
@@ -207,8 +206,8 @@ function createFCAImage(type){
 
 function normalMode(){
   ui.root.clear();
-  ogMap.centerObject(ee.Geometry.Point([10.798, 51.7328]),12)
   ui.root.add(ogMap);
+  ogMap.centerObject(ee.Geometry.Point([51.7328, 10.798]),12)
 }
 
 //Switch to example Mode
@@ -223,6 +222,7 @@ function exampleMode(){
   startCalc(m2);
   m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  ui.Map.Linker([m1,m2]);
   ui.root.add(sp);
   
 }
@@ -358,7 +358,7 @@ m1.add(homeButton);
 m2.add(exampleMapSelect)
 m1.centerObject(currGeo, 12);
 m2.centerObject(currGeo, 12);
-//ui.Map.Linker([m1,m2]);
+
   
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
