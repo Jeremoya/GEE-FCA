@@ -43,6 +43,7 @@ var AOIs = require('users/fichtnej/BA:App/AOIs');
 var utils = require("users/fichtnej/BA:App/ui_utils")
 var viz = FCA.getFCAviz();
 var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
+var normalMap = Map;
 print('aoi', aoi)
 
 
@@ -172,14 +173,16 @@ function createFCAImage(type){
 // Switch to normal Mode
 
 function normalMode(){
+  
   ui.root.clear();
-  ui.root.add(Map);
+  ui.root.add(normalMap);
   Map.centerObject(ee.Geometry.Point([10.798, 51.7328]),12)
 }
 
 //Switch to example Mode
 
 function exampleMode(){
+  normalMap = ui.root.widgets().get(0)
   ui.root.clear();
   m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
