@@ -184,7 +184,6 @@ function normalMode(){
 
 function exampleMode(){
   
-  ui.root.clear()
   print("aoi", aoi)
   ui.root.widgets().reset([sp]);
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
