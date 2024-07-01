@@ -138,44 +138,6 @@ function startCalc(baseMap){
   
 }
 
-function exportData(){
-  
-  hansen = hansen.select(['lossyear']);
-  var rangeMask = hansen.gt(15).and(hansen.lte(20));
-  hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
-  month = [1,2,3,4,5,6,7,8,9,10,11,12]
-  year = 2020;
-  
-  var ddImg = createFCAImage(dd);
-  var egImg = createFCAImage(eg);
-  var mxImg = createFCAImage(mx);
-  var ovImg = createFCAImage(ov);
-  
-  
-  
-
-  
-  var countryFilter = ee.Filter.eq('country_na', 'Portugal')
-  var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
-  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
-  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
-  allImgs = hansen.addBands(allImgs.rename('FCA'))
-  Map.addLayer(allImgs)
-  print('Export for:', month, year);
-  var s = allImgs.stratifiedSample({numPoints: 100,classBand: 'lossyear',region: exportGeo,scale: 10, tileScale: 4})
-  print(s)
-  Export.table.toDrive(s)
-  /*
-  Export.image.toAsset({image: allImgs, 
-    description: 'sampleImg',
-    assetId: 'sampleImg', 
-    priority: 200,
-    region: exportGeo, 
-    scale: 20,
-    maxPixels : 100000000000,
-  })
-  */
-}
 
 // Erstellen des Beobachtungsbildes
 //jährlich/saisonal
@@ -252,6 +214,7 @@ function normalMode(){
 //Switch to example Mode
 
 function exampleMode(){
+  ogMap.layers().reset();
   ui.root.clear();
   month = [5,6];
   year = aoi.get('start');
@@ -309,7 +272,7 @@ var yearSelect = ui.Select({
   onChange: function(value){
     
     year = value;
-    startCalc(ogMap);
+    
   }
 });
 
@@ -321,9 +284,7 @@ var monthSelect = ui.Select({
   items : Object.keys(months),
   onChange: function(key){
     month = months[key];
-    print('month',month);
-    startCalc(ogMap);
-  }
+    }
 });
 
 
@@ -382,9 +343,9 @@ Map.add(legend);
 Map.setLocked(false, 5, 18);
 
 var ogMap = ui.root.widgets().get(0);
-ogMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
 ui.root.clear();
 ui.root.add(ogMap);
+ogMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
 
 var currGeo = ee.Geometry(aoi.get('geo'));
 var p1 = ui.Panel();
