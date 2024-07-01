@@ -174,7 +174,7 @@ function createFCAImage(type){
 
 function normalMode(){
   
-  ui.root.widgets().reset(normalMap);
+  ui.root.widgets().reset([normalMap]);
 
 }
 
