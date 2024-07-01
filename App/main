@@ -184,10 +184,11 @@ function normalMode(){
 
 function exampleMode(){
   
+  ui.root.clear()
   ui.root.widgets().reset([sp]);
   m1 = m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2 = m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
-  ui.Map.Linker.reset([m1,m2]);
+  Map.Linker.reset([m1,m2]);
   month = [5,6];
   year = aoi.get('start');
   startCalc(m1);
