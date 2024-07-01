@@ -188,6 +188,7 @@ function exampleMode(){
   print("aoi", aoi)
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  sp = ui.SplitPanel(m1,m2,'horizontal', true);
   ui.root.widgets().reset([sp]);
   //ui.Map.Linker([m1,m2]);
   month = [5,6];
@@ -322,8 +323,8 @@ normalMap = ui.root.widgets().get(0)
 
 var m1 = ui.Map();
 var m2 = ui.Map();
-m1.setLocked(true, 13, 15);
-m2.setLocked(true, 13, 15);
+m1.setLocked(false, 13, 15);
+m2.setLocked(false, 13, 15);
 m1.add(homeButton);
 m2.add(exampleMapSelect)
 
