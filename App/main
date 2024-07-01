@@ -175,6 +175,7 @@ function createFCAImage(type){
 function normalMode(){
   
   ui.root.widgets().reset([normalMap]);
+  normalMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
 
 }
 
@@ -320,8 +321,8 @@ m1.setLocked(true, 12, 15);
 m2.setLocked(true, 12, 15);
 m1.add(homeButton);
 m2.add(exampleMapSelect)
-m1.centerObject(currGeo, 13);
-m2.centerObject(currGeo, 13);
+m1.centerObject(currGeo, 14);
+m2.centerObject(currGeo, 14);
 normalMap = ui.root.widgets().get(0)
   
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
