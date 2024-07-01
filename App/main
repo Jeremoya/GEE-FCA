@@ -327,3 +327,4 @@ m2.add(exampleMapSelect)
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
 
 
+startCalc()
