@@ -116,7 +116,10 @@ var treuenbrietzen230818 = /* color: #ffb2b2 */ee.Geometry.Polygon(
           [14.240213028539962, 50.88529681078208],
           [14.238239212359913, 50.87720085836018],
           [14.238325042368706, 50.87395129925092]]]),
-    harz = /* color: #d63000 */ee.Geometry.Point([10.7554, 51.7269]),
+    harz = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([10.7554, 51.7269]),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
@@ -132,13 +135,12 @@ exports.getAOI = function(aoi){
   return dict[aoi];
 };
 
-var treuenbrietzenData = {geo: treuenbrietzen230818, start: 2018, compareYear: 2019};
-var fichtenwaldeData = {geo: fichtenwalde260718, start: 2018, compareYear: 2019};
-var falkenbergData = {geo: falkenberg250722, start: 2022, compareYear: 2023};
-var luebtheen19Data = {geo: luebtheen300619, start: 2019, compareYear: 2020};
-var luebtheen23Data = {geo: luebtheen300619, start: 2022, compareYear: 2023};
-var hrenskoData = {geo: hrensko24072022, start: 2022, compareYear: 2023};
+var treuenbrietzenData = {geo: ba.filter(ee.Filter.eq("id", "14433")), start: 2018, compareYear: 2019};
+var fichtenwaldeData = {geo: ba.filter(ee.Filter.eq("id", "14807")), start: 2018, compareYear: 2019};
+var falkenbergData = {geo: ba.filter(ee.Filter.eq("id", "206858")), start: 2022, compareYear: 2023};
+var luebtheen19Data = {geo: ba.filter(ee.Filter.eq("id", "18632")), start: 2019, compareYear: 2020};
+var luebtheen23Data = {geo: ba.filter(ee.Filter.eq("id", "216603")), start: 2022, compareYear: 2023};
+var hrenskoData = {geo: ba.filter(ee.Filter.eq("id", "208786")), start: 2022, compareYear: 2023};
 var harzData = {geo: harz, start: 2019, compareYear: 2020};
 
 
-Map.addLayer(ba, {}, "ba")
