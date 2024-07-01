@@ -190,8 +190,10 @@ function exampleMode(){
   month = [5,6];
   year = aoi.get('start');
   startCalc(m1);
+  m1.addLayer(ee.Geometry(aoi.get('geo')))
   year = aoi.get('compareYear');
   startCalc(m2);
+  m2.addLayer(ee.Geometry(aoi.get('geo')))
   
 }
 
