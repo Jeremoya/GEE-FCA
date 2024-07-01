@@ -40,7 +40,7 @@ var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
-var utils = require("users(fichtnej/BA:App/ui_utils")
+var utils = require("users/fichtnej/BA:App/ui_utils")
 var viz = FCA.getFCAviz();
 var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
 print('aoi', aoi)
@@ -69,32 +69,6 @@ function getFCA(img){
                           }).rename('FCA');
 }
 
-// Erstellen eines Legendeneintrages
-var makeLegendRow = function(name, color, mobileStyle) {
-  // Create the label that is actually the colored box.
-  var colorBox = ui.Label({
-    style: {
-      backgroundColor: color,
-      // Use padding to give the box height and width.
-      padding: mobileStyle ? '10px' : '8px',
-      margin: '0 0 4px 0',
-      border: 'solid 0.5px',
-    }
-  });
-
-  // Create the label filled with the description text.
-  var description = ui.Label({
-    value: name,
-    style: {margin: '0 0 4px 6px', fontSize: mobileStyle ? '16px' : '12px'},
-  });
-
-  return ui.Panel({
-    widgets: [colorBox, description],
-    layout: ui.Panel.Layout.Flow('horizontal')
-  });
-};
-
-
 // Anpassung an Bildschirmgröße
 function configLayout(deviceInfo) {
   
@@ -106,14 +80,6 @@ function configLayout(deviceInfo) {
    
 }
 
-// Funktion zum Anzeigen von zusätzlichen Informationen
-
-function showMoreInformation(){
-  alert('Der Waldzustandsmonitor ist ein Projekt des Helmholtz Zentrums für Umweltforschung in Leipzig. ' + 
-  'Die Arbeitsgruppe Remote Sensing hat dabei unter anderem eine Methode entwickelt, welche aus Reflektionen ' +
-  'im Infraroten Wellenlängenbereich Rückschlüsse auf den Waldzustand getroffen werden können.')
-  
-}
 
 // Berechnen eines neuen Bildes
 
@@ -239,7 +205,7 @@ function reloadExample(newAOI){
     //////////////////////////////////
     
 var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
-var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
+var legend = utils.createLegend();
 var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '600px', position : 'middle-right'}});
 var infolabel = ui.Label('Project Information');
 var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
@@ -248,7 +214,7 @@ var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipsci
 var moreInfoButton = ui.Button({
   label: 'ℹ - more Information' ,
   //style: {position: 'bottom-right'},
-  onClick: showMoreInformation 
+  onClick: utils.showMoreInformation 
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
@@ -317,9 +283,6 @@ var exampleMapSelect = ui.Select({items: aoiList,
 });
 
 
-for (var i = 0; i < classNames.length; i++) {
-  legend.add(makeLegendRow(classNames[i], palette[i], false));
-}
 
 inputPanel = inputPanel.setLayout(hor);
 inputPanel.add(yearSelect);
