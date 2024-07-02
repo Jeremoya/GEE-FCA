@@ -124,6 +124,11 @@ var createMethodsPanel = function(){
 
   );
   
+  var ForestConditionLabel = ui.Label({
+    value: "Reference data derivation",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
   
   methodsPanel.add(aggregationLabel)
   methodsPanel.add(aggregationText)
