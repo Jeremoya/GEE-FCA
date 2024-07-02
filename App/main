@@ -177,6 +177,8 @@ function normalMode(){
   
   ui.root.widgets().reset([normalMap]);
   normalMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
+  m1.remove(layerPanel)
+  Map.add(layerPanel)
 
 }
 
@@ -189,7 +191,6 @@ function exampleMode(){
   m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
   m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
   ui.root.widgets().reset([sp]);
-  //ui.Map.Linker([m1,m2]);
   month = [4,5];
   year = aoi.get('start');
   startCalc(m1);
@@ -197,7 +198,8 @@ function exampleMode(){
   year = aoi.get('compareYear');
   startCalc(m2);
   m2.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
-  
+  Map.remove(layerPanel)
+  m1.add(layerPanel)
   
 }
 
@@ -240,14 +242,15 @@ var ufzlabel = ui.Label({
   targetUrl : "https://www.ufz.de/index.php?en=48150"
 })
 var moreInfoButton = ui.Button({
-  label: 'ℹ - more Information' ,
+  label: 'Methods' ,
   //style: {position: 'bottom-right'},
   onClick: utils.showMoreInformation 
 });
 
 //layer checkboxes and more info button
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).setShown(val)});
+var methodsPanel = ui.Panel({style : {position : 'bottom-center', width: "100%", height: "100%"}})
+var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).setShown(val); m1.layers().get(0).setShown(val)});
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val)});
 var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().get(3).setShown(val)});
@@ -389,6 +392,7 @@ var m2 = ui.Map();
 m1.setLocked(true, 13, 15);
 m2.setLocked(true, 13, 15);
 m1.add(homeButton);
+
 m2.add(exampleMapSelect)
 
   
