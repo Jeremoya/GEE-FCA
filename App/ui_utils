@@ -88,16 +88,27 @@ exports.showMoreInformation = function(){
 var createMethodsPanel = function(){
   var methodsPanel = ui.Panel({style : {position: "top-center", width: "100%", height: "100%"}})
   var aggregationLabel = ui.Label({
-    value: "The aggregation is achieved by first locally filtering and grouping sentinel 2 images"
+    value: "Data aggregation and filtering",
+    style : {fontSize : "35px"}
   })
   
-  //ui.Label({imageUrl: ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca")});
+  var aggregationText = ui.Label({value: "At the beginning, a rough pre-filtering is carried out using the geodata from European borders in order to obtain only images with pixels within Europe. "+
+    "The ee.Filter.calenderRange is then used to group the data by month. By specifying month as the third argument, it is possible to filter for individual or multiple months. "+
+    "As later observations are to be classified in data from the same month, each month is filtered separately here. "+
+    "Then, for each month, the cloudy pixels are masked with the information from the QA60 band and, using the Sentinel2 scene classification, all pixels not classified as vegetation are also masked. " +
+    "Each forest type is then masked separately using Copernicus Global Land Cover. "+
+    "The result is a collection of images for each forest type that were all taken in the same month, but not necessarily in the same year, in which cloudy and non-vegetation pixels are masked out. "+
+    "A median reducer is then applied to each of these ImageCollections to combine them into a single image with representative values for further processing.",
+    style : {fontSize : "17px", width: "70%"}
+    
+  }
+);
   
   methodsPanel.add(aggregationLabel)
-  methodsPanel.add(aggregationImage)
+  methodsPanel.add(aggregationText)
   return(methodsPanel)
 }
 
-//createMethodsPanel()
+Map.add(createMethodsPanel())
 
 //Map.addLayer(ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca").randomVisualizer())
