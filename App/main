@@ -246,7 +246,7 @@ var moreInfoButton = ui.Button({
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var layerInfoPanel = ui.Panel({style : {position : 'bottom-center', width : "40%"}})
+var layerInfoPanel = ui.Panel({style : {position : 'bottom-left', width : "40%"}})
 var layerInfoText = ui.Label({value: "Here you can switch on or off the different layers " +
                                 "Each layer corresponds to a specific forest type according to "+
                                 "the Copernicus Global Landcover Maps. " +
@@ -362,7 +362,6 @@ layerInfoPanel.add(layerInfoText)
 Map.add(inputPanel);
 Map.add(infobox);
 Map.add(layerPanel);
-Map.add(layerInfo);
 Map.add(legend);
 Map.setLocked(false, 5, 18);
 
