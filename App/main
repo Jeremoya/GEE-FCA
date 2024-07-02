@@ -215,7 +215,7 @@ function reloadExample(newAOI){
 var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
 var legend = utils.createLegend(classNames, palette);
 var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '700px', position : 'bottom-right'}});
-var infolabel = ui.Label('Project Information');
+var infolabel = ui.Label({value: 'Project Information'});
 var infotext = ui.Label({value: "Welcome to the GEE Forest Condition Anomaly Application!\n" +
                                 "Here you will find satellite-based information on the state of the forests in Europe "+
                                 "for the years 2017 to 2023. "+
@@ -246,9 +246,6 @@ var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().
 var layerInformation = ui.Button({
   label : 'i',
   style : {stretch: 'horizontal'},
-  // onClick: function(){
-  //   window.open("www.google.de", '_blank').focus();
-  // }
   
 });
 
