@@ -306,7 +306,21 @@ var exampleMapSelect = ui.Select({items: aoiList,
   onChange: reloadExample
 });
 
+var closeButton = ui.Button({
+  label: "Close",
+  onClick: function(){
+    Map.remove(infobox)
+    Map.add(openInfoBox)
+  }
+})
 
+var openInfoBox = ui.Button({
+  label : "moreInformation",
+  onClick : function(){
+    Map.add(infobox)
+    Map.remove(openInfoBox)
+  }
+})
 
 inputPanel = inputPanel.setLayout(hor);
 inputPanel.add(yearSelect);
@@ -318,6 +332,7 @@ infobox.add(infotext);
 infobox.add(ufzlabel);
 infobox.add(exButton);
 infobox.add(moreInfoButton);
+infobox.add(closeButton);
 
 layerPanel.add(checkEG);
 layerPanel.add(checkDD);
