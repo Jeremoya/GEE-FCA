@@ -112,11 +112,11 @@ var createMethodsPanel = function(){
   })
   
   var referenceText = ui.Label({
-    value: "The reference data is collected using a hex grid in order to later enable regional reference of observation pixels to the references. "+
-    "For this purpose, the reducer ee.Image.reduceRegions is used in the implementation on each of the images created using the method described above. "+
+    value: "The reference data is collected using a hexagonal grid in order to later enable regional reference of observation pixels to the references. "+
+    "For this purpose, the reducer ee.Image.reduceRegions in combination with the ee.Reducer.percentiles is used in the implementation on each of the images created using the method described above. "+
     "In addition to the reducer, a geometry collection - in this case the hexagonal grid - is also passed as an argument. "+
     "For each element of the collection - in this case the grid cells - the specified quantiles are then determined for all pixels within the geometry. "+
-    "After selecting the relevant bands B5, B8A and B11, the quantiles determined in this way are then saved in the form of arrays "+
+    "After selecting the relevant bands B5, B8A and B11, the quantiles determined in this way are then saved as an image in the form of arrays "+
     "in each vegetation pixel.",
     style : {fontSize : "17px", width: "70%", margin :"15px"}
     
@@ -127,6 +127,8 @@ var createMethodsPanel = function(){
   
   methodsPanel.add(aggregationLabel)
   methodsPanel.add(aggregationText)
+  methodsPanel.add(referenceLabel)
+  methodsPanel.add(referenceText)
   return(methodsPanel)
 }
 
