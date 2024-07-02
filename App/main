@@ -370,6 +370,7 @@ layerPanel.add(checkOV);
 layerPanel.add(layerInformation);
 
 layerInfoPanel.add(layerInfoText)
+layerInfoPanel.add(layerCloseButton)
 
 Map.add(inputPanel);
 Map.add(infobox);
