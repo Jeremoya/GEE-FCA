@@ -219,7 +219,7 @@ var infolabel = ui.Label('Project Information');
 var infotext = ui.Label({value: "Welcome to the GEE Forest Condition Anomaly Application!\n" +
                                 "Here you will find satellite-based information on the state of the forests in Europe "+
                                 "for the years 2017 to 2023. "+
-                                "The images are created using a simplified Approach derived from the UFZ Forest Condition Monitor. "+
+                                "The images are created using a simplified Approach derived from the UFZ Forest Condition Monitor (Lange et al.). "+
                                 "At the top of the screen you can select the observation period and start the calculations. "+
                                 "On the left hand side you will find some info on how to interpret the colors and the option "+
                                 "to turn image layers on or off. " + 
