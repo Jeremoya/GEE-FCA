@@ -241,9 +241,9 @@ var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().
 var layerInformation = ui.Button({
   label : 'i',
   style : {stretch: 'horizontal'},
-  onClick: function(){
-    window.open("www.google.de", '_blank').focus();
-  }
+  // onClick: function(){
+  //   window.open("www.google.de", '_blank').focus();
+  // }
   
 });
 
