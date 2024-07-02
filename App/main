@@ -247,7 +247,7 @@ var moreInfoButton = ui.Button({
 
 //layer checkboxes and more info button
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var checkDD = ui.Checkbox('Decidouos', true, function(val){Map.layers().get(0).setShown(val)});
+var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).setShown(val)});
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val)});
 var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().get(3).setShown(val)});
@@ -343,7 +343,7 @@ var closeButton = ui.Button({
 })
 
 var openInfoBox = ui.Button({
-  label : "moreInformation",
+  label : "more Information",
   onClick : function(){
     Map.add(infobox)
     Map.remove(openInfoBox)
