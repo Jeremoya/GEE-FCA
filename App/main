@@ -51,7 +51,7 @@ print('aoi', aoi)
 // Globale Variablen
 var vert = ui.Panel.Layout.Flow('vertical');
 var hor = ui.Panel.Layout.Flow('horizontal');
-var classNames = ['<=-0.75 (critical)', '-0.75 to -0.55', '-0.55 to -0.35', '-0.35 to -0.15', '-0.15 to 0.1', '0.1 to 0.3', '0.3 to 0.5', '>= 0.5 (good)'].reverse();//{min: -0.75, max: 0.5} ;
+var classNames = ['<=-0.75 (critical)', '-0.55 to -0.75', '-0.35 to -0.55', '-0.15 to -0.35', '0.1 to -0.15', '0.3 to 0.1', '0.5 to 0.3', '>= 0.5 (good)'].reverse();//{min: -0.75, max: 0.5} ;
 var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#fee818', '#66ff66', '#00cc00', '#006600'].reverse();
 var year = 2019;
 var month = [7];
@@ -203,8 +203,15 @@ function exampleMode(){
 
 function reloadExample(newAOI){
   aoi = ee.Dictionary(AOIs.getAOI(newAOI));
-  
-  exampleMode();
+  m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  year = aoi.get('start');
+  startCalc(m1);
+  m1.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  year = aoi.get('compareYear');
+  startCalc(m2);
+  m2.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  //exampleMode();
   //return 1;
 }
 
@@ -239,6 +246,7 @@ var moreInfoButton = ui.Button({
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
+var layerInfo = ui.Panel({style : {position : 'bottom-center'}})
 var checkDD = ui.Checkbox('Decidouos', true, function(val){Map.layers().get(0).setShown(val)});
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val)});
@@ -341,6 +349,7 @@ layerPanel.add(layerInformation);
 Map.add(inputPanel);
 Map.add(infobox);
 Map.add(layerPanel);
+Map.add(layerInfo);
 Map.add(legend);
 Map.setLocked(false, 5, 18);
 
