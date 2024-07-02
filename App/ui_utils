@@ -63,6 +63,8 @@ var makeLegendRow = function(name, color, mobileStyle) {
 exports.createLegend = function(classes, colorPalette){
   
   var legend = ui.Panel({style: {width: 'auto', position : 'middle-left'}});
+  var heading = ui.Label("FCA-Index values")
+  legend.add(heading)
   for (var i = 0; i < classNames.length; i++) {
     legend.add(makeLegendRow(classes[i], colorPalette[i], false));
   }
