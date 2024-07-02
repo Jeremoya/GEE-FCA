@@ -42,7 +42,7 @@ var FCA = require('users/fichtnej/modules:fcaUtils');
 var AOIs = require('users/fichtnej/BA:App/AOIs');
 var utils = require("users/fichtnej/BA:App/ui_utils")
 var viz = FCA.getFCAviz();
-var aoi = ee.Dictionary(AOIs.getAOI('Treuenbrietzen'));
+var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
 var normalMap = Map;
 print('aoi', aoi)
 
@@ -262,7 +262,7 @@ var layerInformation = ui.Button({
 
 //more information on the layers and close button
 var layerInfoPanel = ui.Panel({style : {position : 'bottom-left', width : "30%"}})
-var layerInfoText = ui.Label({value: "Here you can switch on or off the specifiv layers. " +
+var layerInfoText = ui.Label({value: "Here you can switch on or off the different layers. " +
                                 "Each layer corresponds to a specific forest type according to "+
                                 "the Copernicus Global Landcover Maps. " +
                                 "The \"Other vegetation\" level should be viewed with caution, "+
@@ -273,7 +273,7 @@ var layerInfoText = ui.Label({value: "Here you can switch on or off the specifiv
   
   }
 )
-var layersCloseButton = ui.Button({
+var layerCloseButton = ui.Button({
   label: "Close",
   onClick: function(){
     Map.remove(layerInfoPanel)
@@ -325,7 +325,7 @@ var homeButton = ui.Button({
   onClick: normalMode
 });
 
-var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen19', 'Luebtheen23', 'Hrensko', 'Harz'];
+var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Lübtheen', 'Hrensko', 'Fichtenwalde'/*, "Ljusdal"*/];
 
 var exampleMapSelect = ui.Select({items: aoiList,
   placeholder:'Falkenberg',
