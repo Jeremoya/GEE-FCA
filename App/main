@@ -227,6 +227,11 @@ var infotext = ui.Label({value: "Welcome to the GEE Forest Condition Anomaly App
                                 "affect the forest condition anomaly index, use the buttons down below.",
                   style : {position : 'bottom-left', stretch :'vertical'}
 });
+
+var ufzlabel = ui.Label({
+  value: "Link to the UFZ Monitor",
+  targetUrl : "https://www.ufz.de/index.php?en=48150"
+})
 var moreInfoButton = ui.Button({
   label: 'ℹ - more Information' ,
   //style: {position: 'bottom-right'},
@@ -310,6 +315,7 @@ inputPanel.add(calcButton);
 
 infobox.add(infolabel);
 infobox.add(infotext);
+infobox.add(ufzlabel);
 infobox.add(exButton);
 infobox.add(moreInfoButton);
 
