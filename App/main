@@ -214,7 +214,7 @@ function reloadExample(newAOI){
     
 var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
 var legend = utils.createLegend(classNames, palette);
-var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '600px', position : 'middle-right'}});
+var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '600px', position : 'bottom-right'}});
 var infolabel = ui.Label('Project Information');
 var infotext = ui.Label({value: "Welcome to the GEE Forest Condition Anomaly Application!\n" +
                                 "Here you will find satellite-based information on the state of the forests in Europe "+
@@ -319,7 +319,8 @@ var openInfoBox = ui.Button({
   onClick : function(){
     Map.add(infobox)
     Map.remove(openInfoBox)
-  }
+  },
+  style: {position: "bottom-right"}
 })
 
 inputPanel = inputPanel.setLayout(hor);
