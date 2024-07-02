@@ -216,7 +216,15 @@ var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
 var legend = utils.createLegend(classNames, palette);
 var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '600px', position : 'middle-right'}});
 var infolabel = ui.Label('Project Information');
-var infotext = ui.Label({value: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+var infotext = ui.Label({value: "Welcome to the GEE Forest Condition Anomaly Application!\n" +
+                                "Here you will find satellite-based information on the state of the forests in Europe "+
+                                "for the years 2017 to 2023. "+
+                                "The images are created using a simplified Approach derived from the UFZ Forest Condition Monitor. "+
+                                "At the top of the screen you can select the observation period and start the calculations. "+
+                                "On the left hand side you will find some info on how to interpret the colors and the option "+
+                                "to turn image layers on or off. " + 
+                                "If you would like to learn more about the methods and how to use the product or want to look at some examples, that show how certain disturbances " +
+                                "affect the forest condition anomaly index, use the buttons down below.",
                   style : {position : 'bottom-left', stretch :'vertical'}
 });
 var moreInfoButton = ui.Button({
@@ -232,7 +240,10 @@ var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2
 var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().get(3).setShown(val)});
 var layerInformation = ui.Button({
   label : 'i',
-  style : {stretch: 'horizontal'}
+  style : {stretch: 'horizontal'},
+  onClick: function(){
+    window.open("www.google.de", '_blank').focus();
+  }
   
 });
 
