@@ -246,9 +246,9 @@ var moreInfoButton = ui.Button({
 });
 
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var layerInfoPanel = ui.Panel({style : {position : 'bottom-center'}})
-var layerInfoText = ui.Label({value: "Here you can switch on or off the different layers" +
-                                "Each layer corresponds to a specific forest type according to"+
+var layerInfoPanel = ui.Panel({style : {position : 'bottom-center', width : "40%"}})
+var layerInfoText = ui.Label({value: "Here you can switch on or off the different layers " +
+                                "Each layer corresponds to a specific forest type according to "+
                                 "the Copernicus Global Landcover Maps. " +
                                 "The \"Other vegetation\" level should be viewed with caution, "+
                                 "as very different types of vegetation are compared to create it." +
