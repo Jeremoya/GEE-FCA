@@ -245,16 +245,8 @@ var moreInfoButton = ui.Button({
   onClick: utils.showMoreInformation 
 });
 
+//layer checkboxes and more info button
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var layerInfoPanel = ui.Panel({style : {position : 'bottom-left', width : "30%"}})
-var layerInfoText = ui.Label({value: "Here you can switch on or off the different layers " +
-                                "Each layer corresponds to a specific forest type according to "+
-                                "the Copernicus Global Landcover Maps. " +
-                                "The \"Other vegetation\" level should be viewed with caution, "+
-                                "as very different types of vegetation are compared to create it. " +
-                                "More Information on how the images are created can be found under more information->"+
-                                "methods on the right hand side",
-                  style : {position : 'bottom-left', stretch :'vertical'}})
 var checkDD = ui.Checkbox('Decidouos', true, function(val){Map.layers().get(0).setShown(val)});
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val)});
@@ -263,11 +255,31 @@ var layerInformation = ui.Button({
   label : 'i',
   style : {stretch: 'horizontal'},
   onClick : function(){
-    Map.add(layerInfoPanel)
     Map.remove(layerPanel)
+    Map.add(layerInfoPanel)
   },
 });
 
+//more information on the layers and close button
+var layerInfoPanel = ui.Panel({style : {position : 'bottom-left', width : "30%"}})
+var layerInfoText = ui.Label({value: "Here you can switch on or off the specifiv layers. " +
+                                "Each layer corresponds to a specific forest type according to "+
+                                "the Copernicus Global Landcover Maps. " +
+                                "The \"Other vegetation\" level should be viewed with caution, "+
+                                "as very different types of vegetation are compared to create it. " +
+                                "More Information on how the images are created can be found under more information->"+
+                                "methods on the right hand side",
+                  style : {position : 'bottom-left', stretch :'vertical'}
+  
+  }
+)
+var layersCloseButton = ui.Button({
+  label: "Close",
+  onClick: function(){
+    Map.remove(layerInfoPanel)
+    Map.add(layerPanel)
+  }
+})
 
 var years = ee.List.sequence(2017, 2023).map(function(year) {
   return {label: ee.Number(year).format('%.0f'), value: year };
