@@ -90,7 +90,12 @@ var createMethodsPanel = function(){
   var aggregationLabel = ui.Label({
     value: "The aggregation is achieved by first locally filtering and grouping sentinel 2 images"
   })
-  var aggregationImage = ui.Label();
+  var aggregationImage = ui.Label({setImageUrl: "projects/ee-fichtnej/assets/portugal_2020_fca"});
+  
+  methodsPanel.add(aggregationLabel)
+  methodsPanel.add(aggregationImage)
+  Map.add(methodsPanel)
 }
 
+createMethodsPanel()
 
