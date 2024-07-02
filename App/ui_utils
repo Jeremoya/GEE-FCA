@@ -85,6 +85,12 @@ exports.showMoreInformation = function(){
 
 
 
-
+var createMethodsPanel = function(){
+  var methodsPanel = ui.Panel({style : {position: "top-center", width: "100%", height: "100%"}})
+  var aggregationLabel = ui.Label({
+    value: "The aggregation is achieved by first locally filtering and grouping sentinel 2 images"
+  })
+  var aggregationImage = ui.Label();
+}
 
 
