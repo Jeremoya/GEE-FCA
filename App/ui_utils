@@ -85,7 +85,7 @@ exports.showMoreInformation = function(){
 
 
 
-var createMethodsPanel = function(){
+exports.createMethodsPanel = function(){
   var methodsPanel = ui.Panel({style : {position: "top-center", width: "100%", height: "100%"}})
   var aggregationLabel = ui.Label({
     value: "Data aggregation and filtering",
@@ -179,7 +179,3 @@ var createMethodsPanel = function(){
   allPanel.add(closeButton)
   return(allPanel)
 }
-
-Map.add(createMethodsPanel())
-
-//Map.addLayer(ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca").randomVisualizer())
