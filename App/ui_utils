@@ -125,10 +125,36 @@ var createMethodsPanel = function(){
   );
   
   var ForestConditionLabel = ui.Label({
-    value: "Reference data derivation",
+    value: "Forest Condition Anomaly Index",
     style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
   })
   
+  var FCAText = ui.Label({
+    value: "As a result of the previous step, we now have an array with quantile values in each vegetation pixel. "+
+            "To do this, we now take a specific observation image whose pixel values are assigned to the quantiles. "+
+            "Depending on the quantile into which the pixel value is placed, we can estimate whether there is an upward or downward deviation compared to the reference. "+
+            "If this is done for several spectral bands, these deviations can be used to make statements about the condition of the forest in this pixel.",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
+  var ValidationLabel = ui.Label({
+    value: "Forest Condition Anomaly Index",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var ValidationText = ui.Label({
+    value: "As a result of the previous step, we now have an array with quantile values in each vegetation pixel. "+
+            "To do this, we now take a specific observation image whose pixel values are assigned to the quantiles. "+
+            "Depending on the quantile into which the pixel value is placed, we can estimate whether there is an upward or downward deviation compared to the reference. "+
+            "If this is done for several spectral bands, these deviations can be used to make statements about the condition of the forest in this pixel.",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
   
   methodsPanel.add(aggregationLabel)
   methodsPanel.add(aggregationText)
