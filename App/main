@@ -400,6 +400,8 @@ m2.setLocked(true, 13, 15);
 m1.add(homeButton);
 
 m2.add(exampleMapSelect)
+m1.setControlVisibility(false)
+m2.setControlVisibility(false)
 
   
 var sp = ui.SplitPanel(m1,m2,'horizontal', true);
