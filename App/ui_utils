@@ -146,10 +146,12 @@ var createMethodsPanel = function(){
   })
   
   var ValidationText = ui.Label({
-    value: "As a result of the previous step, we now have an array with quantile values in each vegetation pixel. "+
-            "To do this, we now take a specific observation image whose pixel values are assigned to the quantiles. "+
-            "Depending on the quantile into which the pixel value is placed, we can estimate whether there is an upward or downward deviation compared to the reference. "+
-            "If this is done for several spectral bands, these deviations can be used to make statements about the condition of the forest in this pixel.",
+    value: "Various forest monitoring products were used for the validation."+
+            "The central product are the Global Forest Change maps by Hansen et al."+
+            "The FCA values of pixels in which forest loss occurred were compared with those without forest loss."+
+            "Pixels that were degraded in the 5 years prior to the creation of an FCA image were considered."+
+            "A precision of over 73% and a recall of over 74% were achieved for these pixels."+
+            "Possible sources of error are noise in the data, new growth of vegetation and incorrect classification of pixels without vegetation.",
     style : {fontSize : "17px", width: "70%", margin :"15px"}
     
     }
@@ -160,7 +162,22 @@ var createMethodsPanel = function(){
   methodsPanel.add(aggregationText)
   methodsPanel.add(referenceLabel)
   methodsPanel.add(referenceText)
-  return(methodsPanel)
+  methodsPanel.add(ForestConditionLabel)
+  methodsPanel.add(FCAText)
+  methodsPanel.add(ValidationLabel)
+  methodsPanel.add(ValidationText)
+  
+  var closeButton = ui.Button({
+    label: "Close",
+    onClick : function(){
+      Map.remove(allPanel)
+    },
+    style : {position : "bottom-center"}
+  })
+  var allPanel = ui.Panel({layout: "absolute", style: {width: "100%", height : "100%"}})
+  allPanel.add(methodsPanel)
+  allPanel.add(closeButton)
+  return(allPanel)
 }
 
 Map.add(createMethodsPanel())
