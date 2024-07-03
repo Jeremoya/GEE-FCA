@@ -178,6 +178,7 @@ function normalMode(){
   ui.root.widgets().reset([normalMap]);
   normalMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
   layerPanel.remove(checkBA)
+  layerPanel.add(layerInformation)
   m1.remove(layerPanel)
   Map.add(layerPanel)
 
@@ -200,6 +201,7 @@ function exampleMode(){
   startCalc(m2);
   m2.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
   layerPanel.add(checkBA)
+  layerPanel.remove(layerInformation)
   Map.remove(layerPanel)
   m1.add(layerPanel)
   
