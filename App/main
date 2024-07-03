@@ -177,6 +177,7 @@ function normalMode(){
   
   ui.root.widgets().reset([normalMap]);
   normalMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
+  layerPanel.remove(checkBA)
   m1.remove(layerPanel)
   Map.add(layerPanel)
 
@@ -198,6 +199,7 @@ function exampleMode(){
   year = aoi.get('compareYear');
   startCalc(m2);
   m2.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  layerPanel.add(checkBA)
   Map.remove(layerPanel)
   m1.add(layerPanel)
   
@@ -249,11 +251,11 @@ var moreInfoButton = ui.Button({
 
 //layer checkboxes and more info button
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
-var methodsPanel = ui.Panel({style : {position : 'bottom-center', width: "100%", height: "100%"}})
 var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).setShown(val); m1.layers().get(0).setShown(val)});
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val)});
 var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().get(3).setShown(val)});
+var checkBA = ui.Checkbox('EMS Burned Areas', true, function(val){Map.layers().get(4).setShown(val)});
 var layerInformation = ui.Button({
   label : 'i',
   style : {stretch: 'horizontal'},
