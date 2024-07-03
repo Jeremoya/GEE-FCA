@@ -44,7 +44,7 @@ var utils = require("users/fichtnej/BA:App/ui_utils")
 var viz = FCA.getFCAviz();
 var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
 var normalMap = Map;
-print('aoi', aoi)
+var mPanel = utils.createMethodPanel();
 
 
 
@@ -244,7 +244,7 @@ var ufzlabel = ui.Label({
 var moreInfoButton = ui.Button({
   label: 'Methods' ,
   //style: {position: 'bottom-right'},
-  onClick: utils.showMoreInformation 
+  onClick: function(){Map.add(mPanel)} 
 });
 
 //layer checkboxes and more info button
