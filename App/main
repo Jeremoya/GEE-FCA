@@ -44,7 +44,7 @@ var utils = require("users/fichtnej/BA:App/ui_utils")
 var viz = FCA.getFCAviz();
 var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
 var normalMap = Map;
-var mPanel = utils.createMethodPanel();
+var mPanel = utils.createMethodsPanel();
 
 
 
