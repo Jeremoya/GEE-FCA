@@ -141,7 +141,7 @@ exports.createMethodsPanel = function(){
   );
   
   var ValidationLabel = ui.Label({
-    value: "Forest Condition Anomaly Index",
+    value: "Data Validation",
     style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
   })
   
