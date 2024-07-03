@@ -253,6 +253,7 @@ var moreInfoButton = ui.Button({
 
 //layer checkboxes and more info button
 var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
+var layerHeading = ui.Label({value: "Forest Types", style : {fontSize:"20px"}})
 var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).setShown(val); m1.layers().get(0).setShown(val); m2.layers().get(0).setShown(val)});
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val); m1.layers().get(1).setShown(val); m2.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val); m1.layers().get(2).setShown(val); m2.layers().get(2).setShown(val)});
@@ -370,6 +371,7 @@ infobox.add(exButton);
 infobox.add(moreInfoButton);
 infobox.add(closeButton);
 
+layerPanel.add(layerHeading);
 layerPanel.add(checkEG);
 layerPanel.add(checkDD);
 layerPanel.add(checkMX);
