@@ -175,9 +175,9 @@ function createFCAImage(type){
 
 function normalMode(){
   
+  ui.root.widgets().reset([normalMap]);
   Map.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
   normalMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
-  ui.root.widgets().reset([normalMap]);
   layerPanel.remove(checkBA)
   layerPanel.add(layerInformation)
   m1.remove(layerPanel)
