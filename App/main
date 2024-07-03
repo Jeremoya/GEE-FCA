@@ -255,7 +255,7 @@ var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).s
 var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val)});
 var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val)});
 var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().get(3).setShown(val)});
-var checkBA = ui.Checkbox('EMS Burned Areas', true, function(val){Map.layers().get(4).setShown(val)});
+var checkBA = ui.Checkbox('EMS Burned Areas', true, function(val){m1.layers().get(4).setShown(val); m2.layers().get(4).setShown(val)});
 var layerInformation = ui.Button({
   label : 'i',
   style : {stretch: 'horizontal'},
