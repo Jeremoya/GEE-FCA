@@ -14,6 +14,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     clg = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -25,61 +26,14 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [14.40184392083831, 47.79568791476679],
           [14.40184392083831, 51.928231815269704]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-/***
- * A small utility to show current status (busy or done)
- */
- 
- var start, end;
-var StateMonitor = function() {
-  this.iconBusy = '⏳ checking ...'
-  this.iconDone = '⌛ done'
-  this.label = ui.Label()
-}
 
-StateMonitor.prototype.show = function() {
-  this.onDone()
-  print("show",Date.now())
-} 
+eu = eu.map(function(ft){
+  var area = ee.Geometry(ft.geometry(1)).area(1);
+  return ft.set("area", area)
+})
 
-StateMonitor.prototype.onBusy = function() {
-  this.label.setValue()
-} 
-
-StateMonitor.prototype.onDone = function(x) {
-  var img = x;
-  this.label.setValue(this.iconDone)
-  end = Date.now()
-  print("done",x,end, end-start)
-} 
-
-var monitor = new StateMonitor()
-// monitor.show()
-
-
-function stopTime(){
-  monitor.onBusy
-  start = Date.now()
-  print("start", start)
-  var med = s2Data.filterBounds(geometry).filterDate("2018-06-01", "2023-07-01").median()
-  Map.addLayer(med)
-  med.evaluate(done)
-  print(med.reduce(ee.Reducer.first()))
-}
-
-function done(x,y){
-  monitor.onDone(x)
-}
-
-stopTime()
-// ui.util.setInterval(checkForNewImage, 10000)
-
-
-
-
-
-
-
-
+Map.addLayer(eu)
+print(eu.toDictionary())
 
 
 
