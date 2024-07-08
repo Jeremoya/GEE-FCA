@@ -87,6 +87,22 @@ exports.showMoreInformation = function(){
 
 exports.createMethodsPanel = function(){
   var methodsPanel = ui.Panel({style : {position: "top-center", width: "100%", height: "100%"}})
+  var climateLabel = ui.Label({
+    value: "Forest damage due to increased stress",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var climateText = ui.Label({
+    value: "Due to a variety of causes, including drought, heat and pest infestation, forests have been exposed to increased stress, particularly in recent years, and are suffering increased losses as a result. "+
+            "A clear increase in the number and intensity of forest fires in particular can be observed right up to the global level."+ 
+            "As certain types of forest damage are also linked to climate change, it can be assumed that this trend will continue in the context of global warming."+
+            "The monitoring of forests to determine their current condition and identify endangered areas is therefore becoming increasingly important. ",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
   var aggregationLabel = ui.Label({
     value: "Data aggregation and filtering",
     style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
@@ -158,6 +174,8 @@ exports.createMethodsPanel = function(){
 
   );
   
+  methodsPanel.add(climateLabel)
+  methodsPanel.add(climateText)
   methodsPanel.add(aggregationLabel)
   methodsPanel.add(aggregationText)
   methodsPanel.add(referenceLabel)
