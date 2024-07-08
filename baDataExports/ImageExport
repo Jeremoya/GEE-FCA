@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-10.699517802364253, 72.20271061862974],
-          [-10.699517802364253, 35.53735901937522],
-          [41.47961847388086, 35.53735901937522],
-          [41.47961847388086, 72.20271061862974]]], null, false),
+        [[[-9.013116435176753, 45.09463975959064],
+          [-9.013116435176753, 42.759710716485316],
+          [-3.0369830886190963, 42.759710716485316],
+          [-3.0369830886190963, 45.09463975959064]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -40,7 +40,8 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
         [[9.693387854105584, 51.1270725307316],
          [9.563948487485252, 51.54320614254728],
          [9.732410021732694, 51.02977623334481]]),
-    burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly");
+    burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -52,7 +53,8 @@ var viz = FCA.getFCAviz();
 var year = 2019;
 var month = [7];
 var dates = ee.DateRange('2019-07-01', '2019-08-01');
-Map.addLayer(ee.Image(1), {min:0, max:0.1})
+//Map.addLayer(ee.Image(1), {min:0, max:0.1})
+Map.addLayer(grid.filterBounds(exportGeo))
 // Funktionen
 function getFCA(img){
   
@@ -137,19 +139,19 @@ function exportData(){
   //Map.addLayer(allImgs)
   print('Export for:', month, year);
   var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
-  //print(s)
-  Export.table.toDrive(s)
   /*
+  //print(s)
+  */
+  Export.table.toDrive(grid.filterBounds(exportGeo))
   
-  Export.image.toDrive({image: allImgs, 
-    description: 'friederieke_17',
-    folder: 'friederieke_set2',
+  Export.image.toDrive({image: tc, 
+    description: 'tc_badHex',
+    folder: '',
     priority: ee.Number(200),
     region: exportGeo, 
-    scale: 20,
+    scale: 200,
     maxPixels : 100000000000,
   });
-  */
 }
 
 // Erstellen des Beobachtungsbildes
@@ -220,8 +222,8 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 5, 1);
-  var end = ee.Date.fromYMD(year, 9, 1)
+  var st = ee.Date.fromYMD(year, 3, 1);
+  var end = ee.Date.fromYMD(year, 11, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
@@ -234,7 +236,7 @@ function createTCimg(){
                     */
                     .select(['B4', 'B3', 'B2'])
                     .median()
-                    //.multiply(2.5)
+                    .multiply(2)
                     .visualize({min:0,max:2600});
                     
 
