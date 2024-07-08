@@ -21,7 +21,9 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [14.40184392083831, 47.79568791476679],
           [14.40184392083831, 51.928231815269704]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-print("a", Map.getZoom())
+var defaultMap = Map;
+
+defaultMap.onChangeZoom(print(defaultMap.getZoom()))
 
 // clg = clg.select("discrete_classification");
 // print(clg)
