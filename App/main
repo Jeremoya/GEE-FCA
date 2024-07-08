@@ -247,7 +247,7 @@ var ufzlabel = ui.Label({
   targetUrl : "https://www.ufz.de/index.php?en=48150"
 })
 var moreInfoButton = ui.Button({
-  label: 'Methods' ,
+  label: 'Methods & more Info' ,
   //style: {position: 'bottom-right'},
   onClick: function(){Map.add(mPanel)} 
 });
