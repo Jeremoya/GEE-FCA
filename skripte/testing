@@ -1,153 +1,79 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
-    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
-    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    fcaImg = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
     dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
-    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
-    center = 
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    eco = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
+    nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99"),
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
+    clg = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
+    geometry = 
     /* color: #d63000 */
     /* shown: false */
-    ee.Geometry.Point([15.22923448281721, 50.2696264236422]),
-    geometry = 
-    /* color: #98ff00 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
-        [[[3.3313305785502934, 53.42271283397098],
-          [3.3313305785502934, 46.85277612673683],
-          [26.853059094175293, 46.85277612673683],
-          [26.853059094175293, 53.42271283397098]]], null, false);
+        [[[10.31492985833831, 51.928231815269704],
+          [10.31492985833831, 47.79568791476679],
+          [14.40184392083831, 47.79568791476679],
+          [14.40184392083831, 51.928231815269704]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-//Imports
-var cloudMask = require('users/fichtnej/modules:CloudMasks');
-var vegMask = require('users/fichtnej/modules:VegMasks');
-var FCA = require('users/fichtnej/modules:fcaUtils');
-var AOIs = require('users/fichtnej/BA:App/AOIs');
-var viz = FCA.getFCAviz();
+var defaultMap = Map;
+
+defaultMap.onChangeZoom(print(defaultMap.getZoom()))
+
+// clg = clg.select("discrete_classification");
+// print(clg)
+// var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
+// clg18 = clg18.updateMask(clg18.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
+// var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
+// clg19 = clg19.updateMask(clg19.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
+// Map.addLayer(clg18)
+// Map.addLayer(clg19)
+// var comp = ee.Image(0).addBands(clg18.eq(clg19))
+// var s = comp.stratifiedSample({numPoints: 200000, region: geometry, scale:100})
+// Export.table.toDrive(s)
 
 
 
+/*
+Map.addLayer(nn)
+Map.addLayer(eg)
+Map.addLayer(eu)
 
-// Globale Variablen
-var year = 2019;
-var month = [7];
-var dates = ee.DateRange('2019-07-01', '2019-08-01');
+ba = ba.map(function(ft){
+  var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
+  return ft.set('YEAR', year);
+}).filter(ee.Filter.eq('YEAR', '2018'))
 
+Map.addLayer(ba, {color:'red'})
+Map.addLayer(fritzi, {color:"teal"})
 
-// Funktionen
-
-function getFCA(img){
-  
-  var image = ee.Image();
-  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
-                            'RE1': img.select(['B5']),
-                            'RE4': img.select(['B8A']),
-                            'SWIR': img.select(['B11']),
-                          }).rename('FCA');
-}
+var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
+print(rgns)
 
 
-
-function startCalc(){
-  
-  
-  var ddImg = createFCAImage(dd);
-  var egImg = createFCAImage(eg);
-  var mxImg = createFCAImage(mx);
-  var ovImg = createFCAImage(ov);
-  
-  
-  // Karte Aktualisieren
-  Map.clear()
-  Map.addLayer(ddImg, viz, 'Deciduous Forest');
-  Map.addLayer(egImg, viz, 'Evergreen Forest');
-  Map.addLayer(mxImg, viz, 'Mixed Forest');
-  Map.addLayer(ovImg, viz, 'Other Vegetation');
-  
-
-  
-  
-}
+var af = ['Africa'];
+var eu = ['Europe'];
+var na = ['North America'];
+var ca = ['Central America', 'Caribbean']
+var sa = ['South America']
+var aus = ['Australia', 'Oceania'];
+var rgn = ['S Atlantic', 'Indian Ocean', 'Antarctica']
+var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
+var nAsia = ['N Asia']
+var eAsia = ['SE Asia', 'E Asia']
 
 
+var borderFilter = ee.Filter.inList('wld_rgn' , eu );
+var ROI = LSIB.filter(borderFilter)
+Map.addLayer(ROI, {}, 'ROI');
 
-// Erstellen des Beobachtungsbildes
-//jährlich/saisonal
-
-// Aktualisieren des Zeitraumes für Beobachtungsbild
-function updateDateRange(month){
-  var startDate = ee.Date.fromYMD(year, month, 1);
-  var endDate = startDate.advance(1, 'month');
-  var dr = ee.DateRange(startDate, endDate);
-  dates = dr;
-  
-}
-
-function createObsImage(){
-  
-  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
-                    .filterDate(dates)
-                    .map(cloudMask.S2CloudMask)
-                    .map(function(img){
-                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
-                    })
-                    .select(['B5', 'B8A', 'B11'])
-                    .mean();
-                    
-
-  return s2Data;
-}
-
-function createRefImage(imgCol, oneMonth){
-  
-  imgCol = ee.ImageCollection(imgCol);
-  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
-}
-
-
-// Vergleich Beobachtung Referenz
-
-function compareImages(ref, obs){
-  
-  //Einordnen der Beobachtung in Quantile
-  var comp = obs.gte(ref);
-  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
-  //Normierung
-  rcomp = rcomp.subtract(9.5).divide(9.5);
-  //Indexberechnung
-  return getFCA(rcomp);
-  
-}
-
-
-
-function createFCAImage(type){
-  var retImg = month.map(function(oneMonth){
-    
-    updateDateRange(oneMonth);
-    var img = createObsImage();
-    var refImg = createRefImage(type, oneMonth);
-    var fcaImg = compareImages(refImg, img);
-    
-    return fcaImg;
-  });
-  
-  return ee.ImageCollection(retImg).mean();
-}
-
-
-var zoomlevel = 4;
-month = [6]
-year= 2021
-
-
-
-Map.centerObject(center, zoomlevel)
-
-//startCalc()
-//print(geometry.area(1))
+Map.addLayer(euGrid)
+var a = ee.FeatureCollection(euGrid.filterBounds(ROI))
+Export.table.toAsset(a)
+print(a)
+Map.addLayer(a)*/
