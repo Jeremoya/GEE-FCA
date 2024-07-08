@@ -141,7 +141,7 @@ function createFCAImage(type){
 }
 
 
-var zoomlevel = 6;
+var zoomlevel = 16;
 month = [6]
 year= 2021
 
