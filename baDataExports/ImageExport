@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-9.013116435176753, 45.09463975959064],
-          [-9.013116435176753, 42.759710716485316],
-          [-3.0369830886190963, 42.759710716485316],
-          [-3.0369830886190963, 45.09463975959064]]], null, false),
+        [[[12.894823475711918, 52.058005053115664],
+          [12.894823475711918, 52.027015885557255],
+          [12.955505772464887, 52.027015885557255],
+          [12.955505772464887, 52.058005053115664]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -127,8 +127,10 @@ function exportData(){
   // var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
   print('year', year, 'month', month, 'dates', dates)
   var tc = createTCimg();
+  var scl = createSCLimg();
   
   Map.addLayer(tc, {}, 'TC')
+  Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
@@ -139,17 +141,17 @@ function exportData(){
   //Map.addLayer(allImgs)
   print('Export for:', month, year);
   var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
-  /*
   //print(s)
-  */
+  /*
   Export.table.toDrive(grid.filterBounds(exportGeo))
   
-  Export.image.toDrive({image: tc, 
-    description: 'tc_badHex',
+  */
+  Export.image.toDrive({image: scl, 
+    description: 'scl_tb_burned_classic',
     folder: '',
     priority: ee.Number(200),
     region: exportGeo, 
-    scale: 200,
+    scale: 20,
     maxPixels : 100000000000,
   });
 }
@@ -226,7 +228,7 @@ function createTCimg(){
   var end = ee.Date.fromYMD(year, 11, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',10))
                     .map(cloudMask.S2CloudMask)
                     /*
                     .map(function(img){
@@ -235,9 +237,24 @@ function createTCimg(){
                     })
                     */
                     .select(['B4', 'B3', 'B2'])
-                    .median()
+                    .mean()
                     .multiply(2)
                     .visualize({min:0,max:2600});
+                    
+
+  return s2Data;
+}
+function createSCLimg(){
+  
+  var st = ee.Date.fromYMD(2018, 8, 25);
+  var end = ee.Date.fromYMD(2018, 10, 25);
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate("2018-9-18", "2018-9-20")
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',45))
+                    //.map(cloudMask.S2CloudMask)
+                    .select(['SCL'])
+                    .max()
+                    
                     
 
   return s2Data;
