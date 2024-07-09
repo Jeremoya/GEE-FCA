@@ -3,6 +3,7 @@ var modisdata = ee.ImageCollection("MODIS/061/MOD09A1"),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     exportGeo = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -32,17 +33,18 @@ var img = modisdata.filterDate("2019-01-01", "2019-12-01")
  
 var tcimg = s2data.filterDate("2019-01-01", "2019-12-01")
                     .filterBounds(exportGeo)
-                    .map(function(image){return cm.s2CloudMask(image)})
+                    .map(function(image){return cm.S2CloudMask(image)})
                     .select(["B4", "B3", "B2"])
                     .median()
                    
 Map.addLayer(img, {min: 0, max:3000})
+Map.addLayer(tcimg, {min: 0, max:3000})
 
 Export.table.toDrive(ROI)
 
 Export.image.toDrive({
-  image: img, 
-  description: "LSIB_tc",
+  image: tcimg, 
+  description: "LSIB_tc_s2",
   region: exportGeo, 
-  scale: 10000, 
+  scale: 5000, 
   maxPixels: 10000000000})
