@@ -12,7 +12,8 @@ var modisdata = ee.ImageCollection("MODIS/061/MOD09A1"),
         [[[-12.330053348871441, 70.86222191558953],
           [-12.330053348871441, 34.857720874211545],
           [50.951196651128555, 34.857720874211545],
-          [50.951196651128555, 70.86222191558953]]], null, false);
+          [50.951196651128555, 70.86222191558953]]], null, false),
+    s2data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //1 4 3
 var cm = require("users/fichtnej/modules:CloudMasks");
@@ -27,5 +28,21 @@ var img = modisdata.filterDate("2019-01-01", "2019-12-01")
                     .map(function(image){return cm.modisCloudMask(image)})
                     .select(["sur_refl_b01", "sur_refl_b04", "sur_refl_b03"])
                     .median()
-                    
+ 
+ 
+var tcimg = s2data.filterDate("2019-01-01", "2019-12-01")
+                    .filterBounds(exportGeo)
+                    .map(function(image){return cm.s2CloudMask(image)})
+                    .select(["B4", "B3", "B2"])
+                    .median()
+                   
 Map.addLayer(img, {min: 0, max:3000})
+
+Export.table.toDrive(ROI)
+
+Export.image.toDrive({
+  image: img, 
+  description: "LSIB_tc",
+  region: exportGeo, 
+  scale: 10000, 
+  maxPixels: 10000000000})
