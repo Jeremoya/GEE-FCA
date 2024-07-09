@@ -3,3 +3,11 @@ var modisdata = ee.ImageCollection("MODIS/061/MOD09A1"),
     LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //1 4 3
+
+var eu = ['Europe'];
+var borderFilter = ee.Filter.inList('wld_rgn' , eu );
+var ROI = LSIB.filter(borderFilter)
+Map.addLayer(ROI, {}, 'ROI');
+
+var img = modisdata.filterDate("2019-01-01", "2019-12-01")
+                    .select(["surface_refl_b01"])
