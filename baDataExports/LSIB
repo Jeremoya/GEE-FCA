@@ -1,13 +1,30 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var modisdata = ee.ImageCollection("MODIS/061/MOD09A1"),
-    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    exportGeo = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-14.351537723871441, 72.17127901611153],
+          [-14.351537723871441, 32.295214928370335],
+          [50.951196651128555, 32.295214928370335],
+          [50.951196651128555, 72.17127901611153]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //1 4 3
+var cm = require("");
 
 var eu = ['Europe'];
 var borderFilter = ee.Filter.inList('wld_rgn' , eu );
-var ROI = LSIB.filter(borderFilter)
+var ROI = LSIB.filter(borderFilter).filterBounds(exportGeo);
 Map.addLayer(ROI, {}, 'ROI');
 
 var img = modisdata.filterDate("2019-01-01", "2019-12-01")
-                    .select(["surface_refl_b01"])
+                    .filterBounds(exportGeo)
+                    .select(["sur_refl_b01", "sur_refl_b04", "sur_refl_b03"])
+                    .median()
+                    
+Map.addLayer(img, {min: 0, max:3000})
