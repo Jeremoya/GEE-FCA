@@ -9,13 +9,13 @@ var modisdata = ee.ImageCollection("MODIS/061/MOD09A1"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-14.351537723871441, 72.17127901611153],
-          [-14.351537723871441, 32.295214928370335],
-          [50.951196651128555, 32.295214928370335],
-          [50.951196651128555, 72.17127901611153]]], null, false);
+        [[[-12.330053348871441, 70.86222191558953],
+          [-12.330053348871441, 34.857720874211545],
+          [50.951196651128555, 34.857720874211545],
+          [50.951196651128555, 70.86222191558953]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //1 4 3
-var cm = require("");
+var cm = require("users/fichtnej/modules:CloudMasks");
 
 var eu = ['Europe'];
 var borderFilter = ee.Filter.inList('wld_rgn' , eu );
