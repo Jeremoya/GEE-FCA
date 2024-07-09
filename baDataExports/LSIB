@@ -24,6 +24,7 @@ Map.addLayer(ROI, {}, 'ROI');
 
 var img = modisdata.filterDate("2019-01-01", "2019-12-01")
                     .filterBounds(exportGeo)
+                    .map(function(image){return cm.modisCloudMask(image)})
                     .select(["sur_refl_b01", "sur_refl_b04", "sur_refl_b03"])
                     .median()
                     
