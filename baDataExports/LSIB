@@ -14,7 +14,21 @@ var modisdata = ee.ImageCollection("MODIS/061/MOD09A1"),
           [-12.330053348871441, 34.857720874211545],
           [50.951196651128555, 34.857720874211545],
           [50.951196651128555, 70.86222191558953]]], null, false),
-    s2data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
+    s2data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    cop = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
+    eg2 = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-13.723719667564236, 59.120610737085336],
+          [-13.723719667564236, 33.70772111807383],
+          [50.87588970743576, 33.70772111807383],
+          [50.87588970743576, 59.120610737085336]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //1 4 3
 var cm = require("users/fichtnej/modules:CloudMasks");
@@ -29,7 +43,12 @@ var img = modisdata.filterDate("2019-01-01", "2019-12-01")
                     .map(function(image){return cm.modisCloudMask(image)})
                     .select(["sur_refl_b01", "sur_refl_b04", "sur_refl_b03"])
                     .median()
- 
+
+//var modismax = img.reduceRegion(ee.Reducer.max(), exportGeo).values().get(0)
+//print(modismax)
+
+img = img.multiply(255).divide(ee.Number(9800))
+
  
 var tcimg = s2data.filterDate("2019-01-01", "2019-12-01")
                     .filterBounds(exportGeo)
@@ -37,14 +56,17 @@ var tcimg = s2data.filterDate("2019-01-01", "2019-12-01")
                     .select(["B4", "B3", "B2"])
                     .median()
                    
-Map.addLayer(img, {min: 0, max:3000})
-Map.addLayer(tcimg, {min: 0, max:3000})
+//Map.addLayer(img, {min: 0, max:128})
+//Map.addLayer(tcimg, {min: 0, max:3000})
 
-Export.table.toDrive(ROI)
+var lulc = cop.select("discrete_classification").first()
+Map.addLayer(lulc.reproject({crs: img.projection(), scale: 5000}))
+
+//Export.table.toDrive(ROI)
 
 Export.image.toDrive({
-  image: tcimg, 
-  description: "LSIB_tc_s2",
-  region: exportGeo, 
-  scale: 5000, 
+  image: lulc, 
+  description: "lulc",
+  region: eg2, 
+  scale: 10000, 
   maxPixels: 10000000000})
