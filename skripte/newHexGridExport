@@ -83,6 +83,7 @@ hexGrid = hexGrid.map(function(ft){
 }).filter(iFilter);
 print(hexGrid);
 Map.addLayer(hexGrid);
-Export.table.toAsset(hexGrid, 'hexgrid_for_NA', 'Grids/Hexgrid_NA')
+// Uncomment to enable export
+//Export.table.toAsset(hexGrid, 'hexgrid export task', 'Hexgrid')
 
 
