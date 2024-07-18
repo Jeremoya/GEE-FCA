@@ -142,8 +142,8 @@ function exportData(){
   print('Export for:', month, year);
   var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
   //print(s)
-  /*
   Export.table.toDrive(grid.filterBounds(exportGeo))
+  /*
   
   */
   Export.image.toDrive({image: scl, 
