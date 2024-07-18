@@ -8,7 +8,6 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     exportGeo = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -224,11 +223,11 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 3, 1);
-  var end = ee.Date.fromYMD(year, 11, 1)
+  var st = ee.Date.fromYMD(year, 5, 1);
+  var end = ee.Date.fromYMD(year, 8, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',10))
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',5))
                     .map(cloudMask.S2CloudMask)
                     /*
                     .map(function(img){
