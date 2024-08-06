@@ -4,3 +4,4 @@ var imageCollection = ee.ImageCollection("NASA/GIMMS/3GV0"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var indices = require('users/fichtnej/modules:Indexfunctions');
+
