@@ -1,0 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageCollection = ee.ImageCollection("NASA/GIMMS/3GV0"),
+    imageCollection2 = ee.ImageCollection("MODIS/061/MOD13A2");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var indices = require("")
