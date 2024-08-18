@@ -62,6 +62,9 @@ var cloudMask = require('users/fichtnej/modules:CloudMasks');
 var vegMask = require('users/fichtnej/modules:VegMasks');
 var FCA = require('users/fichtnej/modules:fcaUtils');
 var viz = FCA.getFCAviz();
+var indices = require('users/fichtnej/modules:IndexFunctions');
+
+  
 
 // Globale Variablen
 var year = 2019;
@@ -142,8 +145,10 @@ function exportData(){
   print('year', year, 'month', month, 'dates', dates)
   var tc = createTCimg();
   var scl = createSCLimg();
+  var ndviImg = createNDVIimg()
   
   Map.addLayer(tc, {}, 'TC')
+  Map.addLayer(ndviImg, )
   Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
@@ -273,6 +278,18 @@ function createSCLimg(){
                     
 
   return s2Data;
+}
+
+function createNDVIimg(){
+  
+  var img = s2Data.filterDate("2020-06-01", "2020-07-01")
+                .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',60))
+                .map(cloudMask.S2CloudMask)
+                .median();
+                
+  img = indices.calcIndex(false, "NDVI", img);
+  
+  return img;
 }
 
 exportData()
