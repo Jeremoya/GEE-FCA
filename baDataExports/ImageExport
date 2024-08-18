@@ -41,7 +41,21 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
          [9.563948487485252, 51.54320614254728],
          [9.732410021732694, 51.02977623334481]]),
     burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
-    grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU");
+    grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    olson = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
+    olsonRegio = 
+    /* color: #43a9d6 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-10.710542278654, 72.77599056443283],
+          [-10.710542278654, 35.832642069065976],
+          [42.737944049471, 35.832642069065976],
+          [42.737944049471, 72.77599056443283]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Imports
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -142,8 +156,8 @@ function exportData(){
   print('Export for:', month, year);
   var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
   //print(s)
-  Map.addLayer(grid.filterBounds(exportGeo), {}, "griddo")
-  Export.table.toDrive(grid.filterBounds(exportGeo))
+  Map.addLayer(olson.filterBounds(olsonRegio), {}, "olsen")
+  Export.table.toDrive(olson.filterBounds(olsonRegio))
   /*
   
   */
