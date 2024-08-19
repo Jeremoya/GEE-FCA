@@ -8,17 +8,16 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     exportGeo = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[6.0613273819619184, 53.44106146353901],
-          [6.0613273819619184, 48.27756594581477],
-          [16.58099405371489, 48.27756594581477],
-          [16.58099405371489, 53.44106146353901]]], null, false),
+        [[[-24.87617261803808, 67.34331571372516],
+          [-24.87617261803808, 36.37910554320785],
+          [42.77240030371489, 36.37910554320785],
+          [42.77240030371489, 67.34331571372516]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -147,7 +146,7 @@ function exportData(){
   var scl = createSCLimg();
   var ndviImg = createNDVIimg()
   
-  Map.addLayer(tc.updateMask(vegMask.copernicusMask("Total")), {}, 'TC')
+  Map.addLayer(tc.updateMask(vegMask.createCopernicusMask("Total")), {}, 'TC')
   Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
   Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
@@ -166,7 +165,7 @@ function exportData(){
   /*
   
   */
-  Export.image.toDrive({image: tc, 
+  Export.image.toDrive({image: tc.updateMask(vegMask.createCopernicusMask("Total")), 
     description: 'scl_tb_burned_classic',
     folder: '',
     priority: ee.Number(200),
