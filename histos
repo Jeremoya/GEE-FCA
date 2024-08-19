@@ -1,7 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = 
     /* color: #98ff00 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -22,11 +21,11 @@ var img = s2Data.filterBounds(geometry)
                 .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
                 .map(cloudMask.S2CloudMask)
                 .median()
-                .updateMask(vegMask.createCoperniusMask("Total"))
-                .select(["B5"])//, "B8A", "B11"]);
+                .updateMask(vegMask.createCopernicusMask("Total"))
+                .select(["B5", "B8A", "B11"]);
                 
 Map.addLayer(img)
 
-var chart = ui.Chart.image.histogram({image: img, region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 4, maxPixels: 10000000000})
+var chart = ui.Chart.image.histogram({image: img, region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
 print(chart)                
                 
