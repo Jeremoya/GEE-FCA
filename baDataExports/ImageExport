@@ -8,6 +8,7 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     exportGeo = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
