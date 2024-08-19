@@ -24,12 +24,13 @@ var img = s2Data.filterBounds(geometry)
                 .updateMask(vegMask.createCopernicusMask("Total"))
                 .select(["B5", "B8A", "B11"]);
                 
+img = img.updateMask(img.gt(300).and(img.lt(1640)))                
 Map.addLayer(img)
 
-var chart = ui.Chart.image.histogram({image: img.select("B5"), region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
+var chart = ui.Chart.image.histogram({image: img.select("B5"), region: geometry, scale: 20, maxBuckets:128, maxPixels: 10000000000})
 print(chart)                
-chart = ui.Chart.image.histogram({image: img.select("B8A"), region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
+chart = ui.Chart.image.histogram({image: img.select("B8A"), region: geometry, scale: 40, maxBuckets:128, maxPixels: 10000000000})
 print(chart)                
-chart = ui.Chart.image.histogram({image: img.select("B11"), region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
+chart = ui.Chart.image.histogram({image: img.select("B11"), region: geometry, scale: 40, maxBuckets:128, maxPixels: 10000000000})
 print(chart)                
                 
