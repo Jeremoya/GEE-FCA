@@ -147,7 +147,7 @@ function exportData(){
   var scl = createSCLimg();
   var ndviImg = createNDVIimg()
   
-  Map.addLayer(tc, {}, 'TC')
+  Map.addLayer(tc.updateMask(vegMask.copernicusMask("Total")), {}, 'TC')
   Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
   Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
@@ -282,7 +282,7 @@ function createSCLimg(){
 
 function createNDVIimg(){
   
-  var img = s2Data.filterDate("2020-06-01", "2020-07-01")
+  var img = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterDate("2020-06-01", "2020-07-01")
                 .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',60))
                 .map(cloudMask.S2CloudMask)
                 .median();
