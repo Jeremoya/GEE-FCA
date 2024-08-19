@@ -148,7 +148,7 @@ function exportData(){
   var ndviImg = createNDVIimg()
   
   Map.addLayer(tc, {}, 'TC')
-  Map.addLayer(ndviImg, )
+  Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
   Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
