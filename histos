@@ -1,0 +1,19 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[10.076950735392316, 51.947318367276694],
+          [10.076950735392316, 51.528915739349664],
+          [10.851486868204816, 51.528915739349664],
+          [10.851486868204816, 51.947318367276694]]], null, false),
+    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var img = s2Data.filterBounds(geometry)
+                .filterDate("2020-06-01", "2020-07-01")
+                .filter
