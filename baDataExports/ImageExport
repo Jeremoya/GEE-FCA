@@ -8,17 +8,16 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     exportGeo = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-24.87617261803808, 67.34331571372516],
-          [-24.87617261803808, 36.37910554320785],
-          [42.77240030371489, 36.37910554320785],
-          [42.77240030371489, 67.34331571372516]]], null, false),
+        [[[10.225145741336918, 53.49991664724179],
+          [10.225145741336918, 50.05876366401413],
+          [16.57000772558989, 50.05876366401413],
+          [16.57000772558989, 53.49991664724179]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -250,11 +249,11 @@ function createTCimg(){
                     .filterDate(st, end)
                     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',5))
                     .map(cloudMask.S2CloudMask)
-                    /*
                     .map(function(img){
                       img = img.updateMask(img.select('SCL').eq(4))
                       return img.updateMask(vegMask.createCopernicusMask("Total"))
                     })
+                    /*
                     */
                     .select(['B4', 'B3', 'B2'])
                     .mean()
