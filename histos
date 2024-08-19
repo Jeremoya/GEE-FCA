@@ -32,5 +32,11 @@ print(chart)
 chart = ui.Chart.image.histogram({image: img.select("B8A"), region: geometry, scale: 40, maxBuckets:128, maxPixels: 10000000000})
 print(chart)                
 chart = ui.Chart.image.histogram({image: img.select("B11"), region: geometry, scale: 40, maxBuckets:128, maxPixels: 10000000000})
-print(chart)                
+print(chart)             
+
+var percs = img.reduceRegion(ee.Reducer.percentile(ee.List.sequence(5, 95, 5)), geometry, 20)
+print(percs)
+print(percs.values())
                 
+var s = ee.Image(0).addBands(img.select("B5")).stratifiedSample({numPoints: 25000, region: geometry, scale: 20})
+Export.table.toDrive(s)
