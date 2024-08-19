@@ -14,6 +14,19 @@ var geometry =
           [10.851486868204816, 51.947318367276694]]], null, false),
     s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+
 var img = s2Data.filterBounds(geometry)
-                .filterDate("2020-06-01", "2020-07-01")
-                .filter
+                .filterDate("2020-06-01", "2020-08-01")
+                .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                .map(cloudMask.S2CloudMask)
+                .median()
+                .updateMask(vegMask.createCoperniusMask("Total"))
+                .select(["B5"])//, "B8A", "B11"]);
+                
+Map.addLayer(img)
+
+var chart = ui.Chart.image.histogram({image: img, region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 4, maxPixels: 10000000000})
+print(chart)                
+                
