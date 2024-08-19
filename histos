@@ -7,10 +7,10 @@ var geometry =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[10.076950735392316, 51.947318367276694],
-          [10.076950735392316, 51.528915739349664],
-          [10.851486868204816, 51.528915739349664],
-          [10.851486868204816, 51.947318367276694]]], null, false),
+        [[[10.164841360392316, 51.94393233132915],
+          [10.164841360392316, 51.70967810430595],
+          [10.538376516642316, 51.70967810430595],
+          [10.538376516642316, 51.94393233132915]]], null, false),
     s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var cloudMask = require('users/fichtnej/modules:CloudMasks');
@@ -26,6 +26,10 @@ var img = s2Data.filterBounds(geometry)
                 
 Map.addLayer(img)
 
-var chart = ui.Chart.image.histogram({image: img, region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
+var chart = ui.Chart.image.histogram({image: img.select("B5"), region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
+print(chart)                
+chart = ui.Chart.image.histogram({image: img.select("B8A"), region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
+print(chart)                
+chart = ui.Chart.image.histogram({image: img.select("B11"), region: geometry, scale: 20, maxBuckets:20, minBucketWidth: 5, maxPixels: 10000000000})
 print(chart)                
                 
