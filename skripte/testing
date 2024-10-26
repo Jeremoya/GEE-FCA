@@ -35,7 +35,19 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
         [[[81.18421863033659, 21.57689410753743],
           [81.18421863033659, 20.919011805320913],
           [81.86125110103971, 20.919011805320913],
-          [81.86125110103971, 21.57689410753743]]], null, false);
+          [81.86125110103971, 21.57689410753743]]], null, false),
+    geometry3 = 
+    /* color: #0b4a8b */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[4.408126271687287, 53.909324231739056],
+          [4.408126271687287, 50.392904001759135],
+          [10.296798146687246, 50.392904001759135],
+          [10.296798146687246, 53.909324231739056]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var dataset = ee.ImageCollection('GLCF/GLS_WATER');
 var water = dataset.select('water');
@@ -48,7 +60,7 @@ var waterVis = {
 Map.addLayer(water.max(), waterVis, 'Water');
 
 
-Export.image.toDrive({image: water.max(), region: geometry, scale: 200, description: "GLIW"} )
+//Export.image.toDrive({image: water.max(), region: geometry, scale: 200, description: "GLIW"} )
 
 var dataset = ee.Image('DLR/WSF/WSF2015/v1');
 
@@ -64,18 +76,12 @@ Map.addLayer(dataset, visualization, 'Human settlement areas');
 
 Map.setCenter(90.45, 23.7, 7);
 
-Export.image.toDrive({image: dataset.add(blackBackground), region: geometry, scale: 400, description: "populuation"} )
-
+Export.image.toDrive({image: dataset.add(blackBackground), region: geometry2, scale: 400, description: "populuation2"} )
 
 
 var dataset = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
-var treeCoverVisParam = {
-  bands: ['treecover2000'],
-  min: 0,
-  max: 100,
-  palette: ['black', 'green']
-};
-Map.addLayer(dataset, treeCoverVisParam, 'tree cover 2000');
+
+
 
 var treeLossVisParam = {
   bands: ['lossyear'],
@@ -84,3 +90,5 @@ var treeLossVisParam = {
   palette: ['yellow', 'red']
 };
 Map.addLayer(dataset, treeLossVisParam, 'tree loss year');
+
+Export.image.toDrive({image: dataset.select('lossyear'), region: geometry3, scale: 400, description: "hansen"} )
