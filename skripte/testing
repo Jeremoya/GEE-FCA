@@ -20,9 +20,67 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[8.15242012293377, 52.375716129623285],
-          [8.15242012293377, 47.475867738689104],
-          [10.460620988630618, 47.475867738689104],
-          [10.460620988630618, 52.375716129623285]]], null, false);
+        [[[-81.67179862706618, 46.11145846822406],
+          [-81.67179862706618, 43.120485113550586],
+          [-77.56183994886933, 43.120485113550586],
+          [-77.56183994886933, 46.11145846822406]]], null, false),
+    geometry2 = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[81.18421863033659, 21.57689410753743],
+          [81.18421863033659, 20.919011805320913],
+          [81.86125110103971, 20.919011805320913],
+          [81.86125110103971, 21.57689410753743]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(inland)
+var dataset = ee.ImageCollection('GLCF/GLS_WATER');
+var water = dataset.select('water');
+var waterVis = {
+  min: 1.0,
+  max: 4.0,
+  palette: ['fafafa', '00c5ff', 'df73ff', '828282', 'cccccc'],
+};
+//Map.setCenter(-79.3094, 44.5693, 8);
+Map.addLayer(water.max(), waterVis, 'Water');
+
+
+Export.image.toDrive({image: water.max(), region: geometry, scale: 200, description: "GLIW"} )
+
+var dataset = ee.Image('DLR/WSF/WSF2015/v1');
+
+var opacity = 0.75;
+var blackBackground = ee.Image(0);
+Map.addLayer(blackBackground, null, 'Black background', true, opacity);
+
+var visualization = {
+  min: 0,
+  max: 255,
+};
+Map.addLayer(dataset, visualization, 'Human settlement areas');
+
+Map.setCenter(90.45, 23.7, 7);
+
+Export.image.toDrive({image: dataset.add(blackBackground), region: geometry, scale: 400, description: "populuation"} )
+
+
+
+var dataset = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
+var treeCoverVisParam = {
+  bands: ['treecover2000'],
+  min: 0,
+  max: 100,
+  palette: ['black', 'green']
+};
+Map.addLayer(dataset, treeCoverVisParam, 'tree cover 2000');
+
+var treeLossVisParam = {
+  bands: ['lossyear'],
+  min: 0,
+  max: 23,
+  palette: ['yellow', 'red']
+};
+Map.addLayer(dataset, treeLossVisParam, 'tree loss year');
