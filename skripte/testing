@@ -11,66 +11,6 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
-    clg = ee.ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global"),
-    geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    ee.Geometry.Polygon(
-        [[[10.31492985833831, 51.928231815269704],
-          [10.31492985833831, 47.79568791476679],
-          [14.40184392083831, 47.79568791476679],
-          [14.40184392083831, 51.928231815269704]]], null, false);
+    inland = ee.ImageCollection("GLCF/GLS_WATER");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Export.table.toDrive(eu)
-// clg = clg.select("discrete_classification");
-// print(clg)
-// var clg18 = clg.filter(ee.Filter.eq("system:index", "2018")).first()
-// clg18 = clg18.updateMask(clg18.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
-// var clg19 = clg.filter(ee.Filter.eq("system:index", "2019")).first()
-// clg19 = clg19.updateMask(clg19.eq([20, 30, 90, 100, 111, 112, 113, 114, 115,116, 121, 122, 123, 124, 125, 126]).reduce(ee.Reducer.max()))
-// Map.addLayer(clg18)
-// Map.addLayer(clg19)
-// var comp = ee.Image(0).addBands(clg18.eq(clg19))
-// var s = comp.stratifiedSample({numPoints: 200000, region: geometry, scale:100})
-// Export.table.toDrive(s)
-
-
-
-/*
-Map.addLayer(nn)
-Map.addLayer(eg)
-Map.addLayer(eu)
-
-ba = ba.map(function(ft){
-  var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
-  return ft.set('YEAR', year);
-}).filter(ee.Filter.eq('YEAR', '2018'))
-
-Map.addLayer(ba, {color:'red'})
-Map.addLayer(fritzi, {color:"teal"})
-
-var rgns = LSIB.reduceColumns(ee.Reducer.toList(), ['wld_rgn']).values().flatten().distinct();
-print(rgns)
-
-
-var af = ['Africa'];
-var eu = ['Europe'];
-var na = ['North America'];
-var ca = ['Central America', 'Caribbean']
-var sa = ['South America']
-var aus = ['Australia', 'Oceania'];
-var rgn = ['S Atlantic', 'Indian Ocean', 'Antarctica']
-var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
-var nAsia = ['N Asia']
-var eAsia = ['SE Asia', 'E Asia']
-
-
-var borderFilter = ee.Filter.inList('wld_rgn' , eu );
-var ROI = LSIB.filter(borderFilter)
-Map.addLayer(ROI, {}, 'ROI');
-
-Map.addLayer(euGrid)
-var a = ee.FeatureCollection(euGrid.filterBounds(ROI))
-Export.table.toAsset(a)
-print(a)
-Map.addLayer(a)*/
+Map.addLayer(inland)
