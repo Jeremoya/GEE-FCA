@@ -76,7 +76,7 @@ Map.addLayer(dataset, visualization, 'Human settlement areas');
 
 Map.setCenter(90.45, 23.7, 7);
 
-Export.image.toDrive({image: dataset.add(blackBackground), region: geometry2, scale: 400, description: "populuation2"} )
+Export.image.toDrive({image: dataset.add(blackBackground), region: geometry2, scale: 100, description: "populuation2"} )
 
 
 var dataset = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
@@ -91,4 +91,4 @@ var treeLossVisParam = {
 };
 Map.addLayer(dataset, treeLossVisParam, 'tree loss year');
 
-Export.image.toDrive({image: dataset.select('lossyear'), region: geometry3, scale: 400, description: "hansen"} )
+//Export.image.toDrive({image: dataset.select('lossyear'), region: geometry3, scale: 400, description: "hansen"} )
