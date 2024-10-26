@@ -11,6 +11,18 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99"),
     ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
     fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
-    inland = ee.ImageCollection("GLCF/GLS_WATER");
+    inland = ee.ImageCollection("GLCF/GLS_WATER"),
+    geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[8.15242012293377, 52.375716129623285],
+          [8.15242012293377, 47.475867738689104],
+          [10.460620988630618, 47.475867738689104],
+          [10.460620988630618, 52.375716129623285]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(inland)
