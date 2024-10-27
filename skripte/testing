@@ -32,10 +32,10 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[81.18421863033659, 21.57689410753743],
-          [81.18421863033659, 20.919011805320913],
-          [81.86125110103971, 20.919011805320913],
-          [81.86125110103971, 21.57689410753743]]], null, false),
+        [[[29.20790027096159, 31.747928805486936],
+          [29.20790027096159, 28.351428778725293],
+          [33.32365344478972, 28.351428778725293],
+          [33.32365344478972, 31.747928805486936]]], null, false),
     geometry3 = 
     /* color: #0b4a8b */
     /* displayProperties: [
@@ -44,10 +44,10 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[4.408126271687287, 53.909324231739056],
-          [4.408126271687287, 50.392904001759135],
-          [10.296798146687246, 50.392904001759135],
-          [10.296798146687246, 53.909324231739056]]], null, false);
+        [[[-4.293045603312713, 56.41858322038666],
+          [-4.293045603312713, 45.07949748082864],
+          [13.021407521687246, 45.07949748082864],
+          [13.021407521687246, 56.41858322038666]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var dataset = ee.ImageCollection('GLCF/GLS_WATER');
 var water = dataset.select('water');
@@ -91,4 +91,4 @@ var treeLossVisParam = {
 };
 Map.addLayer(dataset, treeLossVisParam, 'tree loss year');
 
-//Export.image.toDrive({image: dataset.select('lossyear'), region: geometry3, scale: 400, description: "hansen"} )
+//Export.image.toDrive({image: dataset.select('lossyear'), region: geometry3, scale: 1000, description: "hansen"} )
