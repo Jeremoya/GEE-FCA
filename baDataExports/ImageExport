@@ -15,10 +15,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[12.169725819461918, 51.452749330140165],
-          [12.169725819461918, 51.18867669181212],
-          [12.634155674808637, 51.18867669181212],
-          [12.634155674808637, 51.452749330140165]]], null, false),
+        [[[9.977953358524418, 52.20973615012476],
+          [9.977953358524418, 51.18867669181212],
+          [11.672851963871137, 51.18867669181212],
+          [11.672851963871137, 52.20973615012476]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -67,7 +67,7 @@ var indices = require('users/fichtnej/modules:IndexFunctions');
   
 
 // Globale Variablen
-var year = 2019;
+var year = 2020;
 var month = [7];
 var dates = ee.DateRange('2019-07-01', '2019-08-01');
 //Map.addLayer(ee.Image(1), {min:0, max:0.1})
@@ -147,7 +147,7 @@ function exportData(){
   var scl = createSCLimg();
   var ndviImg = createNDVIimg()
   
-  Map.addLayer(tc.updateMask(vegMask.createCopernicusMask("Total")), {}, 'TC')
+  Map.addLayer(tc/*.updateMask(vegMask.createCopernicusMask("Total"))*/, {}, 'TC')
   Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
   Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
@@ -157,21 +157,21 @@ function exportData(){
   var notBurned = ee.Image(1).addBands(allImgs.updateMask(noDamageMask))
   //Map.addLayer(burnedImage, viz, 'burnDamage')
   //allImgs = hansen.addBands(allImgs.rename('FCA'))
-  //Map.addLayer(allImgs)
+  Map.addLayer(allImgs, viz, "allimgs")
   print('Export for:', month, year);
   var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
   //print(s)
   Map.addLayer(olson.filterBounds(olsonRegio), {}, "olsen")
-  Export.table.toDrive(olson.filterBounds(olsonRegio))
+  //Export.table.toDrive(olson.filterBounds(olsonRegio))
   /*
   
   */
-  Export.image.toDrive({image: ndviImg, 
-    description: 'scl_tb_burned_classic',
+  Export.image.toDrive({image: tc, 
+    description: 'tc_Vortrag',
     folder: '',
     priority: ee.Number(200),
     region: exportGeo, 
-    scale: 40,
+    scale: 80,
     maxPixels : 100000000000,
   });
 }
@@ -244,21 +244,22 @@ function createFCAImage(type){
 
 function createTCimg(){
   
-  var st = ee.Date.fromYMD(year, 4, 1);
-  var end = ee.Date.fromYMD(year, 11, 1)
+  var st = ee.Date.fromYMD(2018, 5, 1);
+  var end = ee.Date.fromYMD(2023, 9, 1)
   var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
                     .filterDate(st, end)
-                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',5))
+                    .filter(ee.Filter.calendarRange(4,9, 'month'))
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',10))
                     .map(cloudMask.S2CloudMask)
+                    /*
                     .map(function(img){
                       img = img.updateMask(img.select('SCL').eq(4))
                       return img.updateMask(vegMask.createCopernicusMask("Total"))
                     })
-                    /*
                     */
                     .select(['B4', 'B3', 'B2'])
                     .mean()
-                    .multiply(2)
+                    .multiply(1.3)
                     .visualize({min:0,max:2600});
                     
 
