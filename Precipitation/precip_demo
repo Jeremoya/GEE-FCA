@@ -13,7 +13,7 @@ Map.addLayer(precipitation, precipitationVis, 'NOAA CPC Precipitation');
 
 //CRU gruond based
 var dataset = ee.ImageCollection('IDAHO_EPSCOR/TERRACLIMATE')
-                  .filter(ee.Filter.date('2018-09-01', '2019-01-01'));
+                  .filter(ee.Filter.date('2018-09-01', '2018-10-01'));
 var maximumTemperature = dataset.select('pr');
 var maximumTemperatureVis = {
   min: 0,
@@ -31,7 +31,7 @@ Map.addLayer(maximumTemperature, maximumTemperatureVis, 'Pr accum CRU');
 //TRMM
 
 var dataset = ee.ImageCollection('TRMM/3B42')
-                  .filter(ee.Filter.date('2018-09-01', '2019-01-01'));
+                  .filter(ee.Filter.date('2018-09-01', '2018-10-01'));
 var precipitation =
     dataset.select(['precipitation', 'HQprecipitation', 'IRprecipitation']);
 var precipitationVis = {
