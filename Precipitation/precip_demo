@@ -10,3 +10,19 @@ var precipitationVis = {
 };
 Map.setCenter(-68.36, -6.73, 3);
 Map.addLayer(precipitation, precipitationVis, 'NOAA CPC Precipitation');
+
+//CRU gruond based
+var dataset = ee.ImageCollection('IDAHO_EPSCOR/TERRACLIMATE')
+                  .filter(ee.Filter.date('2018-09-01', '2019-01-01'));
+var maximumTemperature = dataset.select('pr');
+var maximumTemperatureVis = {
+  min: 0,
+  max: 700,
+  palette: [
+    '1a3678', '2955bc', '5699ff', '8dbae9', 'acd1ff', 'caebff', 'e5f9ff',
+    'fdffb4', 'ffe6a2', 'ffc969', 'ffa12d', 'ff7c1f', 'ca531a', 'ff0000',
+    'ab0000'
+  ],
+};
+Map.setCenter(71.72, 52.48, 3);
+Map.addLayer(maximumTemperature, maximumTemperatureVis, 'Pr accum CRU');
