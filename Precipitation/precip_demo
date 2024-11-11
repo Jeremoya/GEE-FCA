@@ -26,3 +26,18 @@ var maximumTemperatureVis = {
 };
 Map.setCenter(71.72, 52.48, 3);
 Map.addLayer(maximumTemperature, maximumTemperatureVis, 'Pr accum CRU');
+
+
+//TRMM
+
+var dataset = ee.ImageCollection('TRMM/3B42')
+                  .filter(ee.Filter.date('2018-09-01', '2019-01-01'));
+var precipitation =
+    dataset.select(['precipitation', 'HQprecipitation', 'IRprecipitation']);
+var precipitationVis = {
+  min: 0,
+  max: 12,
+  gamma: 5,
+};
+Map.setCenter(-79.98, 23.32, 4);
+Map.addLayer(precipitation, precipitationVis, 'Precipitation');
