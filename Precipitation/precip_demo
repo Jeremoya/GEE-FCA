@@ -1,3 +1,5 @@
+//Gauge
+
 var dataset = ee.ImageCollection('NOAA/CPC/Precipitation')
                   .filter(ee.Filter.date('2018-09-01', '2019-01-01'));
 var precipitation = dataset.select('precipitation');
