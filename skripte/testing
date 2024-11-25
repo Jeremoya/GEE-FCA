@@ -14,6 +14,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     inland = ee.ImageCollection("GLCF/GLS_WATER"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -26,6 +27,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [-77.56183994886933, 46.11145846822406]]], null, false),
     geometry2 = 
     /* color: #98ff00 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -38,6 +40,7 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [33.32365344478972, 31.747928805486936]]], null, false),
     geometry3 = 
     /* color: #0b4a8b */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -47,48 +50,29 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
         [[[-4.293045603312713, 56.41858322038666],
           [-4.293045603312713, 45.07949748082864],
           [13.021407521687246, 45.07949748082864],
-          [13.021407521687246, 56.41858322038666]]], null, false);
+          [13.021407521687246, 56.41858322038666]]], null, false),
+    obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var dataset = ee.ImageCollection('GLCF/GLS_WATER');
-var water = dataset.select('water');
-var waterVis = {
-  min: 1.0,
-  max: 4.0,
-  palette: ['fafafa', '00c5ff', 'df73ff', '828282', 'cccccc'],
-};
-//Map.setCenter(-79.3094, 44.5693, 8);
-Map.addLayer(water.max(), waterVis, 'Water');
+Map.addLayer(obs)
 
+var bands = ee.List([
+  "sdA",
+  "meanA",
+  "medianA",
+  "minH",
+  "sdH",
+  "maxH",
+  "bdckngs",
+  "minA",
+  "meanH",
+  "medianH",
+  "maxA"
+])
+print(bands)
 
-//Export.image.toDrive({image: water.max(), region: geometry, scale: 200, description: "GLIW"} )
-
-var dataset = ee.Image('DLR/WSF/WSF2015/v1');
-
-var opacity = 0.75;
-var blackBackground = ee.Image(0);
-Map.addLayer(blackBackground, null, 'Black background', true, opacity);
-
-var visualization = {
-  min: 0,
-  max: 255,
-};
-Map.addLayer(dataset, visualization, 'Human settlement areas');
-
-Map.setCenter(90.45, 23.7, 7);
-
-Export.image.toDrive({image: dataset.add(blackBackground), region: geometry2, scale: 100, description: "populuation2"} )
-
-
-var dataset = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
-
-
-
-var treeLossVisParam = {
-  bands: ['lossyear'],
-  min: 0,
-  max: 23,
-  palette: ['yellow', 'red']
-};
-Map.addLayer(dataset, treeLossVisParam, 'tree loss year');
-
-//Export.image.toDrive({image: dataset.select('lossyear'), region: geometry3, scale: 1000, description: "hansen"} )
+var ic = ee.ImageCollection(bands.map(function(el){
+  return obs.reduceToImage([el], ee.Reducer.first())
+}));
+var obsImage = ic.toBands().rename(bands);
+Map.addLayer(obsImage)
+//Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, crs: "EPSG:32632", maxPixels: 15578530500})
