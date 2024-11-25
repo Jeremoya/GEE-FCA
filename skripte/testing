@@ -14,17 +14,16 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     inland = ee.ImageCollection("GLCF/GLS_WATER"),
     geometry = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-81.67179862706618, 46.11145846822406],
-          [-81.67179862706618, 43.120485113550586],
-          [-77.56183994886933, 43.120485113550586],
-          [-77.56183994886933, 46.11145846822406]]], null, false),
+        [[[-164.11320487706615, 75.66408621907317],
+          [-164.11320487706615, 55.66786742189817],
+          [101.9108163011307, 55.66786742189817],
+          [101.9108163011307, 75.66408621907317]]], null, false),
     geometry2 = 
     /* color: #98ff00 */
     /* shown: false */
@@ -51,9 +50,9 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [-4.293045603312713, 45.07949748082864],
           [13.021407521687246, 45.07949748082864],
           [13.021407521687246, 56.41858322038666]]], null, false),
-    obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys");
+    obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys"),
+    obsi = ee.Image("projects/ee-fichtnej/assets/obsImage-0000021504-0000000000");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(obs)
 
 var bands = ee.List([
   "sdA",
@@ -70,9 +69,18 @@ var bands = ee.List([
 ])
 print(bands)
 
+
+obs = obs.map(function(el){
+  return el.transform(ee.Projection("EPSG:32632"), 10)
+})
+print(obs.first().geometry().projection())
+// Map.addLayer(obs)
+
+print(obs.bounds(100000))
+
 var ic = ee.ImageCollection(bands.map(function(el){
   return obs.reduceToImage([el], ee.Reducer.first())
 }));
-var obsImage = ic.toBands().rename(bands);
-Map.addLayer(obsImage)
-//Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, crs: "EPSG:32632", maxPixels: 15578530500})
+// var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
+// Map.addLayer(obsImage)
+// Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, crs: "EPSG:32632", maxPixels: 15578530500})
