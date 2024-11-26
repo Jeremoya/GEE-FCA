@@ -14,16 +14,17 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     inland = ee.ImageCollection("GLCF/GLS_WATER"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-164.11320487706615, 75.66408621907317],
-          [-164.11320487706615, 55.66786742189817],
-          [101.9108163011307, 55.66786742189817],
-          [101.9108163011307, 75.66408621907317]]], null, false),
+        [[[11.245071490121349, 53.57305208330489],
+          [11.245071490121349, 51.35416180516417],
+          [14.805713762068198, 51.35416180516417],
+          [14.805713762068198, 53.57305208330489]]], null, false),
     geometry2 = 
     /* color: #98ff00 */
     /* shown: false */
@@ -81,6 +82,7 @@ print(obs.bounds(100000))
 var ic = ee.ImageCollection(bands.map(function(el){
   return obs.reduceToImage([el], ee.Reducer.first())
 }));
-// var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
-// Map.addLayer(obsImage)
-// Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, crs: "EPSG:32632", maxPixels: 15578530500})
+var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
+Map.addLayer(obsImage)
+obsImage = obsImage.clip(geometry)
+Export.image.toDrive({image: obsImage, description: "obsImage", scale: 40, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
