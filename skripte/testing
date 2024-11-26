@@ -85,4 +85,4 @@ var ic = ee.ImageCollection(bands.map(function(el){
 var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
 Map.addLayer(obsImage)
 obsImage = obsImage.clip(geometry)
-Export.image.toDrive({image: obsImage, description: "obsImage", scale: 40, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
+Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
