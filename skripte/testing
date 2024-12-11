@@ -86,3 +86,6 @@ var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", mi
 Map.addLayer(obsImage)
 obsImage = obsImage.clip(geometry)
 Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
+
+var falkenbergData = ba.filter(ee.Filter.eq("id", "206858")).first()
+print("area", falkenbergData)
