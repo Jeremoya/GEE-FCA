@@ -14,10 +14,10 @@ var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
       }
     ] */
     ee.Geometry.Polygon(
-        [[[8.527758046024418, 52.5116497471439],
-          [8.527758046024418, 51.49749536265936],
-          [10.222656651371137, 51.49749536265936],
-          [10.222656651371137, 52.5116497471439]]], null, false),
+        [[[6.0997795303994184, 50.74560669144397],
+          [6.0997795303994184, 49.69148059685441],
+          [7.794678135746138, 49.69148059685441],
+          [7.794678135746138, 50.74560669144397]]], null, false),
     exportGeo2 = 
     /* color: #d63000 */
     /* shown: false */
@@ -146,11 +146,11 @@ function exportData(){
   print('year', year, 'month', month, 'dates', dates)
   var tc = createTCimg();
   var scl = createSCLimg();
-  var ndviImg = createNDVIimg()
+  //var ndviImg = createNDVIimg()
   
   Map.addLayer(tc/*.updateMask(vegMask.createCopernicusMask("Total"))*/, {}, 'TC')
-  Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
-  Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", 	"#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
+  //Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
+  Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", "#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
   var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
   Map.addLayer(allImgs, viz)
   allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
