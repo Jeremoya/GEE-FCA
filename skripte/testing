@@ -52,7 +52,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [13.021407521687246, 45.07949748082864],
           [13.021407521687246, 56.41858322038666]]], null, false),
     obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys"),
-    obsi = ee.Image("projects/ee-fichtnej/assets/obsImage-0000021504-0000000000");
+    obsi = ee.Image("projects/ee-fichtnej/assets/obsImage-0000021504-0000000000"),
+    hex = ee.ImageCollection("projects/ee-fichtnej/assets/hexRef");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var bands = ee.List([
@@ -68,24 +69,30 @@ var bands = ee.List([
   "medianH",
   "maxA"
 ])
-print(bands)
+// print(bands)
+
+Map.addLayer(eu)
+Map.addLayer(hex)
 
 
-obs = obs.map(function(el){
-  return el.transform(ee.Projection("EPSG:32632"), 10)
-})
-print(obs.first().geometry().projection())
-// Map.addLayer(obs)
 
-print(obs.bounds(100000))
 
-var ic = ee.ImageCollection(bands.map(function(el){
-  return obs.reduceToImage([el], ee.Reducer.first())
-}));
-var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
-Map.addLayer(obsImage)
-obsImage = obsImage.clip(geometry)
-Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
 
-var falkenbergData = ba.filter(ee.Filter.eq("id", "206858")).first()
-print("area", falkenbergData)
+// obs = obs.map(function(el){
+//   return el.transform(ee.Projection("EPSG:32632"), 10)
+// })
+// print(obs.first().geometry().projection())
+// // Map.addLayer(obs)
+
+// print(obs.bounds(100000))
+
+// var ic = ee.ImageCollection(bands.map(function(el){
+//   return obs.reduceToImage([el], ee.Reducer.first())
+// }));
+// var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
+// Map.addLayer(obsImage)
+// obsImage = obsImage.clip(geometry)
+// Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
+
+// var falkenbergData = ba.filter(ee.Filter.eq("id", "206858")).first()
+// print("area", falkenbergData)
