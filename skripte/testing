@@ -53,7 +53,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
           [13.021407521687246, 56.41858322038666]]], null, false),
     obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys"),
     obsi = ee.Image("projects/ee-fichtnej/assets/obsImage-0000021504-0000000000"),
-    hex = ee.ImageCollection("projects/ee-fichtnej/assets/hexRef");
+    hex = ee.ImageCollection("projects/ee-fichtnej/assets/hexRef"),
+    imageCollection = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var bands = ee.List([
@@ -72,10 +73,9 @@ var bands = ee.List([
 // print(bands)
 
 Map.addLayer(eu)
-Map.addLayer(hex)
+Map.addLayer(dd)
 
-
-
+Re
 
 
 // obs = obs.map(function(el){
