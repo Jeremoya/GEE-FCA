@@ -54,7 +54,8 @@ var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
     obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys"),
     obsi = ee.Image("projects/ee-fichtnej/assets/obsImage-0000021504-0000000000"),
     hex = ee.ImageCollection("projects/ee-fichtnej/assets/hexRef"),
-    imageCollection = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
+    imageCollection = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    get_rect = ee.FeatureCollection("projects/ee-fichtnej/assets/rect_grid_eu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var bands = ee.List([
@@ -75,7 +76,7 @@ var bands = ee.List([
 Map.addLayer(eu)
 Map.addLayer(dd)
 
-Re
+
 
 
 // obs = obs.map(function(el){
@@ -96,3 +97,5 @@ Re
 
 // var falkenbergData = ba.filter(ee.Filter.eq("id", "206858")).first()
 // print("area", falkenbergData)
+
+Export.table.toDrive(get_rect)
