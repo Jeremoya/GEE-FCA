@@ -1,0 +1,305 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    exportGeo = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[6.0997795303994184, 50.74560669144397],
+          [6.0997795303994184, 49.69148059685441],
+          [7.794678135746138, 49.69148059685441],
+          [7.794678135746138, 50.74560669144397]]], null, false),
+    exportGeo2 = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[15.17744076776927, 62.043846259243985],
+          [15.17744076776927, 61.87729344273454],
+          [15.542049532417707, 61.87729344273454],
+          [15.542049532417707, 62.043846259243985]]], null, false),
+    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
+    geometry = 
+    /* color: #f7ff08 */
+    /* shown: false */
+    ee.Geometry.MultiPoint(
+        [[9.693387854105584, 51.1270725307316],
+         [9.563948487485252, 51.54320614254728],
+         [9.732410021732694, 51.02977623334481]]),
+    burnedAreas = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    olson = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
+    olsonRegio = 
+    /* color: #43a9d6 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-10.710542278654, 72.77599056443283],
+          [-10.710542278654, 35.832642069065976],
+          [42.737944049471, 35.832642069065976],
+          [42.737944049471, 72.77599056443283]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+var FCA = require('users/fichtnej/modules:fcaUtils');
+var viz = FCA.getFCAviz();
+var indices = require('users/fichtnej/modules:IndexFunctions');
+
+  
+
+// Globale Variablen
+var year = 2020;
+var month = [7];
+var dates = ee.DateRange('2019-07-01', '2019-08-01');
+//Map.addLayer(ee.Image(1), {min:0, max:0.1})
+
+var export_hex = grid.filterBounds(exportGeo)
+Map.addLayer(export_hex, {color: "red"}, "eh")
+// Funktionen
+function getFCA(img){
+  
+  var image = ee.Image();
+  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
+                            'RE1': img.select(['B5']),
+                            'RE4': img.select(['B8A']),
+                            'SWIR': img.select(['B11']),
+                          }).rename('FCA');
+}
+
+
+
+// Burned Areas
+
+burnedAreas = burnedAreas.map(function(ft){
+  var year = ee.String(ft.get('FIREDATE')).slice(0, 4);
+  return ft.set('YEAR', year);
+}).filter(ee.Filter.eq('YEAR', '2018'))
+
+Map.addLayer(burnedAreas, {color: 'red'}, 'burn');
+
+
+var hYears = hansen.select('lossyear').neq(18)
+var noDamageMask = ee.Image(0).clip(burnedAreas).unmask(1).and(hYears);
+Map.addLayer(noDamageMask, {}, "nodmg")
+
+
+// Berechnen eines neuen Bildes
+
+function startCalc(baseMap){
+  print('Start');
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  // Karte Aktualisieren
+  baseMap.layers().reset();
+  baseMap.addLayer(ddImg, viz, 'Deciduous Forest');
+  baseMap.addLayer(egImg, viz, 'Evergreen Forest');
+  baseMap.addLayer(mxImg, viz, 'Mixed Forest');
+  baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
+  print(baseMap.layers())
+
+  
+  
+}
+
+function exportData(){
+  
+  hansen = hansen.select(['lossyear']);
+  var rangeMask = hansen.gt(15).and(hansen.lte(20));
+  hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
+  month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  year = 2023;
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  
+
+  
+  var countryFilter = ee.Filter.eq('country_na', 'Portugal')
+  // var exportGeo = LSIB.filter(countryFilter)//.geometry().simplify(10000)
+  print('year', year, 'month', month, 'dates', dates)
+  var tc = createTCimg();
+  var scl = createSCLimg();
+  //var ndviImg = createNDVIimg()
+  
+  Map.addLayer(tc/*.updateMask(vegMask.createCopernicusMask("Total"))*/, {}, 'TC')
+  //Map.addLayer(ndviImg, {min: -0.3, max: 1, palette: ["blue", "white", "brown", "green"]}, "NDVI")
+  Map.addLayer(scl, {min:1, max:11, palette: ["#ff0004", "#868686",	"#774b0a",	"#10d22c", 	"#ffff52", 	"#0000ff",	"#818181",	"#c0c0c0",	"#f1f1f1", 	"#bac5eb", 	"#52fff9"]}, "SCL");
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg]);
+  Map.addLayer(allImgs, viz)
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  var burnedImage = ee.Image(0).addBands(allImgs.clip(burnedAreas));
+  var notBurned = ee.Image(1).addBands(allImgs.updateMask(noDamageMask))
+  //Map.addLayer(burnedImage, viz, 'burnDamage')
+  //allImgs = hansen.addBands(allImgs.rename('FCA'))
+  Map.addLayer(allImgs, viz, "allimgs")
+  print('Export for:', month, year);
+  var s = notBurned.stratifiedSample({numPoints: 100000/*,classBand: 'lossyear'*/,region: exportGeo,scale: 20, tileScale: 4})
+  //print(s)
+  Map.addLayer(olson.filterBounds(olsonRegio), {}, "olsen")
+  //Export.table.toDrive(olson.filterBounds(olsonRegio))
+  /*
+  
+  */
+  Export.image.toDrive({image: allImgs, 
+    description: 'fca_test',
+    folder: '',
+    priority: ee.Number(200),
+    region: export_hex, 
+    scale: 20,
+    maxPixels : 100000000000,
+  });
+}
+
+// Erstellen des Beobachtungsbildes
+//jährlich/saisonal
+
+// Aktualisieren des Zeitraumes für Beobachtungsbild
+function updateDateRange(month){
+  var startDate = ee.Date.fromYMD(year, month, 1);
+  var endDate = startDate.advance(1, 'month');
+  var dr = ee.DateRange(startDate, endDate);
+  dates = dr;
+  
+}
+
+function createObsImage(){
+  
+  
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                    })
+                    .select(['B5', 'B8A', 'B11'])
+                    .mean();
+                    
+
+  return s2Data;
+}
+
+function createRefImage(imgCol, oneMonth){
+  
+  imgCol = ee.ImageCollection(imgCol);
+  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
+}
+
+
+// Vergleich Beobachtung Referenz
+
+function compareImages(ref, obs){
+  
+  //Einordnen der Beobachtung in Quantile
+  var comp = obs.gte(ref);
+  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+  //Normierung
+  rcomp = rcomp.subtract(9.5).divide(9.5);
+  //Indexberechnung
+  return getFCA(rcomp);
+  
+}
+
+
+
+function createFCAImage(type){
+  var retImg = month.map(function(oneMonth){
+    
+    updateDateRange(oneMonth);
+    var img = createObsImage();
+    var refImg = createRefImage(type, oneMonth);
+    var fcaImg = compareImages(refImg, img);
+    
+    return fcaImg;
+  });
+  
+  return ee.ImageCollection(retImg).mean();
+}
+
+
+function createTCimg(){
+  
+  var st = ee.Date.fromYMD(2018, 5, 1);
+  var end = ee.Date.fromYMD(2023, 9, 1)
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(st, end)
+                    .filter(ee.Filter.calendarRange(4,9, 'month'))
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',10))
+                    .map(cloudMask.S2CloudMask)
+                    /*
+                    .map(function(img){
+                      img = img.updateMask(img.select('SCL').eq(4))
+                      return img.updateMask(vegMask.createCopernicusMask("Total"))
+                    })
+                    */
+                    .select(['B4', 'B3', 'B2'])
+                    .mean()
+                    .multiply(1.3)
+                    .visualize({min:0,max:2600});
+                    
+
+  return s2Data;
+}
+
+function createSCLimg(){
+  
+  var st = ee.Date.fromYMD(2018, 8, 25);
+  var end = ee.Date.fromYMD(2018, 10, 25);
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate("2018-9-18", "2018-9-20")
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',45))
+                    //.map(cloudMask.S2CloudMask)
+                    .select(['SCL'])
+                    .max()
+                    
+                    
+
+  return s2Data;
+}
+
+function createNDVIimg(){
+  
+  var img = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED").filterDate("2020-06-01", "2020-08-01")
+                .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',60))
+                .map(cloudMask.S2CloudMask)
+                .median();
+                
+  img = indices.calcIndex(false, "NDVI", img);
+  
+  return img;
+}
+
+exportData()
+Map.addLayer(grid, {}, "a")
+//var damageArea = fritzi.filterBounds(exportGeo)
+//Map.addLayer(fritzi, {color:"Teal"})
+//Map.addLayer(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
+//Export.table.toDrive(ba.filter(ee.Filter.inList('id', ["13908", "14573", "14732", "13868", "14222", "14503", "14746", "15165", "14291"])))
+//Export.table.toDrive(damageArea)
+//

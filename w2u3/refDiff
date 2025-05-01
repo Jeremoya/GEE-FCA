@@ -1,0 +1,38 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
+    px = ee.Image("projects/ee-fichtnej/assets/6_PIXEL_Evergreen_100m"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+
+
+//diffrences between hex-references and pixelwise references
+var egImg = eg.filter(ee.Filter.eq('month', 6)).first();
+var diff = px.subtract(egImg).select(['B5']);
+var diffsum = diff.arrayReduce(ee.Reducer.sum(), [0]).divide(19).arrayGet(0);
+
+Map.addLayer(grid, {}, 'grid');
+Map.addLayer(px, {}, 'egPx');
+Map.addLayer(egImg, {}, 'egHex');
+
+Map.addLayer(diffsum, {min: -250, max: 250, palette: ['blue', 'white', 'red']}, 'diffsum');
+Map.addLayer(diffsum.abs(), {min: 0, max: 500}, 'diffsum-abs');
+
+var dr = ee.DateRange('2018-10-01', '2018-11-01')
+//truecolor images to compare with deviations
+var tc = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(4));
+                    })
+                    // .filterDate(dr)
+                    .filter(ee.Filter.calendarRange(6, 6, 'month'))
+                    .median()
+                    .updateMask(vegMask.createCopernicusMask('Evergreen'));
+                    
+Map.addLayer(tc.select(['B5']), {min: 1800, max: 4500, palette: ['blue', 'white', 'red']}, 'tc-IR')    
+Map.addLayer(tc.select(['B4','B3','B2']), {min: 0, max: 2000}, 'tc-RGB')    
+
+

@@ -1,0 +1,89 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var euro = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-24.801726678684073, 85.59602085970546],
+          [-24.801726678684073, -62.09857531435678],
+          [71.70218191824873, -62.09857531435678],
+          [71.70218191824873, 85.59602085970546]]], null, false),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var af = ['Africa'];
+var eu = ['Europe'];
+var na = ['North America'];
+var ca = ['Central America', 'Caribbean']
+var sa = ['South America']
+var aus = ['Australia', 'Oceania'];
+var rgn = ['S Atlantic', 'Indian Ocean', 'Antarctica']
+var wAsia = ['SW Asia', 'S Asia', 'Central Asia']
+var nAsia = ['N Asia']
+var eAsia = ['SE Asia', 'E Asia']
+
+var borderFilter = ee.Filter.inList('wld_rgn' , eu );
+var ROI = LSIB.filter(borderFilter)
+Map.addLayer(ROI, {}, 'ROI');
+
+
+
+var hexGrid = function(proj, diameter) {
+  // Distance from center to vertex
+  var size = ee.Number(diameter).divide(Math.sqrt(3)) 
+  
+  var coords = ee.Image.pixelCoordinates(proj)
+  var vals = {
+    // Switch x and y here to get flat top instead of pointy top hexagons.
+    x: coords.select("x"),
+    u: coords.select("x").divide(diameter),  // term 1
+    v: coords.select("y").divide(size),      // term 2
+    r: ee.Number(diameter).divide(2),
+  }
+  //i = xi + yi / 3
+  //xi = Aix + Biy | u - v | x/d - sqrt(3) * y/d
+  //yi = Cix + Diy | x / r
+  var i = ee.Image().expression("floor((floor(u - v) + floor(x / r))/3)", vals)
+  //j = xj + yj / 3
+  //xj = Ajx + Bjy | u + v | x/d + sqrt(3) * y/d
+  //yj = Cjx + Djy | v - u | sqrt(3) * y/d - x/d
+  var j = ee.Image().expression("floor((floor(u + v) + floor(v - u))/3)", vals)
+  
+  // Turn the hex coordinates into a single "ID" number.
+  // Map.addLayer(i, {min:-32, max: 31}, 'i')
+  // Map.addLayer(j, {min:-23, max: 22}, 'j')
+  //long + leftshift(32) -> 32 bit x und 32 bit y
+  var cells = i.add(j).add(i).rename("hexgrid");
+  // var cells = i.long().leftShift(32).add(j.long()).rename("hexgrid");
+  return cells
+}
+
+
+
+// Generate a hex grid and mask off cells that don't touch the region.
+var grid = hexGrid(ee.Projection('EPSG:5070'), 300000).cast({hexgrid: 'int'})
+
+
+// Map.addLayer(grid, {min: -30, max: 30, palette : ['purple', 'blue', 'green', 'yellow', 'orange', 'red']});
+var hexGrid = grid.addBands(grid).reduceToVectors({reducer : ee.Reducer.max(),
+  geometry: ROI.union().geometry(), 
+  scale: 100,
+  maxPixels	: 1515717163200
+  
+})
+
+var iFilter = ee.Filter.intersects({leftField: 'geo', rightValue : ROI.geometry()})
+hexGrid = hexGrid.map(function(ft){
+  var area = ft.area(1);
+  ft = ft.simplify(1000);
+  return ft.set('gr', area).buffer(200);
+}).filter(iFilter);
+print(hexGrid);
+Map.addLayer(hexGrid);
+// Uncomment to enable export
+//Export.table.toAsset(hexGrid, 'hexgrid export task', 'Hexgrid')
+
+

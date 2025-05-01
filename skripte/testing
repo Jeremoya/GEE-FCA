@@ -1,0 +1,101 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    eu = ee.FeatureCollection("projects/ee-fichtnej/assets/Grids/HexGridEU"),
+    fcaImg = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    eco = ee.FeatureCollection("projects/ee-fichtnej/assets/terrestrial_ecoregions_olson"),
+    nn = ee.Image("projects/ee-fichtnej/assets/percs/testing/6_Evergreen99"),
+    ba = ee.FeatureCollection("projects/ee-fichtnej/assets/modisbapoly"),
+    fritzi = ee.FeatureCollection("projects/ee-fichtnej/assets/f2"),
+    inland = ee.ImageCollection("GLCF/GLS_WATER"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[11.245071490121349, 53.57305208330489],
+          [11.245071490121349, 51.35416180516417],
+          [14.805713762068198, 51.35416180516417],
+          [14.805713762068198, 53.57305208330489]]], null, false),
+    geometry2 = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[29.20790027096159, 31.747928805486936],
+          [29.20790027096159, 28.351428778725293],
+          [33.32365344478972, 28.351428778725293],
+          [33.32365344478972, 31.747928805486936]]], null, false),
+    geometry3 = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-4.293045603312713, 56.41858322038666],
+          [-4.293045603312713, 45.07949748082864],
+          [13.021407521687246, 45.07949748082864],
+          [13.021407521687246, 56.41858322038666]]], null, false),
+    obs = ee.FeatureCollection("projects/ee-fichtnej/assets/ob_polys"),
+    obsi = ee.Image("projects/ee-fichtnej/assets/obsImage-0000021504-0000000000"),
+    hex = ee.ImageCollection("projects/ee-fichtnej/assets/hexRef"),
+    imageCollection = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    get_rect = ee.FeatureCollection("projects/ee-fichtnej/assets/rect_grid_eu");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var bands = ee.List([
+  "sdA",
+  "meanA",
+  "medianA",
+  "minH",
+  "sdH",
+  "maxH",
+  "bdckngs",
+  "minA",
+  "meanH",
+  "medianH",
+  "maxA"
+])
+// print(bands)
+
+Map.addLayer(eu)
+Map.addLayer(dd)
+
+
+
+
+// obs = obs.map(function(el){
+//   return el.transform(ee.Projection("EPSG:32632"), 10)
+// })
+// print(obs.first().geometry().projection())
+// // Map.addLayer(obs)
+
+// print(obs.bounds(100000))
+
+// var ic = ee.ImageCollection(bands.map(function(el){
+//   return obs.reduceToImage([el], ee.Reducer.first())
+// }));
+// var obsImage = ic.toBands().rename(bands).cast(ee.Dictionary({minA: "double", minH: "double", maxA:"double", maxH:"double", medianA:"double", medianH:"double"}));
+// Map.addLayer(obsImage)
+// obsImage = obsImage.clip(geometry)
+// Export.image.toDrive({image: obsImage, description: "obsImage", scale: 20, folder:"obsImage", crs: "EPSG:32632", maxPixels: 15578530500})
+
+// var falkenbergData = ba.filter(ee.Filter.eq("id", "206858")).first()
+// print("area", falkenbergData)
+
+Export.table.toDrive(get_rect)

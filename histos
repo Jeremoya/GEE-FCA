@@ -1,0 +1,42 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[10.164841360392316, 51.94393233132915],
+          [10.164841360392316, 51.70967810430595],
+          [10.538376516642316, 51.70967810430595],
+          [10.538376516642316, 51.94393233132915]]], null, false),
+    s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+
+var img = s2Data.filterBounds(geometry)
+                .filterDate("2020-06-01", "2020-08-01")
+                .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                .map(cloudMask.S2CloudMask)
+                .median()
+                .updateMask(vegMask.createCopernicusMask("Total"))
+                .select(["B5", "B8A", "B11"]);
+                
+img = img.updateMask(img.gt(300).and(img.lt(1640)))                
+Map.addLayer(img)
+
+var chart = ui.Chart.image.histogram({image: img.select("B5"), region: geometry, scale: 20, maxBuckets:128, maxPixels: 10000000000})
+print(chart)                
+chart = ui.Chart.image.histogram({image: img.select("B8A"), region: geometry, scale: 40, maxBuckets:128, maxPixels: 10000000000})
+print(chart)                
+chart = ui.Chart.image.histogram({image: img.select("B11"), region: geometry, scale: 40, maxBuckets:128, maxPixels: 10000000000})
+print(chart)             
+
+var percs = img.reduceRegion(ee.Reducer.percentile(ee.List.sequence(5, 95, 5)), geometry, 20)
+print(percs)
+print(percs.values().map(function(x){ return ee.Number(x).round()}))
+                
+var s = ee.Image(0).addBands(img.select("B5")).stratifiedSample({numPoints: 25000, region: geometry, scale: 20})
+//Export.table.toDrive(s)

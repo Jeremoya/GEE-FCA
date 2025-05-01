@@ -1,0 +1,199 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var aoi1 = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[23.645476277373046, 45.27204716831395],
+          [23.645476277373046, 45.18875133788677],
+          [23.715342457792968, 45.18875133788677],
+          [23.715342457792968, 45.27204716831395]]], null, false),
+    geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[8.464088015503458, 58.87070606583288],
+          [1.8283458280034592, 45.690037563806676],
+          [31.203040652222207, 46.512732087122615],
+          [29.577064089722207, 58.802483554149624]]], null, false),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    tb = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[12.876688313089785, 52.06701492145414],
+          [12.876688313089785, 52.011261895989826],
+          [12.972132038675722, 52.011261895989826],
+          [12.972132038675722, 52.06701492145414]]], null, false),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var classNames = ['1', '2', '3', '4', '5', '6', '7', '8'];
+var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600'];
+
+
+// Erstellen eines Legendeneintrages
+var makeLegendRow = function(name, color, mobileStyle) {
+  // Create the label that is actually the colored box.
+  var colorBox = ui.Label({
+    style: {
+      backgroundColor: color,
+      // Use padding to give the box height and width.
+      padding: mobileStyle ? '10px' : '8px',
+      margin: '0 0 4px 0',
+      border: 'solid 0.5px',
+    }
+  });
+
+  // Create the label filled with the description text.
+  var description = ui.Label({
+    value: name,
+    style: {margin: '0 0 4px 6px', fontSize: mobileStyle ? '16px' : '12px'},
+  });
+
+  return ui.Panel({
+    widgets: [colorBox, description],
+    layout: ui.Panel.Layout.Flow('horizontal')
+  });
+};
+
+
+exports.createLegend = function(classes, colorPalette){
+  
+  var legend = ui.Panel({style: {width: 'auto', position : 'top-left'}});
+  var heading = ui.Label("FCA-Index values")
+  legend.add(heading)
+  for (var i = 0; i < classNames.length; i++) {
+    legend.add(makeLegendRow(classes[i], colorPalette[i], false));
+  }
+  return legend;
+}
+
+
+
+// Funktion zum Anzeigen von zusätzlichen Informationen
+
+exports.showMoreInformation = function(){
+  alert('Der Waldzustandsmonitor ist ein Projekt des Helmholtz Zentrums für Umweltforschung in Leipzig. ' + 
+  'Die Arbeitsgruppe Remote Sensing hat dabei unter anderem eine Methode entwickelt, welche aus Reflektionen ' +
+  'im Infraroten Wellenlängenbereich Rückschlüsse auf den Waldzustand getroffen werden können. www.google.de')
+  
+}
+
+
+
+
+exports.createMethodsPanel = function(){
+  var methodsPanel = ui.Panel({style : {position: "top-center", width: "100%", height: "100%"}})
+  var climateLabel = ui.Label({
+    value: "Forest damage due to increased stress",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var climateText = ui.Label({
+    value: "Due to a variety of causes, including drought, heat and pest infestation, forests have been exposed to increased stress, particularly in recent years, and are suffering increased losses as a result. "+
+            "A clear increase in the number and intensity of forest fires in particular can be observed right up to the global level."+ 
+            "As certain types of forest damage are also linked to climate change, it can be assumed that this trend will continue in the context of global warming."+
+            "The monitoring of forests to determine their current condition and identify endangered areas is therefore becoming increasingly important. ",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
+  var aggregationLabel = ui.Label({
+    value: "Data aggregation and filtering",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var aggregationText = ui.Label({
+    value: "At the beginning, a rough pre-filtering is carried out using the geodata from European borders in order to obtain only images with pixels within Europe. "+
+    "The ee.Filter.calenderRange is then used to group the data by month. By specifying month as the third argument, it is possible to filter for individual or multiple months. "+
+    "As later observations are to be classified in data from the same month, each month is filtered separately here. "+
+    "Then, for each month, the cloudy pixels are masked with the information from the QA60 band and, using the Sentinel2 scene classification, all pixels not classified as vegetation are also masked. " +
+    "Each forest type is then masked separately using Copernicus Global Land Cover. "+
+    "The result is a collection of images for each forest type that were all taken in the same month, but not necessarily in the same year, in which cloudy and non-vegetation pixels are masked out. "+
+    "A median reducer is then applied to each of these ImageCollections to combine them into a single image with representative values for further processing.",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
+  var referenceLabel = ui.Label({
+    value: "Reference data derivation",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var referenceText = ui.Label({
+    value: "The reference data is collected using a hexagonal grid in order to later enable regional reference of observation pixels to the references. "+
+    "For this purpose, the reducer ee.Image.reduceRegions in combination with the ee.Reducer.percentiles is used in the implementation on each of the images created using the method described above. "+
+    "In addition to the reducer, a geometry collection - in this case the hexagonal grid - is also passed as an argument. "+
+    "For each element of the collection - in this case the grid cells - the specified quantiles are then determined for all pixels within the geometry. "+
+    "After selecting the relevant bands B5, B8A and B11, the quantiles determined in this way are then saved as an image in the form of arrays "+
+    "in each vegetation pixel.",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
+  var ForestConditionLabel = ui.Label({
+    value: "Forest Condition Anomaly Index",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var FCAText = ui.Label({
+    value: "As a result of the previous step, we now have an array with quantile values in each vegetation pixel. "+
+            "To do this, we now take a specific observation image whose pixel values are assigned to the quantiles. "+
+            "Depending on the quantile into which the pixel value is placed, we can estimate whether there is an upward or downward deviation compared to the reference. "+
+            "If this is done for several spectral bands, these deviations can be used to make statements about the condition of the forest in this pixel.",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
+  var ValidationLabel = ui.Label({
+    value: "Data Validation",
+    style : {fontSize : "35px", fontWeight: "bold", margin : "30px 0px 0px 15px"}
+  })
+  
+  var ValidationText = ui.Label({
+    value: "Various forest monitoring products were used for the validation."+
+            "The central product are the Global Forest Change maps by Hansen et al."+
+            "The FCA values of pixels in which forest loss occurred were compared with those without forest loss."+
+            "Pixels that were degraded in the 5 years prior to the creation of an FCA image were considered."+
+            "A precision of over 73% and a recall of over 74% were achieved for these pixels."+
+            "Possible sources of error are noise in the data, new growth of vegetation and incorrect classification of pixels without vegetation.",
+    style : {fontSize : "17px", width: "70%", margin :"15px"}
+    
+    }
+
+  );
+  
+  methodsPanel.add(climateLabel)
+  methodsPanel.add(climateText)
+  methodsPanel.add(aggregationLabel)
+  methodsPanel.add(aggregationText)
+  methodsPanel.add(referenceLabel)
+  methodsPanel.add(referenceText)
+  methodsPanel.add(ForestConditionLabel)
+  methodsPanel.add(FCAText)
+  methodsPanel.add(ValidationLabel)
+  methodsPanel.add(ValidationText)
+  
+  var closeButton = ui.Button({
+    label: "Close",
+    onClick : function(){
+      Map.remove(allPanel)
+    },
+    style : {position : "bottom-center"}
+  })
+  var allPanel = ui.Panel({layout: "absolute", style: {width: "100%", height : "100%"}})
+  allPanel.add(methodsPanel)
+  allPanel.add(closeButton)
+  return(allPanel)
+}

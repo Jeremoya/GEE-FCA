@@ -1,0 +1,61 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var bounds = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.962441963820137, 52.57653015127535],
+          [9.962441963820137, 51.179528881189],
+          [13.752725166945137, 51.179528881189],
+          [13.752725166945137, 52.57653015127535]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var constant = ee.Image([[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6]]);
+print(constant);
+var arrayConstant = constant.toArray();
+print(arrayConstant);
+
+
+function maskS2clouds(image) {
+  var qa = image.select('QA60');
+
+  // Bits 10 and 11 are clouds and cirrus, respectively.
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+
+  return image.updateMask(mask).divide(10000);
+}
+
+function toPercentile(image1, image2){
+  
+  
+}
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+                  .filterDate('2020-01-01', '2020-01-30')
+                  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                  .map(maskS2clouds)
+                  .select(['B4', 'B3', 'B2'])
+                  .filterBounds(bounds)
+                  .mean();
+
+var visualization = {
+  min: 0,
+  max: 2,
+};
+print("dataset\n", dataset);
+var ones = ee.Image(2.6);
+var comp = arrayConstant.lte(dataset);
+print(comp);
+var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]);
+print(rcomp);
+Map.addLayer(rcomp, visualization, 'RGB');
+
+

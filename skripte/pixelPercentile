@@ -1,0 +1,94 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var grid = ee.FeatureCollection("projects/ee-fichtnej/assets/Qrfts"),
+    rekt = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.88694502953952, 52.94019427842104],
+          [9.88694502953952, 51.752366910321044],
+          [12.82029463891452, 51.752366910321044],
+          [12.82029463891452, 52.94019427842104]]], null, false),
+    gerGrid = ee.FeatureCollection("projects/ee-fichtnej/assets/HexGridGer");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+
+//Satellite Data
+var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                     return img.updateMask(img.select(['SCL']).eq(4));
+                     })
+                    .select(['B5', 'B8A', 'B11']);
+
+
+//Global variables
+
+var circleKernel = ee.Kernel.circle(100);
+
+
+
+
+//create percentiles for 5 and for 10 to 95 percent, so that the order does not get messed up
+//(in dictionaries p5 is located between p45 and p50 because of the alphabetical order of keys)
+var outputnames = ee.List(['p05', 'p10', 'p15', 'p20', 'p25', 'p30', 'p35', 'p40', 'p45', 'p50', 
+                            'p55', 'p60', 'p65', 'p70', 'p75', 'p80', 'p85', 'p90', 'p95']);
+var bands = ee.List(['B5_', 'B8A_', 'B11_']);
+var bandnames = bands.map(function(el){
+     return outputnames.map(function(innerel){
+       return ee.String(el).cat(ee.String(innerel));
+     });
+});
+
+//Functions
+
+var createImage = function(type, month){
+  
+  var img = s2Data.filter(ee.Filter.calendarRange(month, month, 'month'))
+                  .filterBounds(grid)
+                  .median()
+                  .updateMask(vegMask.createCopernicusMask(type));
+  
+  return img;
+};
+
+
+var createPercentiles = function(type, month){
+  
+  var img = ee.Image(createImage(type, month));
+  
+  var perc_reducer = ee.Reducer.percentile(ee.List.sequence(5, 95, 5), outputnames);
+
+  var redImg = img.reduceNeighborhood(perc_reducer, circleKernel);
+  var allImg = bandnames.map(function(el){
+    return redImg.select(el).toArray(0);
+  });
+  redImg = ee.ImageCollection(allImg).toBands().rename(['B5', 'B8A', 'B11']);
+  return redImg;
+  
+};
+  
+for (var m = 1; m < 13; m++){
+  
+  var type = 'Evergreen';
+  var img = createPercentiles(type, m);
+  img = img.set({'month' : m});
+  img = img.set({'type' : type});
+  // Export.image.toAsset({image: img, description: m + '_' + type + '_export_px1km100m', assetId : 'EG_PX/' + m + '_' + type, scale: 100, maxPixels: 9000000000000});
+  
+  
+}
+
+//Map für jeden Monat
+var month = 6;
+// print(img);
+// Map.addLayer(img);
+
+                
+                  

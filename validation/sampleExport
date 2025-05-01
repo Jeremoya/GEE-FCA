@@ -1,0 +1,71 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
+    portugal = ee.Image("projects/ee-fichtnej/assets/portugal_2020_fca"),
+    romania = ee.Image("projects/ee-fichtnej/assets/romania_2020_fca"),
+    germany = ee.Image("projects/ee-fichtnej/assets/germany_2020_fca"),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    sweden = ee.Image("projects/ee-fichtnej/assets/sweden_2020_fca"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[9.599256254911385, 52.202198589077504],
+          [9.599256254911385, 51.20135433995263],
+          [11.598767973661385, 51.20135433995263],
+          [11.598767973661385, 52.202198589077504]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+// Variables
+var viz = {min: -0.75, max: 0.5, palette: ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#ffff00', '#66ff66', '#00cc00', '#006600']};
+var cname = 'Germany';
+var countryFilter = ee.Filter.eq('country_na', cname);
+var exportGeo = LSIB.filter(countryFilter).geometry().simplify(5000);
+
+
+//Forest Change Data
+
+hansen = hansen.select(['lossyear']);
+var rangeMask = hansen.gt(15).and(hansen.lte(20));
+hansen = hansen.updateMask(rangeMask).gt(0).unmask(0);
+Map.addLayer(hansen);
+
+
+//FCA Data
+
+//Random Image for sampling
+var rng = ee.Image.random().setDefaultProjection('EPSG:4326', null, 10).reduceResolution(ee.Reducer.first(), true);
+Map.addLayer(rng, {}, 'rng')
+Map.addLayer(germany, viz)
+
+var studyImage = germany;
+var allTogether = hansen.addBands(studyImage)
+Map.addLayer(allTogether, {}, 'all')
+var s = allTogether.stratifiedSample(200, 'lossyear', geometry, 10)
+print(s)
+Export.table.toDrive(s)
+
+/*
+print(studyImage.projection())
+var studyImageLoss = studyImage.updateMask(hansen);
+var studyImageNoLoss = studyImage.updateMask(hansen.not());
+Map.addLayer(studyImage, viz, 'noLoss?')
+var exportImageLoss = studyImageLoss.updateMask(rng.gt(0.999)).clip(exportGeo);
+var exportImageNoLoss = studyImageNoLoss.updateMask(rng.gt(0.9999)).clip(exportGeo);
+Map.addLayer(exportImageLoss, viz);
+*/
+var time = new Date(Date.now())
+time = time.toISOString();
+
+//Export.image.toDrive({image: exportImageLoss, description: time + '_fca_loss_' + cname, folder: 'index_eval', fileNamePrefix: time + '_fca_loss_' + cname, scale: 10, maxPixels: 100000000000, region: exportGeo})
+// Export.image.toDrive({image: exportImageNoLoss, description: time + '_fca_noLoss_' + cname, folder: 'index_eval', fileNamePrefix: time + '_fca_noLoss_' + cname, scale: 10, maxPixels: 100000000000, region: exportGeo})
+
+//Pixelcount
+//var c = exportImageLoss.reduceRegion({reducer: ee.Reducer.count(), scale: 10, maxPixels : 10000000000});
+// print(c);
+
+

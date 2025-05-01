@@ -1,0 +1,100 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var fcaImg = ee.Image("projects/ee-fichtnej/assets/testConf"),
+    s2data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED"),
+    ger = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[4.609971762973628, 55.201055506038],
+          [4.609971762973628, 45.94761916798086],
+          [17.31016707547363, 45.94761916798086],
+          [17.31016707547363, 55.201055506038]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(fcaImg, {min: -0.75, max : 0.5, palette : ['magenta', 'yellow', 'green']})
+// var sample = fcaImg.sample({scale: 10, numPixels: 4000})
+// print(sample)
+var old = null;
+
+var cm = require('users/fichtnej/modules:CloudMasks');
+
+function createHisto(coords){
+  coords = ee.Dictionary(coords)
+  var center = ee.Geometry.Point(coords.values().reverse());
+  Map.layers().remove(old)
+  var rg = center.buffer(2000);
+  Map.centerObject(rg)
+  print(rg)
+  Map.addLayer(rg)
+  old = Map.layers().get(Map.layers().length() - 1)
+  var chart =
+    ui.Chart.image.histogram({image: fcaImg, scale : 20, maxPixels: 100000000, region: rg
+  });
+  print(chart);
+}
+
+function createTimeSeries(coords){
+  coords = ee.Dictionary(coords)
+  var center = ee.Geometry.Point(coords.values().reverse());
+  var x = ui.Chart.image.doySeriesByYear(ttt.select('NDVI'), 'NDVI', center, ee.Reducer.mean(), 20)
+  print('Chart for ', center)
+  print(x)
+}
+function addMonthProp(img){
+    var month = ee.Date(img.get('system:time_start')).getRelative('month', 'year');
+    return img.set('month', month);
+}
+
+function createMonthlyTimeSeries(coords){
+  coords = ee.Dictionary(coords)
+  var center = ee.Geometry.Point(coords.values().reverse());
+  var x = ui.Chart.image.series(ttt.select('NDVI'), center, ee.Reducer.median(), 20, 'system:time_start')
+  print('Chart for ', center)
+  print(x)
+}
+// Map.onClick(createHisto)
+Map.onClick(createMonthlyTimeSeries)
+Map.onClick(createHisto)
+
+var col;
+
+function groupImages(){
+  col = s2data.map(function(img) {
+    var month = ee.Date(img.get('system:time_start')).getRelative('month', 'year');
+    var year = ee.Date(img.get('system:time_start')).get('year');
+    var my = ee.String(month).cat(ee.String('_')).cat(ee.String(year));
+    return img.set('month', month).set('year', year).set('my', my);
+  });
+}
+
+function calcNDVI(image){
+  var red = image.select('B4');
+  var nir = image.select('B8');
+  return image.addBands(ee.Image(nir.subtract(red)).divide(nir.add(red)).rename('NDVI'));
+  /*
+  return image.expression('(NIR - RED) / (NIR + RED)',
+                             {'RED' : red,'NIR' : nir})
+                             .rename('NDVI');*/
+}
+
+
+
+var ttt = s2data.filterDate('2018-01-01','2018-12-31')
+                .filterBounds(ger)
+                .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 5))
+                .map(cm.S2CloudMask)
+                .map(addMonthProp)
+                .map(calcNDVI);
+Map.addLayer(ttt.median().select('NDVI'), {min: -0.1, max: 0.9, palette: ['blue', 'brown', 'white', 'green']})
+
+print(ttt.first())
+
+var mJoin = ee.Join.saveAll('same_month').apply({
+  primary : ttt.distinct('month'),
+  secondary : ttt,
+  condition: ee.Filter.equals({leftField: 'month', rightField: 'month'})
+})

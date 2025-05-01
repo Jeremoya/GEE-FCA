@@ -1,0 +1,74 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageCollection = ee.ImageCollection("COPERNICUS/S5P/NRTI/L3_CLOUD");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Gauge
+
+var dataset = ee.ImageCollection('NOAA/CPC/Precipitation')
+                  .filter(ee.Filter.date('2018-09-01', '2019-01-01'));
+var precipitation = dataset.select('precipitation');
+var precipitationVis = {
+  min: 0,
+  max: 150,
+  palette: ['#ADD8E6', '#008000', '#FFFF00', '#FFA500', '#FF0000', '#800080'],
+};
+Map.setCenter(-68.36, -6.73, 3);
+Map.addLayer(precipitation, precipitationVis, 'NOAA CPC Precipitation');
+
+//CRU gruond based
+var dataset = ee.ImageCollection('IDAHO_EPSCOR/TERRACLIMATE')
+                  .filter(ee.Filter.date('2018-09-01', '2018-10-01'));
+var maximumTemperature = dataset.select('pr');
+var maximumTemperatureVis = {
+  min: 0,
+  max: 700,
+  palette: [
+    '1a3678', '2955bc', '5699ff', '8dbae9', 'acd1ff', 'caebff', 'e5f9ff',
+    'fdffb4', 'ffe6a2', 'ffc969', 'ffa12d', 'ff7c1f', 'ca531a', 'ff0000',
+    'ab0000'
+  ],
+};
+Map.setCenter(71.72, 52.48, 3);
+Map.addLayer(maximumTemperature, maximumTemperatureVis, 'Pr accum CRU');
+
+
+//TRMM
+
+var dataset = ee.ImageCollection('TRMM/3B42')
+                  .filter(ee.Filter.date('2018-09-01', '2018-10-01'));
+var precipitation =
+    dataset.select(['precipitation', 'HQprecipitation', 'IRprecipitation']);
+var precipitationVis = {
+  min: 0,
+  max: 12,
+  gamma: 5,
+};
+Map.setCenter(-79.98, 23.32, 4);
+Map.addLayer(precipitation, precipitationVis, 'Precipitation');
+
+//sentinel 5
+
+var collection = ee.ImageCollection('COPERNICUS/S5P/NRTI/L3_CLOUD')
+  .select('cloud_fraction')
+  .filterDate('2019-06-01', '2019-06-02');
+
+var band_viz = {
+  min: 0,
+  max: 0.95,
+  palette: ['black', 'blue', 'purple', 'cyan', 'green', 'yellow', 'red']
+};
+
+Map.addLayer(collection.mean(), band_viz, 'S5P Cloud');
+Map.setCenter(-58.14, -10.47, 2);
+
+//persiann
+
+var dataset = ee.ImageCollection('NOAA/PERSIANN-CDR')
+                  .filter(ee.Filter.date('2019-05-31', '2019-06-01'));
+var precipitation = dataset.select('precipitation');
+var precipitationVis = {
+  min: 0.0,
+  max: 50.0,
+  palette: ['3907ff', '03fff3', '28ff25', 'fbff09', 'ff1105'],
+};
+Map.setCenter(113.03, 3.34, 3);
+Map.addLayer(precipitation, precipitationVis, 'Persiann');

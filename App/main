@@ -1,0 +1,406 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var aoi1 = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[23.645476277373046, 45.27204716831395],
+          [23.645476277373046, 45.18875133788677],
+          [23.715342457792968, 45.18875133788677],
+          [23.715342457792968, 45.27204716831395]]], null, false),
+    geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[8.464088015503458, 58.87070606583288],
+          [1.8283458280034592, 45.690037563806676],
+          [31.203040652222207, 46.512732087122615],
+          [29.577064089722207, 58.802483554149624]]], null, false),
+    LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    tb = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[12.876688313089785, 52.06701492145414],
+          [12.876688313089785, 52.011261895989826],
+          [12.972132038675722, 52.011261895989826],
+          [12.972132038675722, 52.06701492145414]]], null, false),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+var FCA = require('users/fichtnej/modules:fcaUtils');
+var AOIs = require('users/fichtnej/BA:App/AOIs');
+var utils = require("users/fichtnej/BA:App/ui_utils")
+var viz = FCA.getFCAviz();
+var aoi = ee.Dictionary(AOIs.getAOI('Falkenberg'));
+var normalMap = Map;
+var mPanel = utils.createMethodsPanel();
+
+
+
+// Globale Variablen
+var vert = ui.Panel.Layout.Flow('vertical');
+var hor = ui.Panel.Layout.Flow('horizontal');
+var classNames = ['<=-0.75 (critical)', '-0.55 to -0.75', '-0.35 to -0.55', '-0.15 to -0.35', '0.1 to -0.15', '0.3 to 0.1', '0.5 to 0.3', '>= 0.5 (good)'].reverse();//{min: -0.75, max: 0.5} ;
+var palette = ['#660066', '#9900cc', '#cc00ff', '#ff00ff', '#fee818', '#66ff66', '#00cc00', '#006600'].reverse();
+var year = 2019;
+var month = [7];
+var dates = ee.DateRange('2019-07-01', '2019-08-01');
+
+
+// Funktionen
+
+function getFCA(img){
+  
+  var image = ee.Image();
+  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
+                            'RE1': img.select(['B5']),
+                            'RE4': img.select(['B8A']),
+                            'SWIR': img.select(['B11']),
+                          }).rename('FCA');
+}
+
+// Anpassung an Bildschirmgröße
+function configLayout(deviceInfo) {
+  
+  if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
+    
+  } else {
+    
+  }
+   
+}
+
+
+// Berechnen eines neuen Bildes
+
+function startCalc(baseMap){
+  print('Start');
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  // Karte Aktualisieren
+  baseMap.layers().reset();
+  baseMap.addLayer(ddImg, viz, 'Deciduous Forest');
+  baseMap.addLayer(egImg, viz, 'Evergreen Forest');
+  baseMap.addLayer(mxImg, viz, 'Mixed Forest');
+  baseMap.addLayer(ovImg, viz, 'Other Vegetation', false);
+  print(baseMap.layers())
+
+  
+  
+}
+
+
+// Erstellen des Beobachtungsbildes
+//jährlich/saisonal
+
+// Aktualisieren des Zeitraumes für Beobachtungsbild
+function updateDateRange(month){
+  var startDate = ee.Date.fromYMD(year, month, 1);
+  var endDate = startDate.advance(1, 'month');
+  var dr = ee.DateRange(startDate, endDate);
+  dates = dr;
+  
+}
+
+function createObsImage(){
+  
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',60))
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                      return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                    })
+                    .select(['B5', 'B8A', 'B11'])
+                    .mean();
+                    
+
+  return s2Data;
+}
+
+function createRefImage(imgCol, oneMonth){
+  
+  imgCol = ee.ImageCollection(imgCol);
+  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
+}
+
+
+// Vergleich Beobachtung Referenz
+
+function compareImages(ref, obs){
+  
+  //Einordnen der Beobachtung in Quantile
+  var comp = obs.gte(ref);
+  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+  //Normierung
+  rcomp = rcomp.subtract(9.5).divide(9.5);
+  //Indexberechnung
+  return getFCA(rcomp);
+  
+}
+
+
+
+function createFCAImage(type){
+  var retImg = month.map(function(oneMonth){
+    
+    updateDateRange(oneMonth);
+    var img = createObsImage();
+    var refImg = createRefImage(type, oneMonth);
+    var fcaImg = compareImages(refImg, img);
+    
+    return fcaImg;
+  });
+  
+  return ee.ImageCollection(retImg).mean();
+}
+
+// Switch to normal Mode
+
+function normalMode(){
+  
+  ui.root.widgets().reset([normalMap]);
+  Map.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
+  normalMap.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
+  layerPanel.remove(checkBA)
+  layerPanel.add(layerInformation)
+  m1.remove(layerPanel)
+  Map.add(layerPanel)
+
+}
+
+//Switch to example Mode
+
+function exampleMode(){
+  
+  ui.root.clear()
+  print("aoi", ee.Geometry(aoi.get('geo')))
+  m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  ui.root.widgets().reset([sp]);
+  month = [4,5];
+  year = aoi.get('start');
+  startCalc(m1);
+  m1.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  year = aoi.get('compareYear');
+  startCalc(m2);
+  m2.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  layerPanel.add(checkBA)
+  layerPanel.remove(layerInformation)
+  Map.remove(layerPanel)
+  m1.add(layerPanel)
+  
+}
+
+function reloadExample(newAOI){
+  aoi = ee.Dictionary(AOIs.getAOI(newAOI));
+  m1.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  m2.centerObject(ee.Geometry(aoi.get('geo')), 12);
+  year = aoi.get('start');
+  startCalc(m1);
+  m1.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  year = aoi.get('compareYear');
+  startCalc(m2);
+  m2.addLayer(ee.Geometry(aoi.get('geo')), {color: "red", opacity : 0.4}, "Burned Area (Copernicus EMS)")
+  //exampleMode();
+  //return 1;
+}
+
+    //////////////////////////////////
+    //  GUI                         //
+    //////////////////////////////////
+    
+var inputPanel = ui.Panel({style: {width: '300px', position: 'top-center'}});
+var legend = utils.createLegend(classNames, palette);
+var infobox = ui.Panel({style: {width: '250px', height: '80%', maxHeight: '700px', position : 'bottom-right'}});
+var infolabel = ui.Label({value: 'Project Information'});
+var infotext = ui.Label({value: "Welcome to the GEE Forest Condition Anomaly Application!\n" +
+                                "Here you will find satellite-based information on the state of the forests in Europe "+
+                                "for the years 2017 to 2023. "+
+                                "The images are created using a simplified Approach derived from the UFZ Forest Condition Monitor (Lange et al.). "+
+                                "At the top of the screen you can select the observation period and start the calculations. "+
+                                "On the left hand side you will find some info on how to interpret the colors and the option "+
+                                "to turn image layers on or off. " + 
+                                "If you would like to learn more about the methods and how to use the product or want to look at some examples, that show how certain disturbances " +
+                                "affect the forest condition anomaly index, use the buttons down below.",
+                  style : {position : 'bottom-left', stretch :'vertical'}
+});
+
+var ufzlabel = ui.Label({
+  value: "Link to the UFZ Monitor",
+  targetUrl : "https://www.ufz.de/index.php?en=48150"
+})
+var moreInfoButton = ui.Button({
+  label: 'Methods & more Info' ,
+  //style: {position: 'bottom-right'},
+  onClick: function(){Map.add(mPanel)} 
+});
+
+//layer checkboxes and more info button
+var layerPanel = ui.Panel({style : {position : 'bottom-left'}})
+var layerHeading = ui.Label({value: "Forest Types", style : {fontSize:"20px"}})
+var checkDD = ui.Checkbox('Deciduous', true, function(val){Map.layers().get(0).setShown(val); m1.layers().get(0).setShown(val); m2.layers().get(0).setShown(val)});
+var checkEG = ui.Checkbox('Evergreen', true, function(val){Map.layers().get(1).setShown(val); m1.layers().get(1).setShown(val); m2.layers().get(1).setShown(val)});
+var checkMX = ui.Checkbox('Mixed Forest', true, function(val){Map.layers().get(2).setShown(val); m1.layers().get(2).setShown(val); m2.layers().get(2).setShown(val)});
+var checkOV = ui.Checkbox('Other Vegetation', false, function(val){Map.layers().get(3).setShown(val); m1.layers().get(3).setShown(val); m2.layers().get(3).setShown(val)});
+var checkBA = ui.Checkbox('EMS Burned Areas', true, function(val){m1.layers().get(4).setShown(val); m2.layers().get(4).setShown(val)});
+var layerInformation = ui.Button({
+  label : 'i',
+  style : {stretch: 'horizontal'},
+  onClick : function(){
+    Map.remove(layerPanel)
+    Map.add(layerInfoPanel)
+  },
+});
+
+//more information on the layers and close button
+var layerInfoPanel = ui.Panel({style : {position : 'bottom-left', width : "30%"}})
+var layerInfoText = ui.Label({value: "Here you can switch on or off the different layers. " +
+                                "Each layer corresponds to a specific forest type according to "+
+                                "the Copernicus Global Landcover Maps. " +
+                                "The \"Other vegetation\" level should be viewed with caution, "+
+                                "as very different types of vegetation are compared to create it. " +
+                                "More Information on how the images are created can be found under more information->"+
+                                "methods on the right hand side",
+                  style : {position : 'bottom-left', stretch :'vertical'}
+  
+  }
+)
+var layerCloseButton = ui.Button({
+  label: "Close",
+  onClick: function(){
+    Map.remove(layerInfoPanel)
+    Map.add(layerPanel)
+  }
+})
+
+var years = ee.List.sequence(2017, 2023).map(function(year) {
+  return {label: ee.Number(year).format('%.0f'), value: year };
+});
+
+var yearSelect = ui.Select({
+  placeholder : '2019',
+  items : years.getInfo(),
+  onChange: function(value){
+    
+    year = value;
+    
+  }
+});
+
+var months = {May: [5], Jun: [6], Jul: [7], Aug: [8], Sep: [9], Oct: [10],
+  Spring: [5,6], Summer: [7,8], Autumn: [9,10], Yearly: [1,2,3,4,5,6,7,8,9,10,11,12]};
+
+var monthSelect = ui.Select({
+  placeholder : 'Jul',
+  items : Object.keys(months),
+  onChange: function(key){
+    month = months[key];
+    }
+});
+
+
+var calcButton = ui.Button({
+  label: 'Calculate FCA',
+  style: {stretch: 'horizontal'},
+  onClick: function() {startCalc(Map)}
+});
+
+
+var exButton = ui.Button({
+  label: 'Example Maps',
+  onClick: exampleMode
+});
+
+var homeButton = ui.Button({
+  label: 'Back to normal mode',
+  style : {position : 'top-left'},
+  onClick: normalMode
+});
+
+var aoiList = ['Treuenbrietzen', 'Falkenberg', 'Luebtheen', 'Hrensko', 'Fichtenwalde'/*, "Ljusdal"*/];
+
+var exampleMapSelect = ui.Select({items: aoiList,
+  placeholder:'Falkenberg',
+  value:'Falkenberg',
+  style:{position: 'middle-right'},
+  onChange: reloadExample
+});
+
+var closeButton = ui.Button({
+  label: "Close",
+  onClick: function(){
+    Map.remove(infobox)
+    Map.add(openInfoBox)
+  }
+})
+
+var openInfoBox = ui.Button({
+  label : "more Information",
+  onClick : function(){
+    Map.add(infobox)
+    Map.remove(openInfoBox)
+  },
+  style: {position: "bottom-right"}
+})
+
+inputPanel = inputPanel.setLayout(hor);
+inputPanel.add(yearSelect);
+inputPanel.add(monthSelect);
+inputPanel.add(calcButton);
+
+infobox.add(infolabel);
+infobox.add(infotext);
+infobox.add(ufzlabel);
+infobox.add(exButton);
+infobox.add(moreInfoButton);
+infobox.add(closeButton);
+
+layerPanel.add(layerHeading);
+layerPanel.add(checkEG);
+layerPanel.add(checkDD);
+layerPanel.add(checkMX);
+layerPanel.add(checkOV);
+layerPanel.add(layerInformation);
+
+layerInfoPanel.add(layerInfoText)
+layerInfoPanel.add(layerCloseButton)
+
+Map.add(inputPanel);
+Map.add(infobox);
+Map.add(layerPanel);
+Map.add(legend);
+Map.setLocked(false, 5, 18);
+
+Map.centerObject(ee.Geometry.Point([10.59, 51.76]), 10)
+Map.setControlVisibility(false)
+normalMap = ui.root.widgets().get(0)
+
+
+
+var m1 = ui.Map();
+var m2 = ui.Map();
+m1.setLocked(true, 13, 15);
+m2.setLocked(true, 13, 15);
+m1.add(homeButton);
+
+m2.add(exampleMapSelect)
+m1.setControlVisibility(false)
+m2.setControlVisibility(false)
+
+  
+var sp = ui.SplitPanel(m1,m2,'horizontal', true);
+
+
+startCalc(Map)

@@ -1,0 +1,47 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var dd = ee.ImageCollection("projects/ee-fichtnej/assets/DD"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/EG"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/MX"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/OV");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var monthNumbers = ee.List.sequence(1,12,1);
+
+var combinedImages = ee.ImageCollection(monthNumbers.map(function(month){
+  var mxImg = mx.filter(ee.Filter.eq('month', month)).first();
+  var egImg = eg.filter(ee.Filter.eq('month', month)).first();
+  var ddImg = dd.filter(ee.Filter.eq('month', month)).first();
+  var ovImg = ov.filter(ee.Filter.eq('month', month)).first();
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, ovImg]);
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  allImgs = allImgs.set('month', month).rename(['B5', 'B8A', 'B11']);
+  
+  return allImgs;
+}));
+
+var viz = {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']};
+for(var month = 1; month < 2; month++){
+  var mxImg = mx.filter(ee.Filter.eq('month', month)).first();
+  var egImg = eg.filter(ee.Filter.eq('month', month)).first();
+  var ddImg = dd.filter(ee.Filter.eq('month', month)).first();
+  // var ovImg = ov.filter(ee.Filter.eq('month', month)).first();
+  var allImgs = ee.ImageCollection([mxImg, egImg, ddImg, /*ovImg*/]);
+  allImgs = allImgs.reduce(ee.Reducer.firstNonNull());
+  allImgs = allImgs.set('month', month).rename(['B5', 'B8A', 'B11']);
+  
+  //Map.addLayer(allImgs.select(['B5']).arrayReduce(ee.Reducer.median(), [0]).arrayGet(0), {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']}, month+'')
+  Export.image.toAsset({image: allImgs,
+    description: month + '_export_hexRef',
+    assetId : 'hexRef/' + month + '_reference_data',
+    scale: 100, maxPixels: 900000000000
+    
+  });
+  /*
+  */
+}
+
+Map.addLayer(combinedImages);
+//to visualize differences between forest types
+
+var junImg = combinedImages.filter(ee.Filter.eq('month', 6)).first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
+var cI = combinedImages.first().arrayReduce(ee.Reducer.median(), [0]).select(['B5']).arrayGet(0);
+Map.addLayer(junImg, {min:800, max:1200, palette : ['blue', 'aqua','lightblue', 'pink', 'red', 'brown']});

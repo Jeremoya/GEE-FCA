@@ -1,0 +1,153 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var LSIB = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    ov = ee.ImageCollection("projects/ee-fichtnej/assets/percs/OV_2"),
+    mx = ee.ImageCollection("projects/ee-fichtnej/assets/percs/MX_2"),
+    eg = ee.ImageCollection("projects/ee-fichtnej/assets/percs/EG_2"),
+    dd = ee.ImageCollection("projects/ee-fichtnej/assets/percs/DD_2"),
+    hansen = ee.Image("UMD/hansen/global_forest_change_2023_v1_11"),
+    center = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([15.22923448281721, 50.2696264236422]),
+    geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[3.3313305785502934, 53.42271283397098],
+          [3.3313305785502934, 46.85277612673683],
+          [26.853059094175293, 46.85277612673683],
+          [26.853059094175293, 53.42271283397098]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Imports
+var cloudMask = require('users/fichtnej/modules:CloudMasks');
+var vegMask = require('users/fichtnej/modules:VegMasks');
+var FCA = require('users/fichtnej/modules:fcaUtils');
+var AOIs = require('users/fichtnej/BA:App/AOIs');
+var viz = FCA.getFCAviz();
+
+
+
+
+// Globale Variablen
+var year = 2019;
+var month = [7];
+var dates = ee.DateRange('2019-07-01', '2019-08-01');
+
+
+// Funktionen
+
+function getFCA(img){
+  
+  var image = ee.Image();
+  return image.expression('RE4 * 0.3778 - RE1 * 0.3278 - SWIR * 0.2944',{
+                            'RE1': img.select(['B5']),
+                            'RE4': img.select(['B8A']),
+                            'SWIR': img.select(['B11']),
+                          }).rename('FCA');
+}
+
+
+
+function startCalc(){
+  
+  
+  var ddImg = createFCAImage(dd);
+  var egImg = createFCAImage(eg);
+  var mxImg = createFCAImage(mx);
+  var ovImg = createFCAImage(ov);
+  
+  
+  // Karte Aktualisieren
+  Map.clear()
+  Map.addLayer(ddImg, viz, 'Deciduous Forest');
+  Map.addLayer(egImg, viz, 'Evergreen Forest');
+  Map.addLayer(mxImg, viz, 'Mixed Forest');
+  Map.addLayer(ovImg, viz, 'Other Vegetation');
+  
+
+  
+  
+}
+
+
+
+// Erstellen des Beobachtungsbildes
+//jährlich/saisonal
+
+// Aktualisieren des Zeitraumes für Beobachtungsbild
+function updateDateRange(month){
+  var startDate = ee.Date.fromYMD(year, month, 1);
+  var endDate = startDate.advance(1, 'month');
+  var dr = ee.DateRange(startDate, endDate);
+  dates = dr;
+  
+}
+
+function createObsImage(){
+  
+  var s2Data = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
+                    .filterDate(dates)
+                    .map(cloudMask.S2CloudMask)
+                    .map(function(img){
+                    return img.updateMask(img.select(['SCL']).eq(ee.Image([4,5])).reduce(ee.Reducer.max()));
+                    })
+                    .select(['B5', 'B8A', 'B11'])
+                    .mean();
+                    
+
+  return s2Data;
+}
+
+function createRefImage(imgCol, oneMonth){
+  
+  imgCol = ee.ImageCollection(imgCol);
+  return imgCol.filter(ee.Filter.eq('month', oneMonth)).first();
+}
+
+
+// Vergleich Beobachtung Referenz
+
+function compareImages(ref, obs){
+  
+  //Einordnen der Beobachtung in Quantile
+  var comp = obs.gte(ref);
+  var rcomp = comp.arrayReduce(ee.Reducer.sum(), [0]).arrayGet(0);
+  //Normierung
+  rcomp = rcomp.subtract(9.5).divide(9.5);
+  //Indexberechnung
+  return getFCA(rcomp);
+  
+}
+
+
+
+function createFCAImage(type){
+  var retImg = month.map(function(oneMonth){
+    
+    updateDateRange(oneMonth);
+    var img = createObsImage();
+    var refImg = createRefImage(type, oneMonth);
+    var fcaImg = compareImages(refImg, img);
+    
+    return fcaImg;
+  });
+  
+  return ee.ImageCollection(retImg).mean();
+}
+
+
+var zoomlevel = 16;
+month = [6]
+year= 2021
+
+
+
+Map.centerObject(center, zoomlevel)
+
+startCalc()
+//print(geometry.area(1))
